@@ -10,7 +10,7 @@
 static void print_usage(char *argv) {
    const char *exeName = strrchr(argv, '/') + 1;  // the +1 removes the leading '/'
    printf("Usage: %s\n"
-          "A mini_app project for experimenting with GTK3 and design patterns in C.\n"
+          "A project for experimenting with GTK3 and design patterns in C.\n"
           " -D --debug\tEnable Debugging and enable Debug (full) level logging\n"
           " -q --quiet\tRaise log level to ERROR\n"
           " +t --timestamps\tEnable timestamps\n"
@@ -31,7 +31,6 @@ RVALUE parse_input_args(int argc, char **argv) {
          set_app_log_w_timestamp_flag(true);
       } else if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0))
       {
-         // TODO: Is the only difference here the explicit call for help?  Maybe not an error, just excuse to exit?
          print_usage(argv[0]);
       } else if (strlen(argv[i]) > 0) {
          print_usage(argv[0]);

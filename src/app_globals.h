@@ -3,7 +3,6 @@
  */
 #ifndef APP_GLOBALS_H__
 #define APP_GLOBALS_H__
-
 #include <gtk/gtk.h>
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"

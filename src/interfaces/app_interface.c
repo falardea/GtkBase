@@ -45,7 +45,6 @@ void app_init(int argc, char **argv) {
    apply_app_styling(g_app_widget_refs);
 
    set_app_state(APP_STATE_SUCCESS);
-
 }
 
 void app_finalize(void)

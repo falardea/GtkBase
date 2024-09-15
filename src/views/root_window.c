@@ -6,6 +6,9 @@
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 
+static const char *MSG_OUT_CURSOR_NAME = "msgOutCursor";
+static GtkTextMark *msgOutCursor;
+static char timestamp[20];  // not sure why it felt better to allocate the memory once
 
 void on_main_wnd_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,
                                 __attribute__((unused)) gpointer uData) {
@@ -27,12 +30,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    } else {
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
-
 }
-
-static const char *MSG_OUT_CURSOR_NAME = "msgOutCursor";
-static GtkTextMark *msgOutCursor;
-static char timestamp[20];  // not sure why it felt better to allocate the memory once
 
 void set_msgout_buffer(const char *msgout)
 {
@@ -74,7 +72,6 @@ void print_log_level_msgout(LOGLEVEL loglevel, const char *_format, ...)
       if (use_ts)
          get_timestamp(timestamp, sizeof(timestamp));
 
-      /* TODO: Same as logging_llprintf, this is a big icky, is there a better way? */
       snprintf(ll_msg_out, sizeof (ll_msg_out), "%s%s%s:%s\n",
                use_ts ? timestamp:"", use_ts?":":"", get_log_level_str(loglevel), line_out);
 
@@ -82,4 +79,3 @@ void print_log_level_msgout(LOGLEVEL loglevel, const char *_format, ...)
       set_msgout_buffer(ll_msg_out);
    }
 }
-
