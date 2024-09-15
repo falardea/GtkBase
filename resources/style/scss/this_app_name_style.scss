@@ -1,0 +1,8 @@
+@import "this_app_name_colors";
+@import "this_app_name_button";
+
+window {
+  //background-image: none;
+  background-color: $base-bg;
+  color: $light-base-bg;
+}

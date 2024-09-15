@@ -1,0 +1,11 @@
+/*
+ * Created by french on 2/3/24.
+*/
+#ifndef THIS_APP_NAME_VERSION_H
+#define THIS_APP_NAME_VERSION_H
+
+#define project_VERSION_MAJOR @GtkBase_VERSION_MAJOR@
+#define project_VERSION_MINOR @GtkBase_VERSION_MINOR@
+#define project_VERSION_PATCH @GtkBase_VERSION_PATCH@
+
+#endif  /* THIS_APP_NAME_VERSION_H */
