@@ -1,8 +1,31 @@
-$base-bg: rgba(77, 77, 97, 1); // #4d4d61
+$bg-red: rgba(255, 0, 0, 1);
+$bg-red-backshadow: rgba(48, 8, 8, 1);
+$bg-red-shadow: rgba(60, 10, 10, 1);
+$red-reflection: rgb(232, 92, 92);
+$red-deep-dark: rgba(140, 0, 0, 1);
+
+$base-bg: rgb(77, 77, 97); // #4d4d61
 $dark-base-bg: darken($base-bg, 30%);
 $light-base-bg: lighten($base-bg, 20%);
 
 $base-fg: rgba(246, 245, 244, 1); // #f6f5f4
 $base-outline-color: rgba(236, 241, 241, 0.3); //
 $base-border-color: rgb(46, 52, 54); // #2e3436
+
+// Theme diverging here
+$ux-darkest-blue: #0000ba;
+//$ux-darkdark-blue: darken($ux-darkest-blue, 80%);
+$ux-darkdark-blue: #000078;
+$ux-darkest-popup_bg: #6363ba;
+$ux-other-blue-light: #9696ba;
+
+$ux-dark-gray: #404040;
+
+// Constants for the base colors from GTK
+//$gtk_text_color: #2e3436;
+//$gtk_bg_color: #f6f5f4;
+$gtk_text_color: $ux-dark-gray;
+$gtk_bg_color: $ux-other-blue-light;
+$gtk_border_color: darken($gtk_bg_color, 18%);
+$insensitive_bg_color: mix($gtk_bg_color, white, 60%);
 

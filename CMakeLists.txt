@@ -12,20 +12,23 @@ link_directories(${GTK3_LIBRARY_DIRS})
 add_definitions(${GTK3_CFLAGS_OTHER})
 
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources REQUIRED)
-set(GRESOURCE_C     this_app_name.gresource.c)
-set(GRESOURCE_XML   this_app_name.gresource.xml)
 
-set(PROJECT_TARGET      this_app_name)
-set(PROJECT_SOURCE_DIR  ./src)
-set(PROJECT_BINARY_DIR  ./target)
-
-set(CSS_TARGET this_app_name_style.css)
-
+set(PROJECT_SOURCE_DIR      ./src)
+set(PROJECT_BINARY_DIR      ./target)
 set(PROJECT_RESOURCE_DIR    ${CMAKE_SOURCE_DIR}/resources)
 set(STYLE_DIR               ${PROJECT_RESOURCE_DIR}/style)
-set(SCSS_SOURCE             ${STYLE_DIR}/scss/this_app_name_style.scss)
-set(CSS_OUTFILE             ${STYLE_DIR}/${CSS_TARGET})
 
+# Customize as necessary
+set(PROJECT_OWNER       "your-name-or-organization-here")
+set(PROJECT_URL         "https://github.com")
+set(PROJECT_TARGET      this_app_name)
+set(CSS_TARGET          this_app_name_style.css)
+set(SCSS_SOURCE         ${STYLE_DIR}/scss/this_app_name_style.scss)
+set(GRESOURCE_C         this_app_name.gresource.c)
+set(GRESOURCE_XML       this_app_name.gresource.xml)
+
+
+set(CSS_OUTFILE ${STYLE_DIR}/${CSS_TARGET})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 add_compile_options(${CMAKE_C_FLAGS} -Wall -Wextra -rdynamic)
@@ -83,6 +86,8 @@ set(MY_SOURCES
     src/views/css_styler.h
     src/views/root_window.c
     src/views/root_window.h
+    src/headless_sandbox/headless_sandbox.h
+    src/headless_sandbox/headless_sandbox.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

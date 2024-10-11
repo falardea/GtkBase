@@ -7,7 +7,7 @@ button.remove-before-flight {
   font-weight: bolder;
   outline-color: $base-outline-color;
   border-color: $base-border-color;
-  background-image: linear-gradient(to top, #e60000 2px, #ff0000);
+  background-image: linear-gradient(to top, $red-deep-dark 16px, $bg-red);
   text-shadow: 0 1px rgba(16, 16, 16, 0.75);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -16,5 +16,32 @@ button.remove-before-flight:active {
   color: $base-fg;
   outline-color: $base-outline-color;
   border-color: $base-border-color;
-  background-image: image(#b30000);
+  background-image: linear-gradient(to top, $bg-red-backshadow 16px, $red-deep-dark);
+  //background-image: image($bg-red-shadow);
+}
+
+button.remove-before-flight.toggle:checked {
+  color: $base-fg;
+  outline-color: $base-outline-color;
+  border-color: $base-border-color;
+  background-image: image($red-deep-dark);
+}
+
+button.remove-before-flight:backdrop {
+  color: #929595;
+  border-color: #a6a9b6;
+  background-image: image($bg-red-backshadow);
+  text-shadow: none;
+}
+
+button.remove-before-flight:backdrop:disabled {
+  color: #d4cfca;
+  border-color: #d5d0cc;
+  background-image: image(#faf9f8);
+}
+
+button.remove-before-flight:disabled {
+  color: #929595;
+  border-color: #cdc7c2;
+  background-image: image(#faf9f8);
 }

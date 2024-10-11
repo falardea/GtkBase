@@ -14,21 +14,29 @@ static void print_usage(char *argv) {
           " -D --debug\tEnable Debugging and enable Debug (full) level logging\n"
           " -q --quiet\tRaise log level to ERROR\n"
           " +t --timestamps\tEnable timestamps\n"
+          " -c --console\tSkip the UI, just run main as a console app\n"
           " -h --help\tPrint this help message\n\n", exeName);
 }
 
 RVALUE parse_input_args(int argc, char **argv) {
+   bool debugging_enabled = false;
+   bool quiet_enabled = false;
+   bool timestamps_enabled = false;
+   bool console_only_enabled = false;
+
    for (int i = 1; i < argc; i++) {
       if ((strcmp(argv[i], "-D") == 0) || (strcmp(argv[i], "--debug") == 0))
       {
-         set_app_debug_flag(true);
-         set_app_log_level(LOGLEVEL_DEBUG);
+         debugging_enabled = true;
       } else if ((strcmp(argv[i], "-q") == 0) || (strcmp(argv[i], "--quiet") == 0))
       {
-         set_app_log_level(LOGLEVEL_ERROR);
+         quiet_enabled = true;
       } else if ((strcmp(argv[i], "+t") == 0) || (strcmp(argv[i], "--timestamps") == 0))
       {
-         set_app_log_w_timestamp_flag(true);
+         timestamps_enabled = true;
+      } else if ((strcmp(argv[i], "-c") == 0) || (strcmp(argv[i], "--console") == 0))
+      {
+         console_only_enabled = true;
       } else if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0))
       {
          print_usage(argv[0]);
@@ -37,5 +45,16 @@ RVALUE parse_input_args(int argc, char **argv) {
          return RVALUE_ERROR;
       }
    }
+
+   set_app_debug_flag(debugging_enabled);
+
+   // The order here is preference in which has override.  I figure if you set debug, you meant it
+   // whereas "quiet" would be an automatic inclusion in most builds for production or nearing it
+   if (quiet_enabled) set_app_log_level(LOGLEVEL_ERROR);
+   if (debugging_enabled) set_app_log_level(LOGLEVEL_DEBUG);
+
+   set_app_log_w_timestamp_flag(timestamps_enabled);
+   set_app_run_console_only(console_only_enabled);
+
    return RVALUE_SUCCESS;
 }

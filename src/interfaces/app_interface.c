@@ -13,6 +13,7 @@ const LOGLEVEL DEFAULT_APP_LOG_LEVEL = LOGLEVEL_INFO;
 static app_model_t sAppModel = {APP_STATE_UNINITIALIZED,
                                 false,
                                 false,
+                                false,
                                 DEFAULT_APP_LOG_LEVEL};
 
 const char *APP_STATE_UNINITIALIZED_STR = "APP_STATE_UNINITIALIZED";
@@ -38,11 +39,14 @@ void app_init(int argc, char **argv) {
       return;
    }
 
-   gtk_init(&argc, &argv);
+   if (!get_app_run_console_only())
+   {
+      gtk_init(&argc, &argv);
 
-   g_app_widget_refs = app_builder();
+      g_app_widget_refs = app_builder();
 
-   apply_app_styling(g_app_widget_refs);
+      apply_app_styling(g_app_widget_refs);
+   }
 
    set_app_state(APP_STATE_SUCCESS);
 }
@@ -90,4 +94,13 @@ void set_app_log_level(LOGLEVEL logLevel) {
 }
 LOGLEVEL get_app_log_level(void) {
    return sAppModel.runtime_log_level;
+}
+
+void set_app_run_console_only(bool console_only)
+{
+   sAppModel.run_console_only = console_only;
+}
+bool get_app_run_console_only(void)
+{
+   return sAppModel.run_console_only;
 }

@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 #include "version.h"
 #include "interfaces/app_interface.h"
+#include "headless_sandbox/headless_sandbox.h"
 #include "utils/logging.h"
 
 int main(int argc, char **argv) {
@@ -13,9 +14,14 @@ int main(int argc, char **argv) {
 
    if (get_app_state() == APP_STATE_SUCCESS)
    {
-      logging_llprintf(LOGLEVEL_INFO, "application initialized, starting UI");
-      gtk_main();
-      logging_llprintf(LOGLEVEL_INFO, "UI closed, shutting down");
+      if (!get_app_run_console_only())
+      {
+         logging_llprintf(LOGLEVEL_INFO, "application initialized, starting UI");
+         gtk_main();
+         logging_llprintf(LOGLEVEL_INFO, "UI closed, shutting down");
+      } else {
+         run_console_context();
+      }
    }
    else
    {
@@ -24,5 +30,6 @@ int main(int argc, char **argv) {
    }
 
    app_finalize();
+
    return get_app_state();
 }

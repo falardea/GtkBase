@@ -16,6 +16,7 @@ typedef struct {
    APP_INTERFACE_STATE app_state;
    bool debugging_enabled;
    bool log_with_timestamps;
+   bool run_console_only;
    LOGLEVEL runtime_log_level;
 } app_model_t;
 
@@ -35,5 +36,8 @@ bool get_app_log_w_timestamp_flag(void);
 
 void set_app_log_level(LOGLEVEL logLevel);
 LOGLEVEL get_app_log_level(void);
+
+void set_app_run_console_only(bool console_only);
+bool get_app_run_console_only(void);
 
 #endif  /* APP_INTERFACE_H__ */
