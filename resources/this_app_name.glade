@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <!-- interface-css-provider-path style/this_app_name_style.css -->
   <object class="GtkApplicationWindow" id="main_wnd">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -42,6 +43,7 @@
                   <object class="GtkEntry" id="say_something_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="valign">center</property>
                     <property name="placeholder-text" translatable="yes">Say Something</property>
                   </object>
                   <packing>
@@ -52,7 +54,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="do_something_button">
-                    <property name="label" translatable="yes">Do Something</property>
+                    <property name="label" translatable="yes">Do It!</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="has-focus">True</property>
@@ -163,7 +165,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="pack-type">end</property>
             <property name="position">1</property>
