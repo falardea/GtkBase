@@ -22,7 +22,7 @@
         <property name="orientation">vertical</property>
         <property name="baseline-position">top</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="app_content_box">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-start">10</property>

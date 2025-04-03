@@ -88,6 +88,14 @@ set(MY_SOURCES
     src/views/root_window.h
     src/headless_sandbox/headless_sandbox.h
     src/headless_sandbox/headless_sandbox.c
+    src/views/composites/alarms_content/alarms_content.c
+    src/views/composites/alarms_content/alarms_content.h
+    src/views/composites/alarms_content/alarm_banner.c
+    src/views/composites/alarms_content/alarm_banner.h
+    src/views/composites/alarms_content/alarm_interface.c
+    src/views/composites/alarms_content/alarm_interface.h
+    src/views/composites/alarms_content/alarm_model.c
+    src/views/composites/alarms_content/alarm_model.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

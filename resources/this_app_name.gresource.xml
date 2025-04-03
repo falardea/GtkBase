@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/resource_path">
+        <!--  -->
         <file preprocess="xml-stripblanks">resources/this_app_name.glade</file>
+        <file preprocess="xml-stripblanks">resources/alarms_content.ui</file>
+        <file preprocess="xml-stripblanks">resources/alarm_banner.glade</file>
+        <file preprocess="xml-stripblanks">resources/alarm_interface.glade</file>
+        <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
     </gresource>
 </gresources>
