@@ -32,13 +32,35 @@ static void alarms_content_class_init(AlarmsContentClass *klass)
 
 static void alarms_content_init(AlarmsContent *self)
 {
+   g_type_ensure(ALARM_TYPE_BANNER);
+   g_type_ensure(ALARM_TYPE_INTERFACE);
+
    gtk_widget_init_template(GTK_WIDGET(self));
+}
+
+void handle_alarm_signal(AlarmInterface *self, ALARM_INTERFACE_ALARM_LEVELS level, gpointer user_data)
+{
+   AlarmsContent *ac = ALARMS_CONTENT(user_data);
+
+   g_print("%s\n", __func__);
+
+   if (level == ALARM_INTERFACE_HIGH_ALARM)
+   {
+      alarm_banner_set_alarm_high(ac->alarm_banner);
+   }
 }
 
 AlarmsContent *alarms_content_new()
 {
    AlarmsContent *myself;
    myself = g_object_new(ALARMS_TYPE_CONTENT, NULL);
+
+//   myself->alarm_banner = alarm_banner_new(GINT_TO_POINTER(10));
+//   myself->alarm_interface = alarm_interface_new();
+
+   g_print("%s\n", __func__);
+
+   g_signal_connect(G_OBJECT(myself->alarm_interface), "alarm-changed", G_CALLBACK(handle_alarm_signal), myself);
 
    return myself;
 }
@@ -47,6 +69,13 @@ static void alarms_content_finalize(GObject *self)
 {
    g_return_if_fail(self != NULL);
    g_return_if_fail(ALARMS_IS_CONTENT(self));
+
+   g_print("%s\n", __func__);
+
+   AlarmsContent *ac = ALARMS_CONTENT(self);
+
+   gtk_widget_destroy(GTK_WIDGET(ac->alarm_banner));
+   gtk_widget_destroy(GTK_WIDGET(ac->alarm_interface));
 
    G_OBJECT_CLASS(alarms_content_parent_class)->finalize(self);
 }

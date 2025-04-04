@@ -13,7 +13,7 @@ struct _AlarmBanner
    GtkLabel *banner_message;
    GtkImage *banner_icon;
 
-   guint    id;
+   guint    random_int;
 };
 
 G_DEFINE_TYPE(AlarmBanner, alarm_banner, GTK_TYPE_BOX)
@@ -23,6 +23,7 @@ static void alarm_banner_finalize(GObject *self);
 static void alarm_banner_class_init(AlarmBannerClass *klass)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
@@ -37,15 +38,15 @@ static void alarm_banner_class_init(AlarmBannerClass *klass)
 
 static void alarm_banner_init(AlarmBanner *self)
 {
+   g_print("%s\n", __func__);
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-AlarmBanner *alarm_banner_new(guint id)
+AlarmBanner *alarm_banner_new(gpointer random_int)
 {
    AlarmBanner *myself;
    myself = g_object_new(ALARM_TYPE_BANNER, NULL);
 
-   myself->id = id;
    return myself;
 }
 
@@ -53,5 +54,24 @@ static void alarm_banner_finalize(GObject *self)
 {
    g_return_if_fail(self != NULL);
    g_return_if_fail(ALARM_IS_BANNER(self));
+
+   g_print("%s\n", __func__);
    G_OBJECT_CLASS(alarm_banner_parent_class)->finalize(self);
+}
+
+void alarm_banner_set_alarm_high(AlarmBanner *self)
+{
+   gtk_label_set_label(GTK_LABEL(self->banner_message), "HIGH");
+}
+void alarm_banner_set_alarm_mid(AlarmBanner *self)
+{
+   gtk_label_set_label(GTK_LABEL(self->banner_message), "MID");
+}
+void alarm_banner_set_alarm_low(AlarmBanner *self)
+{
+   gtk_label_set_label(GTK_LABEL(self->banner_message), "LOW");
+}
+void alarm_banner_set_alarm_off(AlarmBanner *self)
+{
+   gtk_label_set_label(GTK_LABEL(self->banner_message), "OFF");
 }

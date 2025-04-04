@@ -15,7 +15,12 @@ extern "C" {
 
 G_DECLARE_FINAL_TYPE(AlarmBanner, alarm_banner, ALARM, BANNER, GtkBox)
 
-AlarmBanner *alarm_banner_new(guint id);
+AlarmBanner *alarm_banner_new(gpointer random_int);
+
+void alarm_banner_set_alarm_high(AlarmBanner *self);
+void alarm_banner_set_alarm_mid(AlarmBanner *self);
+void alarm_banner_set_alarm_low(AlarmBanner *self);
+void alarm_banner_set_alarm_off(AlarmBanner *self);
 
 #ifdef __cplusplus
 }  // closing brace for extern "C"

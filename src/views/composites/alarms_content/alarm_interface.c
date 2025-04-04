@@ -17,12 +17,17 @@ struct _AlarmInterface
 
 G_DEFINE_TYPE(AlarmInterface, alarm_interface, GTK_TYPE_BOX)
 
+static guint alarm_interface_signal = 0;
+
 static void alarm_interface_finalize(GObject *self);
+
+void (* alarm_interface_signal_cb) (AlarmInterface *self, ALARM_INTERFACE_ALARM_LEVELS *level);
 
 void on_btn_set_high_alarm_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    AlarmInterface *self = ALARM_INTERFACE(user_data);
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   g_signal_emit(G_OBJECT(self), alarm_interface_signal, 0, ALARM_INTERFACE_HIGH_ALARM);
 }
 void on_btn_set_mid_alarm_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
@@ -59,10 +64,20 @@ static void alarm_interface_class_init(AlarmInterfaceClass *klass)
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_set_low_alarm_clicked", (GCallback)on_btn_set_low_alarm_clicked);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_set_no_alarm_clicked", (GCallback)on_btn_set_no_alarm_clicked);
 
+   alarm_interface_signal = g_signal_new_class_handler("alarm-changed",
+                                                       G_TYPE_FROM_CLASS(klass),
+                                                       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                                       (GCallback)alarm_interface_signal_cb,
+                                                       NULL,
+                                                       NULL,
+                                                       g_cclosure_marshal_VOID__INT,
+                                                       G_TYPE_NONE, 1, G_TYPE_INT);
+
 }
 
 static void alarm_interface_init(AlarmInterface *self)
 {
+   g_print("%s\n", __func__);
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
@@ -77,5 +92,8 @@ static void alarm_interface_finalize(GObject *self)
 {
    g_return_if_fail(self != NULL);
    g_return_if_fail(ALARM_INTERFACE(self));
+
+   g_print("%s\n", __func__);
+
    G_OBJECT_CLASS(alarm_interface_parent_class)->finalize(self);
 }
