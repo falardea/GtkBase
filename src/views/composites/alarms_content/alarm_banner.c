@@ -38,12 +38,15 @@ static void alarm_banner_class_init(AlarmBannerClass *klass)
 
 static void alarm_banner_init(AlarmBanner *self)
 {
-   g_print("%s\n", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-AlarmBanner *alarm_banner_new(gpointer random_int)
+AlarmBanner *alarm_banner_new(const gchar *test_arg)
 {
+   g_warn_if_fail(test_arg != NULL);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: string passed in = %s", __func__, test_arg);
+
    AlarmBanner *myself;
    myself = g_object_new(ALARM_TYPE_BANNER, NULL);
 
@@ -55,7 +58,7 @@ static void alarm_banner_finalize(GObject *self)
    g_return_if_fail(self != NULL);
    g_return_if_fail(ALARM_IS_BANNER(self));
 
-   g_print("%s\n", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    G_OBJECT_CLASS(alarm_banner_parent_class)->finalize(self);
 }
 

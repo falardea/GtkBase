@@ -77,7 +77,7 @@ static void alarm_interface_class_init(AlarmInterfaceClass *klass)
 
 static void alarm_interface_init(AlarmInterface *self)
 {
-   g_print("%s\n", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
@@ -93,7 +93,7 @@ static void alarm_interface_finalize(GObject *self)
    g_return_if_fail(self != NULL);
    g_return_if_fail(ALARM_INTERFACE(self));
 
-   g_print("%s\n", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    G_OBJECT_CLASS(alarm_interface_parent_class)->finalize(self);
 }

@@ -15,7 +15,7 @@ extern "C" {
 
 G_DECLARE_FINAL_TYPE(AlarmBanner, alarm_banner, ALARM, BANNER, GtkBox)
 
-AlarmBanner *alarm_banner_new(gpointer random_int);
+AlarmBanner *alarm_banner_new(const gchar *test_arg);
 
 void alarm_banner_set_alarm_high(AlarmBanner *self);
 void alarm_banner_set_alarm_mid(AlarmBanner *self);
