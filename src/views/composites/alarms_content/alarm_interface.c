@@ -94,10 +94,11 @@ AlarmInterface *alarm_interface_new(void)
 
 static void alarm_interface_finalize(GObject *obj)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(obj != NULL);
    g_return_if_fail(ALARM_INTERFACE(obj));
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    G_OBJECT_CLASS(alarm_interface_parent_class)->finalize(obj);
 }

@@ -13,6 +13,8 @@ static char timestamp[20];  // not sure why it felt better to allocate the memor
 void on_main_wnd_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,
                                 __attribute__((unused)) gpointer uData) {
    gtk_main_quit();
+   GtkWidget *parent_wnd = gtk_widget_get_toplevel(srcWidget);
+   gtk_widget_destroy(parent_wnd);
 }
 
 gboolean on_main_wnd_delete_event(__attribute__((unused)) GtkWidget *srcWidget,

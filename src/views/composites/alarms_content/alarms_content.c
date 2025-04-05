@@ -77,15 +77,12 @@ AlarmsContent *alarms_content_new()
 
 static void alarms_content_finalize(GObject *obj)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(obj != NULL);
    g_return_if_fail(ALARMS_IS_CONTENT(obj));
 
    AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(obj));
-
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   gtk_widget_destroy(GTK_WIDGET(ap->alarm_banner));
-   gtk_widget_destroy(GTK_WIDGET(ap->alarm_interface));
 
    G_OBJECT_CLASS(alarms_content_parent_class)->finalize(obj);
 }

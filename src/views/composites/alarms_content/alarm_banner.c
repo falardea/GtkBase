@@ -59,10 +59,11 @@ AlarmBanner *alarm_banner_new()
 
 static void alarm_banner_finalize(GObject *obj)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(obj != NULL);
    g_return_if_fail(ALARM_IS_BANNER(obj));
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    G_OBJECT_CLASS(alarm_banner_parent_class)->finalize(obj);
 }
 
