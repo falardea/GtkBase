@@ -5,80 +5,96 @@
 #include "alarms_content.h"
 #include "alarm_banner.h"
 #include "alarm_interface.h"
+#include "alarm_model.h"
 #include "utils/logging.h"
 
+// Private instance date
+typedef struct
+{
+   AlarmInterface *alarm_interface;
+   AlarmBanner    *alarm_banner;
+   AlarmModel     *alarm_model;
+} AlarmsContentPrivate;
+
+// Public?
 struct _AlarmsContent
 {
-   GtkBox         parent;
-   AlarmBanner    *alarm_banner;
-   AlarmInterface *alarm_interface;
+   GtkBox   parent;
+   GtkBox   *content_box;
 };
 
-G_DEFINE_TYPE(AlarmsContent, alarms_content, GTK_TYPE_BOX)
+G_DEFINE_TYPE_WITH_PRIVATE(AlarmsContent, alarms_content, GTK_TYPE_BOX)
 
-void alarms_content_handle_alarm_signal(AlarmInterface *self, ALARM_INTERFACE_ALARM_LEVELS level, gpointer user_data);
+void alarms_content_handle_alarm_signal(AlarmInterface *self, ALARM_MODEL_LEVEL level, gpointer user_data);
 
 static void alarms_content_finalize(GObject *self);
 
 static void alarms_content_class_init(AlarmsContentClass *klass)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
    gobject_class->finalize = alarms_content_finalize;
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/resources/alarms_content.ui");
-   gtk_widget_class_bind_template_child_internal(widget_class, AlarmsContent, alarm_banner);
-   gtk_widget_class_bind_template_child(widget_class, AlarmsContent, alarm_interface);
+   gtk_widget_class_bind_template_child_internal(widget_class, AlarmsContent, content_box);
 
 }
 
 static void alarms_content_init(AlarmsContent *self)
 {
+   AlarmsContentPrivate *ap = alarms_content_get_instance_private(self);
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_type_ensure(ALARM_TYPE_BANNER);
    g_type_ensure(ALARM_TYPE_INTERFACE);
 
    gtk_widget_init_template(GTK_WIDGET(self));
+
+   ap->alarm_banner = alarm_banner_new();
+   ap->alarm_interface = alarm_interface_new();
+   ap->alarm_model = alarm_model_new();
+
+   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(ap->alarm_banner), TRUE, TRUE,0);
+   gtk_box_pack_end(GTK_BOX(self->content_box), GTK_WIDGET(ap->alarm_interface), TRUE, TRUE,0);
+
+   g_signal_connect(G_OBJECT(ap->alarm_interface), "alarm-changed", G_CALLBACK(alarms_content_handle_alarm_signal), self);
 }
 
 AlarmsContent *alarms_content_new()
 {
    AlarmsContent *myself;
-   myself = g_object_new(ALARMS_TYPE_CONTENT, NULL);
-
-//   myself->alarm_banner = alarm_banner_new(GINT_TO_POINTER(10));
-//   myself->alarm_interface = alarm_interface_new();
 
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-   g_signal_connect(G_OBJECT(myself->alarm_interface), "alarm-changed", G_CALLBACK(alarms_content_handle_alarm_signal), myself);
+   myself = g_object_new(ALARMS_TYPE_CONTENT, NULL);
 
    return myself;
 }
 
-static void alarms_content_finalize(GObject *self)
+static void alarms_content_finalize(GObject *obj)
 {
-   g_return_if_fail(self != NULL);
-   g_return_if_fail(ALARMS_IS_CONTENT(self));
+   g_return_if_fail(obj != NULL);
+   g_return_if_fail(ALARMS_IS_CONTENT(obj));
+
+   AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(obj));
 
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-//   AlarmsContent *ac = ALARMS_CONTENT(self);
+   gtk_widget_destroy(GTK_WIDGET(ap->alarm_banner));
+   gtk_widget_destroy(GTK_WIDGET(ap->alarm_interface));
 
-//   gtk_widget_destroy(GTK_WIDGET(ac->alarm_banner));
-//   gtk_widget_destroy(GTK_WIDGET(ac->alarm_interface));
-
-   G_OBJECT_CLASS(alarms_content_parent_class)->finalize(self);
+   G_OBJECT_CLASS(alarms_content_parent_class)->finalize(obj);
 }
 
-void alarms_content_handle_alarm_signal(__attribute__((unused))AlarmInterface *self, ALARM_INTERFACE_ALARM_LEVELS level, gpointer user_data)
+void alarms_content_handle_alarm_signal(__attribute__((unused))AlarmInterface *self, ALARM_MODEL_LEVEL level, gpointer user_data)
 {
-   AlarmsContent *ac = ALARMS_CONTENT(user_data);
+   AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(user_data));
 
    logging_llprintf(LOGLEVEL_DEBUG, "%s: handling child composite alarm signal", __func__);
 
-   if (level == ALARM_INTERFACE_HIGH_ALARM)
-   {
-      alarm_banner_set_alarm_high(ac->alarm_banner);
-   }
+   alarm_banner_set_alarm_level(ap->alarm_banner, level);
 }

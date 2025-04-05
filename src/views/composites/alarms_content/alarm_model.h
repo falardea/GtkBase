@@ -15,14 +15,19 @@ extern "C" {
 
 G_DECLARE_FINAL_TYPE(AlarmModel, alarm_model, ALARM, MODEL, GObject)
 
+typedef enum
+{
+   AM_NO_ALARM = 0,
+   AM_BASIC_LOW_ALARM = 1,
+   AM_BASIC_MID_ALARM = 2048,
+   AM_BASIC_HIGH_ALARM = 4096,
+} ALARM_MODEL_LEVEL;
+
 /* Methods for our newly declared GObject derived GType*/
 AlarmModel *alarm_model_new();
 
-gchar *alarm_model_get_name( AlarmModel *self );
-void alarm_model_set_name( AlarmModel *self, const gchar *name );
-
-gboolean alarm_model_get_enabled( AlarmModel *self );
-void alarm_model_set_enabled( AlarmModel *self, gboolean enabled );
+ALARM_MODEL_LEVEL alarm_model_get_alarm_level( AlarmModel *self );
+void alarm_model_set_alarm_level( AlarmModel *self, ALARM_MODEL_LEVEL level );
 
 #ifdef __cplusplus
 }  // closing brace for extern "C"

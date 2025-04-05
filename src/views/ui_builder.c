@@ -24,6 +24,7 @@ app_widget_ref_struct *app_builder(void) {
 
    appWidgetsT->w_app_content_box = GTK_WIDGET(gtk_builder_get_object(builder, "app_content_box"));
 
+   logging_llprintf(LOGLEVEL_DEBUG, "<<<<<<<<<< START (%s) >>>>>>>>>>", __func__);
    appWidgetsT->w_alarms_content_root = alarms_content_new();
 
    gtk_box_pack_end(GTK_BOX(appWidgetsT->w_app_content_box), GTK_WIDGET(appWidgetsT->w_alarms_content_root), TRUE, TRUE,0);

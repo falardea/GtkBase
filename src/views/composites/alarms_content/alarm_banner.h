@@ -6,6 +6,7 @@
 #define ALARM_BANNER_H__
 
 #include <gtk/gtk.h>
+#include "alarm_model.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,12 +16,9 @@ extern "C" {
 
 G_DECLARE_FINAL_TYPE(AlarmBanner, alarm_banner, ALARM, BANNER, GtkBox)
 
-AlarmBanner *alarm_banner_new(const gchar *test_arg);
+AlarmBanner *alarm_banner_new();
 
-void alarm_banner_set_alarm_high(AlarmBanner *self);
-void alarm_banner_set_alarm_mid(AlarmBanner *self);
-void alarm_banner_set_alarm_low(AlarmBanner *self);
-void alarm_banner_set_alarm_off(AlarmBanner *self);
+void alarm_banner_set_alarm_level(AlarmBanner *self, ALARM_MODEL_LEVEL level);
 
 #ifdef __cplusplus
 }  // closing brace for extern "C"
