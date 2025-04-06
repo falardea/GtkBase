@@ -45,7 +45,7 @@ static void alarm_banner_set_property( GObject *object, guint prop_id, const GVa
 
    switch( prop_id ) {
       case ALARM_BANNER_PROP_ALARM_LEVEL:
-         alarm_banner_set_alarm_level( model, g_value_get_int( value ) );
+         alarm_banner_set_alarm_level( model, g_value_get_uint( value ) );
          break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
@@ -70,11 +70,11 @@ static void alarm_banner_class_init(AlarmBannerClass *klass)
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, lbl_bullet);
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, banner_icon);
 
-   model_properties[ALARM_BANNER_PROP_ALARM_LEVEL] = g_param_spec_boolean("alarm-level",
-                                                                         "Alarm Level Property",
-                                                                         "Alarm level for binding to a model",
-                                                                         AM_NO_ALARM,
-                                                                         G_PARAM_WRITABLE );
+   model_properties[ALARM_BANNER_PROP_ALARM_LEVEL] = g_param_spec_uint("alarm-level",
+                                                                       "Alarm Level Property",
+                                                                       "Alarm level for binding to a model",
+                                                                       AM_NO_ALARM, AM_BASIC_HIGH_ALARM, AM_NO_ALARM,
+                                                                       G_PARAM_WRITABLE  );
 
    g_object_class_install_properties( gobject_class, ALARM_BANNER_N_PROPERTIES, model_properties);
 

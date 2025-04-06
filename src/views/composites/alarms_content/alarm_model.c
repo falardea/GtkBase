@@ -10,7 +10,7 @@
 struct _AlarmModel
 {
    GObject  parent_object;
-   ALARM_MODEL_LEVEL curr_highest_level;
+   ALARM_MODEL_LEVEL alarm_level;
 };
 
 G_DEFINE_TYPE( AlarmModel, alarm_model, G_TYPE_OBJECT )
@@ -30,7 +30,7 @@ static void alarm_model_set_property( GObject *object, guint prop_id, const GVal
 
    switch( prop_id ) {
       case ALARM_MODEL_PROP_ALARM_LEVEL:
-         alarm_model_set_alarm_level( model, g_value_get_int( value ) );
+         alarm_model_set_alarm_level( model, g_value_get_uint( value ) );
          break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
@@ -43,7 +43,7 @@ static void alarm_model_get_property( GObject *object, guint prop_id, GValue *va
 
    switch( prop_id ) {
       case ALARM_MODEL_PROP_ALARM_LEVEL:
-         g_value_set_int( value, alarm_model_get_alarm_level( model ) );
+         g_value_set_uint( value, alarm_model_get_alarm_level( model ) );
          break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
@@ -61,17 +61,17 @@ static void alarm_model_class_init( AlarmModelClass *klass )
    gobject_class->get_property = alarm_model_get_property;
    gobject_class->set_property = alarm_model_set_property;
 
-   model_properties[ALARM_MODEL_PROP_ALARM_LEVEL] = g_param_spec_boolean("alarm-level",
+   model_properties[ALARM_MODEL_PROP_ALARM_LEVEL] = g_param_spec_uint("alarm-level",
                                                           "Alarm Level",
                                                           "The alarm level of the model",
-                                                          AM_NO_ALARM,
+                                                          AM_NO_ALARM, AM_BASIC_HIGH_ALARM, AM_NO_ALARM,
                                                           G_PARAM_READWRITE );
 
    g_object_class_install_properties( gobject_class, ALARM_MODEL_N_PROPERTIES, model_properties);
 }
 
 /////////////////// INSTANCE //////////////////////////////
-static void alarm_model_init( AlarmModel *self )
+static void alarm_model_init( __attribute__((unused)) AlarmModel *self )
 {
 }
 
@@ -84,7 +84,15 @@ AlarmModel *alarm_model_new( )
 {
    AlarmModel *model;
 
-   model = ALARM_MODEL( g_object_new( ALARM_TYPE_MODEL, NULL ) );
+   // GValue init_alarm_val = G_VALUE_INIT;
+   // g_value_init(&init_alarm_val, G_TYPE_UINT);
+   // g_value_set_uint(&init_alarm_val, AM_NO_ALARM);
+
+   model = g_object_new(ALARM_TYPE_MODEL,
+                        "alarm-level", AM_BASIC_HIGH_ALARM,
+                        NULL);
+
+   // g_value_unset(&init_alarm_val);
 
    return model;
 }
@@ -92,11 +100,11 @@ AlarmModel *alarm_model_new( )
 ALARM_MODEL_LEVEL alarm_model_get_alarm_level( AlarmModel *self )
 {
    g_return_val_if_fail( ALARM_IS_MODEL( self ), FALSE );
-   return self->curr_highest_level;
+   return self->alarm_level;
 }
 void alarm_model_set_alarm_level( AlarmModel *self, ALARM_MODEL_LEVEL level )
 {
    g_return_if_fail( ALARM_IS_MODEL( self ) );
-   self->curr_highest_level = level;
+   self->alarm_level = level;
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[ALARM_MODEL_PROP_ALARM_LEVEL]);
 }

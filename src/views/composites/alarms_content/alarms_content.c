@@ -8,6 +8,7 @@
 #include "alarm_model.h"
 #include "utils/logging.h"
 
+
 // Private instance date
 typedef struct
 {
@@ -61,6 +62,8 @@ static void alarms_content_init(AlarmsContent *self)
    gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(ap->alarm_banner), TRUE, TRUE,0);
    gtk_box_pack_end(GTK_BOX(self->content_box), GTK_WIDGET(ap->alarm_interface), TRUE, TRUE,0);
 
+   g_object_bind_property(ap->alarm_model, "alarm-level", ap->alarm_banner, "alarm-level", G_BINDING_DEFAULT);
+
    g_signal_connect(G_OBJECT(ap->alarm_interface), "alarm-changed", G_CALLBACK(alarms_content_handle_alarm_signal), self);
 }
 
@@ -82,7 +85,7 @@ static void alarms_content_finalize(GObject *obj)
    g_return_if_fail(obj != NULL);
    g_return_if_fail(ALARMS_IS_CONTENT(obj));
 
-   AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(obj));
+   // AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(obj));
 
    G_OBJECT_CLASS(alarms_content_parent_class)->finalize(obj);
 }
@@ -93,5 +96,5 @@ void alarms_content_handle_alarm_signal(__attribute__((unused))AlarmInterface *s
 
    logging_llprintf(LOGLEVEL_DEBUG, "%s: handling child composite alarm signal", __func__);
 
-   alarm_banner_set_alarm_level(ap->alarm_banner, level);
+   alarm_model_set_alarm_level(ap->alarm_model, level);
 }
