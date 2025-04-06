@@ -1,0 +1,109 @@
+@import "this_app_name_colors";
+@import "this_app_name_button";
+
+////////////////////////////////////////////////////////////////////
+// High Level Alarm Animation
+////////////////////////////////////////////////////////////////////
+@keyframes high-level-alarm-keyframe {
+  0% {
+    background-color: red;
+    background-image: none;
+  }
+  67% {
+    background-color: white;
+    background-image: none;
+  }
+}
+.high-level-alarm-animation {
+  animation-name: high-level-alarm-keyframe;
+  animation-duration: 0.3141596s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+////////////////////////////////////////////////////////////////////
+// Mid Level Alarm Animation
+////////////////////////////////////////////////////////////////////
+@keyframes mid-level-alarm-keyframe {
+  0% {
+    background-color: orange;
+    background-image: none;
+  }
+  33% {
+    background-color: white;
+    background-image: none;
+  }
+  66% {
+    background-color: orange;
+    background-image: none;
+  }
+}
+.mid-level-alarm-animation {
+  animation-name: mid-level-alarm-keyframe;
+  animation-duration: 0.3141596s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+////////////////////////////////////////////////////////////////////
+// Low Level Alarm Animation
+////////////////////////////////////////////////////////////////////
+@keyframes low-level-alarm-keyframe {
+  0% {
+    background-color: yellow;
+    background-image: none;
+  }
+  33% {
+    background-color: white;
+    background-image: none;
+  }
+  66% {
+    background-color: yellow;
+    background-image: none;
+  }
+}
+.low-level-alarm-animation {
+  animation-name: low-level-alarm-keyframe;
+  animation-duration: 0.3141596s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+////////////////////////////////////////////////////////////////////
+#banner-box
+{
+  color: $base-fg;
+}
+#banner-bullet
+{
+  background-color: $base-outline-color;
+  background-image: none;
+}
+
+#banner-icon
+{
+  background-color: $base-outline-color;
+  background-image: none;
+  //background-image: url("resource:///resource_path/resources/images/battery_level.svg");
+}
+
+.alarm-high
+{
+  @extend .high-level-alarm-animation;
+}
+
+.alarm-mid
+{
+  @extend .mid-level-alarm-animation;
+}
+
+.alarm-low
+{
+  @extend .low-level-alarm-animation;
+}
+
+.alarm-none
+{
+  background-color: $base-outline-color;
+  background-image: none;
+}

@@ -1,53 +1,10 @@
 @import "this_app_name_colors";
 @import "this_app_name_button";
+@import "this_app_name_alarm_content";
 
 window {
   //background-image: none;
   background-color: $base-bg;
   color: $light-base-bg;
   font-size: 18px;
-}
-
-
-#banner-box
-{
-  color: $base-fg;
-}
-#banner-bullet
-{
-  background-color: $base-outline-color;
-  //background-color: $base-outline-color;
-  background-image: none;
-}
-
-#banner-icon
-{
-  background-color: $base-outline-color;
-  background-image: none;
-  //background-color: $base-outline-color;
-  //background-image: url("resource:///resource_path/resources/images/battery_level.svg");
-}
-
-.alarm-high
-{
-  background-color: red;
-  background-image: none;
-}
-
-.alarm-mid
-{
-  background-color: orange;
-  background-image: none;
-}
-
-.alarm-low
-{
-  background-color: yellow;
-  background-image: none;
-}
-
-.alarm-none
-{
-  background-color: $base-outline-color;
-  background-image: none;
 }

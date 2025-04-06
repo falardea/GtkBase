@@ -116,40 +116,40 @@ void alarm_banner_set_alarm_level(AlarmBanner *self, ALARM_MODEL_LEVEL level)
       //ALARM_MODEL_LEVEL previous_level = self->alarm_level;
       self->alarm_level = level;
 
-      GtkStyleContext *dlgContext;
-      dlgContext = gtk_widget_get_style_context(GTK_WIDGET(self));
+      GtkStyleContext *bannerContext;
+      bannerContext = gtk_widget_get_style_context(GTK_WIDGET(self));
 
       if (level == AM_NO_ALARM)
       {
          gtk_label_set_markup(GTK_LABEL(self->lbl_message), SOME_DEFAULT_MESSAGE);
-         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+         gtk_style_context_add_class(bannerContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_LOW_ALARM);
       }
       else if (level < AM_BASIC_MID_ALARM)
       { // AM_XXXX_LOW_ALARM == [1:AM_BASIC_MID_ALARM)
          gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_LOW_LABEL_MARKUP);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
-         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_add_class(bannerContext, ALARM_BANNER_CLASS_LOW_ALARM);
       }
       else if (level < AM_BASIC_HIGH_ALARM)
       { // AM_XXXX_MID_ALARM == [AM_BASIC_MID_ALARM:AM_BASIC_HIGH_ALARM)
          gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_MID_LABEL_MARKUP);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
-         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_add_class(bannerContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_LOW_ALARM);
       }
       else
       { // AM_XXXX_HIGH_ALARM == [AM_BASIC_HIGH_ALARM:INT_MAX?)
          gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_HIGH_LABEL_MARKUP);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
-         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
-         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_add_class(bannerContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_remove_class(bannerContext, ALARM_BANNER_CLASS_LOW_ALARM);
       }
    }
 }
