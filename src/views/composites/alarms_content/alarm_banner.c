@@ -6,6 +6,17 @@
 #include "app_globals.h"
 #include "utils/logging.h"
 
+
+#define SOME_DEFAULT_MESSAGE "<b>Markup Allowed Message</b>"
+#define ALARM_LOW_LABEL_MARKUP "<b>LOW</b>"
+#define ALARM_MID_LABEL_MARKUP "<b>MID</b>"
+#define ALARM_HIGH_LABEL_MARKUP "<b>HIGH</b>"
+
+#define ALARM_BANNER_CLASS_NO_ALARM "alarm-none"
+#define ALARM_BANNER_CLASS_LOW_ALARM "alarm-low"
+#define ALARM_BANNER_CLASS_MID_ALARM "alarm-mid"
+#define ALARM_BANNER_CLASS_HIGH_ALARM "alarm-high"
+
 struct _AlarmBanner
 {
    GtkBox   parent;
@@ -19,7 +30,29 @@ struct _AlarmBanner
 
 G_DEFINE_TYPE(AlarmBanner, alarm_banner, GTK_TYPE_BOX)
 
+enum
+{
+   PROP_0 = 0, // Reserved for GObject
+   ALARM_BANNER_PROP_ALARM_LEVEL,
+   ALARM_BANNER_N_PROPERTIES
+};
+
 static void alarm_banner_finalize(GObject *self);
+
+static void alarm_banner_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec )
+{
+   AlarmBanner *model = ALARM_BANNER( object );
+
+   switch( prop_id ) {
+      case ALARM_BANNER_PROP_ALARM_LEVEL:
+         alarm_banner_set_alarm_level( model, g_value_get_int( value ) );
+         break;
+      default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
+   }
+}
+
+static GParamSpec *model_properties[ALARM_BANNER_N_PROPERTIES] = {NULL, };
 
 static void alarm_banner_class_init(AlarmBannerClass *klass)
 {
@@ -29,12 +62,21 @@ static void alarm_banner_class_init(AlarmBannerClass *klass)
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
    gobject_class->finalize = alarm_banner_finalize;
+   gobject_class->set_property = alarm_banner_set_property;
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/resource_path/resources/alarm_banner.ui");
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, banner_hbox);
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, lbl_message);
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, lbl_bullet);
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, banner_icon);
+
+   model_properties[ALARM_BANNER_PROP_ALARM_LEVEL] = g_param_spec_boolean("alarm-level",
+                                                                         "Alarm Level Property",
+                                                                         "Alarm level for binding to a model",
+                                                                         AM_NO_ALARM,
+                                                                         G_PARAM_WRITABLE );
+
+   g_object_class_install_properties( gobject_class, ALARM_BANNER_N_PROPERTIES, model_properties);
 
 }
 
@@ -69,45 +111,45 @@ static void alarm_banner_finalize(GObject *obj)
 
 void alarm_banner_set_alarm_level(AlarmBanner *self, ALARM_MODEL_LEVEL level)
 {
-#define SOME_DEFAULT_MESSAGE "<b>Markup Allowed Message</b>"
-#define ALARM_LOW_LABEL_MARKUP "<b>LOW</b>"
-#define ALARM_MID_LABEL_MARKUP "<b>MID</b>"
-#define ALARM_HIGH_LABEL_MARKUP "<b>HIGH</b>"
-
-   GtkStyleContext *dlgContext;
-   dlgContext = gtk_widget_get_style_context(GTK_WIDGET(self));
-
-   if (level == AM_NO_ALARM)
+   if (level != self->alarm_level)
    {
-      gtk_label_set_markup(GTK_LABEL(self->lbl_message), SOME_DEFAULT_MESSAGE);
-      gtk_style_context_add_class(dlgContext, "alarm-none");
-      gtk_style_context_remove_class(dlgContext, "alarm-high");
-      gtk_style_context_remove_class(dlgContext, "alarm-mid");
-      gtk_style_context_remove_class(dlgContext, "alarm-low");
-   }
-   else if (level < AM_BASIC_MID_ALARM)
-   { // AM_XXXX_LOW_ALARM == [1:AM_BASIC_MID_ALARM)
-      gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_LOW_LABEL_MARKUP);
-      gtk_style_context_remove_class(dlgContext, "alarm-none");
-      gtk_style_context_remove_class(dlgContext, "alarm-high");
-      gtk_style_context_remove_class(dlgContext, "alarm-mid");
-      gtk_style_context_add_class(dlgContext, "alarm-low");
-   }
-   else if (level < AM_BASIC_HIGH_ALARM)
-   { // AM_XXXX_MID_ALARM == [AM_BASIC_MID_ALARM:AM_BASIC_HIGH_ALARM)
-      gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_MID_LABEL_MARKUP);
-      gtk_style_context_remove_class(dlgContext, "alarm-none");
-      gtk_style_context_remove_class(dlgContext, "alarm-high");
-      gtk_style_context_add_class(dlgContext, "alarm-mid");
-      gtk_style_context_remove_class(dlgContext, "alarm-low");
-   }
-   else
-   { // AM_XXXX_HIGH_ALARM == [AM_BASIC_HIGH_ALARM:INT_MAX?)
-      gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_HIGH_LABEL_MARKUP);
-      gtk_style_context_remove_class(dlgContext, "alarm-none");
-      gtk_style_context_add_class(dlgContext, "alarm-high");
-      gtk_style_context_remove_class(dlgContext, "alarm-mid");
-      gtk_style_context_remove_class(dlgContext, "alarm-low");
-   }
+      //ALARM_MODEL_LEVEL previous_level = self->alarm_level;
+      self->alarm_level = level;
 
+      GtkStyleContext *dlgContext;
+      dlgContext = gtk_widget_get_style_context(GTK_WIDGET(self));
+
+      if (level == AM_NO_ALARM)
+      {
+         gtk_label_set_markup(GTK_LABEL(self->lbl_message), SOME_DEFAULT_MESSAGE);
+         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+      }
+      else if (level < AM_BASIC_MID_ALARM)
+      { // AM_XXXX_LOW_ALARM == [1:AM_BASIC_MID_ALARM)
+         gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_LOW_LABEL_MARKUP);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+      }
+      else if (level < AM_BASIC_HIGH_ALARM)
+      { // AM_XXXX_MID_ALARM == [AM_BASIC_MID_ALARM:AM_BASIC_HIGH_ALARM)
+         gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_MID_LABEL_MARKUP);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+      }
+      else
+      { // AM_XXXX_HIGH_ALARM == [AM_BASIC_HIGH_ALARM:INT_MAX?)
+         gtk_label_set_markup(GTK_LABEL(self->lbl_message), ALARM_HIGH_LABEL_MARKUP);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_NO_ALARM);
+         gtk_style_context_add_class(dlgContext, ALARM_BANNER_CLASS_HIGH_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_MID_ALARM);
+         gtk_style_context_remove_class(dlgContext, ALARM_BANNER_CLASS_LOW_ALARM);
+      }
+   }
 }
