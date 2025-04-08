@@ -3,6 +3,7 @@
  */
 #include "root_window.h"
 #include "interfaces/app_interface.h"
+#include "composites/setup_wizard/setup_runner.h"
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 
@@ -32,6 +33,8 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    } else {
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
+
+   execute_sample_timeout_step(NULL);
 }
 
 void set_msgout_buffer(const char *msgout)

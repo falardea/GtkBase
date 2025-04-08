@@ -2,10 +2,21 @@
 <gresources>
     <gresource prefix="/resource_path">
         <!--  -->
-        <file preprocess="xml-stripblanks">resources/this_app_name.glade</file>
-        <file preprocess="xml-stripblanks">resources/alarms_content.ui</file>
-        <file preprocess="xml-stripblanks">resources/alarm_banner.ui</file>
-        <file preprocess="xml-stripblanks">resources/alarm_interface.ui</file>
+        <file alias="this_app_name.glade"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/this_app_name.glade</file>
+        <file alias="alarms_content.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/alarms_content.ui</file>
+        <file alias="alarm_banner.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/alarm_banner.ui</file>
+        <file alias="alarm_interface.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/alarm_interface.ui</file>
+        <file alias="timeout_setup_step.glade"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/timeout_setup_step.glade</file>
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
     </gresource>

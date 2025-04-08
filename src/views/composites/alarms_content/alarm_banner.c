@@ -64,7 +64,7 @@ static void alarm_banner_class_init(AlarmBannerClass *klass)
    gobject_class->finalize = alarm_banner_finalize;
    gobject_class->set_property = alarm_banner_set_property;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/resource_path/resources/alarm_banner.ui");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/resource_path/alarm_banner.ui");
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, banner_hbox);
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, lbl_message);
    gtk_widget_class_bind_template_child(widget_class, AlarmBanner, lbl_bullet);

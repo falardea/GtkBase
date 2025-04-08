@@ -39,7 +39,7 @@ static void alarms_content_class_init(AlarmsContentClass *klass)
 
    gobject_class->finalize = alarms_content_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/resources/alarms_content.ui");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/alarms_content.ui");
    gtk_widget_class_bind_template_child_internal(widget_class, AlarmsContent, content_box);
 
 }

@@ -57,7 +57,7 @@ static void alarm_interface_class_init(AlarmInterfaceClass *klass)
 
    gobject_class->finalize = alarm_interface_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/resource_path/resources/alarm_interface.ui");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/resource_path/alarm_interface.ui");
    gtk_widget_class_bind_template_child(widget_class, AlarmInterface, btn_set_high_alarm);
    gtk_widget_class_bind_template_child(widget_class, AlarmInterface, btn_set_mid_alarm);
    gtk_widget_class_bind_template_child(widget_class, AlarmInterface, btn_set_low_alarm);

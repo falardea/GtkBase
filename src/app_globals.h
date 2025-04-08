@@ -41,6 +41,12 @@ typedef struct {
    GtkWidget   *w_app_content_box;
 
    AlarmsContent *w_alarms_content_root;
+
+
+   GtkWidget   *w_box_sandbox_content;
+   GtkWidget   *w_sample_timeout_step;
+   GtkWidget   *w_secondary_timeout_step;
+
 } app_widget_ref_struct;
 
 extern app_widget_ref_struct *g_app_widget_refs;
