@@ -96,10 +96,15 @@ set(MY_SOURCES
     src/views/composites/alarms_content/alarm_interface.h
     src/views/composites/alarms_content/alarm_model.c
     src/views/composites/alarms_content/alarm_model.h
-      src/views/composites/setup_wizard/step_timeout.c
-      src/views/composites/setup_wizard/step_timeout.h
       src/views/composites/setup_wizard/sequence_runner.c
       src/views/composites/setup_wizard/sequence_runner.h
+      src/views/composites/setup_wizard/step_timeout.c
+      src/views/composites/setup_wizard/step_timeout.h
+      src/views/composites/setup_wizard/step_acknowledge.c
+      src/views/composites/setup_wizard/step_acknowledge.h
+      src/views/composites/setup_wizard/step_executable_interface.c
+      src/views/composites/setup_wizard/step_executable_interface.h
+
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

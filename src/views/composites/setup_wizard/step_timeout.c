@@ -4,6 +4,7 @@
  */
 
 #include "step_timeout.h"
+#include "utils/logging.h"
 
 struct _StepTimeout
 {
@@ -88,6 +89,8 @@ StepTimeout* step_timeout_new(const gchar *step_description,
 
 static void step_timeout_finalize(GObject *g_object)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(STEP_IS_TIMEOUT(g_object));
 

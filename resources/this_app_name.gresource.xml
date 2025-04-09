@@ -14,12 +14,15 @@
         <file alias="alarm_interface.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/alarm_interface.ui</file>
-        <file alias="step_timeout.ui"
-              compressed="true"
-              preprocess="xml-stripblanks">resources/step_timeout.ui</file>
         <file alias="sequence_runner.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/sequence_runner.ui</file>
+        <file alias="step_timeout.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/step_timeout.ui</file>
+        <file alias="step_acknowledge.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/step_acknowledge.ui</file>
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
     </gresource>
