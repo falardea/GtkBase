@@ -7,9 +7,7 @@
 
 #include <glib-object.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define ALARM_TYPE_MODEL              ( alarm_model_get_type( ) )
 
@@ -48,7 +46,5 @@ AlarmModel *alarm_model_new();
 ALARM_MODEL_LEVEL alarm_model_get_alarm_level( AlarmModel *self );
 void alarm_model_set_alarm_level( AlarmModel *self, ALARM_MODEL_LEVEL level );
 
-#ifdef __cplusplus
-}  // closing brace for extern "C"
-#endif
+G_END_DECLS
 #endif  // ALARM_MODEL_H__

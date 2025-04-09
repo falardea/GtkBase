@@ -3,7 +3,7 @@
  */
 #include "root_window.h"
 #include "interfaces/app_interface.h"
-#include "composites/setup_wizard/setup_runner.h"
+#include "composites/setup_wizard/sequence_runner.h"
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 

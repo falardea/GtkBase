@@ -5,6 +5,7 @@
 #define APP_INTERFACE_H__
 #include <stdbool.h>
 #include "app_globals.h"
+G_BEGIN_DECLS
 
 typedef enum {
    APP_STATE_UNINITIALIZED =  -1,
@@ -40,4 +41,5 @@ LOGLEVEL get_app_log_level(void);
 void set_app_run_console_only(bool console_only);
 bool get_app_run_console_only(void);
 
+G_END_DECLS
 #endif  /* APP_INTERFACE_H__ */

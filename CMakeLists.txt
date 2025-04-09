@@ -98,8 +98,8 @@ set(MY_SOURCES
     src/views/composites/alarms_content/alarm_model.h
       src/views/composites/setup_wizard/timeout_setup_step.c
       src/views/composites/setup_wizard/timeout_setup_step.h
-      src/views/composites/setup_wizard/setup_runner.c
-      src/views/composites/setup_wizard/setup_runner.h
+      src/views/composites/setup_wizard/sequence_runner.c
+      src/views/composites/setup_wizard/sequence_runner.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

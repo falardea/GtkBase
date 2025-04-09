@@ -6,7 +6,7 @@
 #include "ui_builder.h"
 #include "utils/logging.h"
 #include "composites/alarms_content/alarms_content.h"
-#include "composites/setup_wizard/setup_runner.h"
+#include "composites/setup_wizard/sequence_runner.h"
 #include "composites/setup_wizard/timeout_setup_step.h"
 
 app_widget_ref_struct *app_builder(void) {

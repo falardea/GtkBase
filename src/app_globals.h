@@ -5,6 +5,7 @@
 #define APP_GLOBALS_H__
 #include <gtk/gtk.h>
 #include "views/composites/alarms_content/alarms_content.h"
+G_BEGIN_DECLS
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -51,4 +52,5 @@ typedef struct {
 
 extern app_widget_ref_struct *g_app_widget_refs;
 
+G_END_DECLS
 #endif  /* APP_GLOBALS_H__ */

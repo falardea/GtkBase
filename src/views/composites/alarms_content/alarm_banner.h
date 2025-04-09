@@ -8,9 +8,7 @@
 #include <gtk/gtk.h>
 #include "alarm_model.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define ALARM_TYPE_BANNER (alarm_banner_get_type())
 
@@ -20,7 +18,5 @@ AlarmBanner *alarm_banner_new();
 
 void alarm_banner_set_alarm_level(AlarmBanner *self, ALARM_MODEL_LEVEL level);
 
-#ifdef __cplusplus
-}  // closing brace for extern "C"
-#endif
+G_END_DECLS
 #endif  // ALARM_BANNER_H__
