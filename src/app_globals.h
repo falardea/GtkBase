@@ -5,6 +5,8 @@
 #define APP_GLOBALS_H__
 #include <gtk/gtk.h>
 #include "views/composites/alarms_content/alarms_content.h"
+#include "views/composites/setup_wizard/sequence_runner.h"
+
 G_BEGIN_DECLS
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
@@ -41,12 +43,8 @@ typedef struct {
 
    GtkWidget   *w_app_content_box;
 
-   AlarmsContent *w_alarms_content_root;
-
-
-   GtkWidget   *w_box_sandbox_content;
-   GtkWidget   *w_sample_timeout_step;
-   GtkWidget   *w_secondary_timeout_step;
+   AlarmsContent  *w_alarms_content_root;
+   SequenceRunner *w_sequence_runner;
 
 } app_widget_ref_struct;
 

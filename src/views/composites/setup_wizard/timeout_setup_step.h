@@ -7,6 +7,7 @@
 #define TIMEOUT_SETUP_STEP_H__
 #include <gtk/gtk.h>
 #include "app_globals.h"
+#include "sequence_runner.h"
 
 G_BEGIN_DECLS
 
@@ -14,12 +15,13 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(TimeoutSetupStep, timeout_setup_step, TIMEOUT, SETUP_STEP, GtkBox)
 
-typedef void (*OnTimoutExpiredCallback_T)(gpointer user_data);
+typedef void (*ValidationCallback_T)(SequenceRunner *parent_sequence, gpointer user_data);
 
-GtkWidget* timeout_setup_step_new(const gchar *step_description,
-                                  guint countdown,
-                                  OnTimoutExpiredCallback_T on_timeout,
-                                  gpointer callback_user_data);
+TimeoutSetupStep* timeout_setup_step_new(const gchar *step_description,
+                                         guint countdown,
+                                         SequenceRunner *parent_sequence,
+                                         ValidationCallback_T on_timeout,
+                                         gpointer callback_user_data);
 
 void timeout_setup_step_execute(TimeoutSetupStep *self);
 

@@ -20,7 +20,7 @@ G_DEFINE_TYPE(AlarmInterface, alarm_interface, GTK_TYPE_BOX)
 
 static guint alarm_interface_signal = 0;
 
-static void alarm_interface_finalize(GObject *self);
+static void alarm_interface_finalize(GObject *g_object);
 
 void (* alarm_interface_signal_cb) (AlarmInterface *self, ALARM_MODEL_LEVEL *level);
 
@@ -92,13 +92,13 @@ AlarmInterface *alarm_interface_new(void)
    return myself;
 }
 
-static void alarm_interface_finalize(GObject *obj)
+static void alarm_interface_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-   g_return_if_fail(obj != NULL);
-   g_return_if_fail(ALARM_INTERFACE(obj));
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(ALARM_INTERFACE(g_object));
 
 
-   G_OBJECT_CLASS(alarm_interface_parent_class)->finalize(obj);
+   G_OBJECT_CLASS(alarm_interface_parent_class)->finalize(g_object);
 }

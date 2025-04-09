@@ -37,7 +37,7 @@ enum
    ALARM_BANNER_N_PROPERTIES
 };
 
-static void alarm_banner_finalize(GObject *self);
+static void alarm_banner_finalize(GObject *g_object);
 
 static void alarm_banner_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec )
 {
@@ -99,14 +99,14 @@ AlarmBanner *alarm_banner_new()
    return myself;
 }
 
-static void alarm_banner_finalize(GObject *obj)
+static void alarm_banner_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-   g_return_if_fail(obj != NULL);
-   g_return_if_fail(ALARM_IS_BANNER(obj));
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(ALARM_IS_BANNER(g_object));
 
-   G_OBJECT_CLASS(alarm_banner_parent_class)->finalize(obj);
+   G_OBJECT_CLASS(alarm_banner_parent_class)->finalize(g_object);
 }
 
 void alarm_banner_set_alarm_level(AlarmBanner *self, ALARM_MODEL_LEVEL level)

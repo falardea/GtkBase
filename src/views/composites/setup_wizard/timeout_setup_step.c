@@ -17,13 +17,15 @@ struct _TimeoutSetupStep
    guint          curr_count;
    gboolean       running;
 
-   void           (*on_timeout_expired)(gpointer user_data);
+   void           (*on_timeout_expired)(SequenceRunner *parent_sequence, gpointer user_data);
    gpointer       callback_user_data;
+
+   SequenceRunner *parent_sequence;
 };
 
 G_DEFINE_TYPE(TimeoutSetupStep, timeout_setup_step, GTK_TYPE_BOX)
 
-static void timeout_setup_step_finalize(GObject *self);
+static void timeout_setup_step_finalize(GObject *g_object);
 
 static gboolean updateTimeoutProgressLabel(gpointer user_data);
 
@@ -52,7 +54,7 @@ static void timeout_setup_step_class_init(TimeoutSetupStepClass *klass)
 
    gobject_class->finalize = timeout_setup_step_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/timeout_setup_step.glade");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/timeout_setup_step.ui");
    gtk_widget_class_bind_template_child(widget_class, TimeoutSetupStep, img_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, TimeoutSetupStep, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, TimeoutSetupStep, pbar_step_countdown);
@@ -64,10 +66,11 @@ static void timeout_setup_step_init(TimeoutSetupStep *self)
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-GtkWidget* timeout_setup_step_new(const gchar *step_description,
-                                  guint countdown,
-                                  OnTimoutExpiredCallback_T on_timeout,
-                                  gpointer callback_user_data)
+TimeoutSetupStep* timeout_setup_step_new(const gchar *step_description,
+                                         guint countdown,
+                                         SequenceRunner *parent_sequence,
+                                         ValidationCallback_T on_timeout,
+                                         gpointer callback_user_data)
 {
    TimeoutSetupStep *tout;
    tout = g_object_new(TIMEOUT_TYPE_SETUP_STEP, NULL);
@@ -76,17 +79,19 @@ GtkWidget* timeout_setup_step_new(const gchar *step_description,
    tout->countdown = countdown;
    tout->on_timeout_expired = on_timeout;
    tout->callback_user_data = callback_user_data;
+   tout->parent_sequence = parent_sequence;
+
    gtk_label_set_text(tout->lbl_step_description, step_description);
 
-   return GTK_WIDGET(tout);
+   return tout;
 }
 
-static void timeout_setup_step_finalize(GObject *self)
+static void timeout_setup_step_finalize(GObject *g_object)
 {
-   g_return_if_fail(self != NULL);
-   g_return_if_fail(TIMEOUT_IS_SETUP_STEP(self));
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(TIMEOUT_IS_SETUP_STEP(g_object));
 
-   G_OBJECT_CLASS (timeout_setup_step_parent_class)->finalize (self);
+   G_OBJECT_CLASS (timeout_setup_step_parent_class)->finalize (g_object);
 }
 
 
@@ -114,7 +119,7 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
    {
       self->running = FALSE;
       timeout_setup_step_update_timeout_label(self);
-      self->on_timeout_expired(self->callback_user_data);
+      self->on_timeout_expired(self->parent_sequence, self->callback_user_data);
       return G_SOURCE_REMOVE;
    }
 }

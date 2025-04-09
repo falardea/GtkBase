@@ -25,7 +25,7 @@ gboolean on_main_wnd_delete_event(__attribute__((unused)) GtkWidget *srcWidget,
    return FALSE;
 }
 
-void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, __attribute__((unused)) gpointer *user_data)
+void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, gpointer *user_data)
 {
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
    if (gtk_entry_buffer_get_length(gtk_entry_get_buffer(GTK_ENTRY(wdgts->w_say_something_entry))) > 0){
@@ -34,7 +34,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
 
-   execute_sample_timeout_step(NULL);
+   sequence_runner_execute(wdgts->w_sequence_runner);
 }
 
 void set_msgout_buffer(const char *msgout)

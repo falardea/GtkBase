@@ -5,21 +5,97 @@
 #include "app_globals.h"
 #include "sequence_runner.h"
 #include "timeout_setup_step.h"
+#include "utils/logging.h"
 
-
-
-void execute_sample_timeout_step(gpointer user_data)
+typedef struct
 {
-   timeout_setup_step_execute(TIMEOUT_SETUP_STEP(g_app_widget_refs->w_sample_timeout_step));
+   TimeoutSetupStep *children[2];
+} SequenceRunnerPrivate;
+
+struct _SequenceRunner
+{
+   GtkBox   parent;
+   GtkBox   *content_box;
+};
+
+G_DEFINE_TYPE_WITH_PRIVATE(SequenceRunner, sequence_runner, GTK_TYPE_BOX)
+
+void sequence_runner_next(SequenceRunner *self, gpointer user_data);
+void sequence_runner_validate(SequenceRunner *self, gpointer user_data);
+
+static void sequence_runner_finalize(GObject *g_object);
+
+static void sequence_runner_class_init(SequenceRunnerClass *klass)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
+   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
+
+   gobject_class->finalize = sequence_runner_finalize;
+
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/sequence_runner.ui");
+   gtk_widget_class_bind_template_child_internal(widget_class, SequenceRunner, content_box);
 }
 
-void on_sample_timeout_step_complete(gpointer user_data)
+static void sequence_runner_init(SequenceRunner *self)
 {
-   g_print("%s: on to step 2\n", __func__);
-   timeout_setup_step_execute(TIMEOUT_SETUP_STEP(g_app_widget_refs->w_secondary_timeout_step));
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   g_type_ensure(SEQUENCE_TYPE_RUNNER);
+
+   gtk_widget_init_template(GTK_WIDGET(self));
+
+   priv->children[0] = timeout_setup_step_new("A sample timeout step", 10,
+                                              self,
+                                              sequence_runner_next, NULL);
+   priv->children[1] = timeout_setup_step_new("A second timeout step", 20,
+                                              self,
+                                              sequence_runner_validate, NULL);
+
+   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[0]), TRUE, TRUE, 0);
+   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[1]), TRUE, TRUE, 0);
 }
 
-void on_secondary_timeout_step_complete(gpointer user_data)
+SequenceRunner *sequence_runner_new()
+{
+   SequenceRunner *myself;
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   myself = g_object_new(SEQUENCE_TYPE_RUNNER, NULL);
+
+   return myself;
+}
+
+static void sequence_runner_finalize(GObject *g_object)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(SEQUENCE_IS_RUNNER(g_object));
+
+   G_OBJECT_CLASS(sequence_runner_parent_class)->finalize(g_object);
+}
+
+void sequence_runner_execute(SequenceRunner *self, gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
+   timeout_setup_step_execute(priv->children[0]);
+}
+
+void sequence_runner_next(SequenceRunner *self, gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
+   timeout_setup_step_execute(priv->children[1]);
+}
+
+void sequence_runner_validate(SequenceRunner *self, gpointer user_data)
 {
    g_print("%s\n", __func__);
 }

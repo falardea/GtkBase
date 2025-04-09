@@ -8,10 +8,15 @@
 
 G_BEGIN_DECLS
 
-void execute_sample_timeout_step(gpointer user_data);
+#define SEQUENCE_TYPE_RUNNER (sequence_runner_get_type())
 
-void on_sample_timeout_step_complete(gpointer user_data);
-void on_secondary_timeout_step_complete(gpointer user_data);
+G_DECLARE_FINAL_TYPE(SequenceRunner, sequence_runner, SEQUENCE, RUNNER, GtkBox)
+
+SequenceRunner *sequence_runner_new();
+
+void sequence_runner_execute();
+
+void sequence_runner_validate_sequence();
 
 G_END_DECLS
 #endif  // SETUP_RUNNER_H__

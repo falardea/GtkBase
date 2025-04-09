@@ -28,7 +28,7 @@ G_DEFINE_TYPE_WITH_PRIVATE(AlarmsContent, alarms_content, GTK_TYPE_BOX)
 
 void alarms_content_handle_alarm_signal(AlarmInterface *self, ALARM_MODEL_LEVEL level, gpointer user_data);
 
-static void alarms_content_finalize(GObject *self);
+static void alarms_content_finalize(GObject *g_object);
 
 static void alarms_content_class_init(AlarmsContentClass *klass)
 {
@@ -78,16 +78,16 @@ AlarmsContent *alarms_content_new()
    return myself;
 }
 
-static void alarms_content_finalize(GObject *obj)
+static void alarms_content_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-   g_return_if_fail(obj != NULL);
-   g_return_if_fail(ALARMS_IS_CONTENT(obj));
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(ALARMS_IS_CONTENT(g_object));
 
-   // AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(obj));
+   // AlarmsContentPrivate *ap = alarms_content_get_instance_private(ALARMS_CONTENT(g_object));
 
-   G_OBJECT_CLASS(alarms_content_parent_class)->finalize(obj);
+   G_OBJECT_CLASS(alarms_content_parent_class)->finalize(g_object);
 }
 
 void alarms_content_handle_alarm_signal(__attribute__((unused))AlarmInterface *self, ALARM_MODEL_LEVEL level, gpointer user_data)
