@@ -2,8 +2,8 @@
  * Created by french on 3/22/25.
  * @brief
  */
-#ifndef SETUP_RUNNER_H__
-#define SETUP_RUNNER_H__
+#ifndef SEQUENCE_RUNNER_H__
+#define SEQUENCE_RUNNER_H__
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -12,6 +12,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(SequenceRunner, sequence_runner, SEQUENCE, RUNNER, GtkBox)
 
+typedef void (*SequenceCallback_T)(SequenceRunner *parent_sequence, gpointer user_data);
+
 SequenceRunner *sequence_runner_new();
 
 void sequence_runner_execute();
@@ -19,4 +21,4 @@ void sequence_runner_execute();
 void sequence_runner_validate_sequence();
 
 G_END_DECLS
-#endif  // SETUP_RUNNER_H__
+#endif  // SEQUENCE_RUNNER_H__

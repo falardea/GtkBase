@@ -14,9 +14,9 @@
         <file alias="alarm_interface.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/alarm_interface.ui</file>
-        <file alias="timeout_setup_step.ui"
+        <file alias="step_timeout.ui"
               compressed="true"
-              preprocess="xml-stripblanks">resources/timeout_setup_step.ui</file>
+              preprocess="xml-stripblanks">resources/step_timeout.ui</file>
         <file alias="sequence_runner.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/sequence_runner.ui</file>

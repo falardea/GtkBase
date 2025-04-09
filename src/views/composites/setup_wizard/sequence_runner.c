@@ -4,12 +4,12 @@
  */
 #include "app_globals.h"
 #include "sequence_runner.h"
-#include "timeout_setup_step.h"
+#include "step_timeout.h"
 #include "utils/logging.h"
 
 typedef struct
 {
-   TimeoutSetupStep *children[2];
+   StepTimeout *children[2];
 } SequenceRunnerPrivate;
 
 struct _SequenceRunner
@@ -47,10 +47,10 @@ static void sequence_runner_init(SequenceRunner *self)
 
    gtk_widget_init_template(GTK_WIDGET(self));
 
-   priv->children[0] = timeout_setup_step_new("A sample timeout step", 10,
+   priv->children[0] = step_timeout_new("A sample timeout step", 10,
                                               self,
                                               sequence_runner_next, NULL);
-   priv->children[1] = timeout_setup_step_new("A second timeout step", 20,
+   priv->children[1] = step_timeout_new("A second timeout step", 20,
                                               self,
                                               sequence_runner_validate, NULL);
 
@@ -84,7 +84,7 @@ void sequence_runner_execute(SequenceRunner *self, gpointer user_data)
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-   timeout_setup_step_execute(priv->children[0]);
+   step_timeout_execute(priv->children[0]);
 }
 
 void sequence_runner_next(SequenceRunner *self, gpointer user_data)
@@ -92,7 +92,7 @@ void sequence_runner_next(SequenceRunner *self, gpointer user_data)
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-   timeout_setup_step_execute(priv->children[1]);
+   step_timeout_execute(priv->children[1]);
 }
 
 void sequence_runner_validate(SequenceRunner *self, gpointer user_data)
