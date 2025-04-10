@@ -8,6 +8,7 @@
 #include <gtk/gtk.h>
 #include "app_globals.h"
 #include "sequence_runner.h"
+#include "step_executable_interface.h"
 
 G_BEGIN_DECLS
 
@@ -20,8 +21,6 @@ StepTimeout* step_timeout_new(const gchar *step_description,
                               SequenceRunner *parent_sequence,
                               SequenceCallback_T on_timeout,
                               gpointer callback_user_data);
-
-void step_timeout_execute(StepTimeout *self);
 
 G_END_DECLS
 #endif  // STEP_TIMEOUT_H__

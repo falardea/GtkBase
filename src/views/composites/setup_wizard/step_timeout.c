@@ -24,28 +24,45 @@ struct _StepTimeout
    SequenceRunner *parent_sequence;
 };
 
-G_DEFINE_TYPE(StepTimeout, step_timeout, GTK_TYPE_BOX)
-
-static void step_timeout_finalize(GObject *g_object);
-
+static void step_timeout_update_timeout_label(StepTimeout *self);
 static gboolean updateTimeoutProgressLabel(gpointer user_data);
 
-static void step_timeout_update_timeout_label(StepTimeout *self);
-
-void step_timeout_execute(StepTimeout *self)
+void step_timeout_execute(StepExecutable *self)
 {
-   if (!self->running)
+   StepTimeout *st = STEP_TIMEOUT(self);
+
+   if (!st->running)
    {
-      self->running = TRUE;
-      self->curr_count = self->countdown;
-      step_timeout_update_timeout_label(self);
-      gdk_threads_add_timeout_seconds(1, (GSourceFunc)updateTimeoutProgressLabel, (gpointer)self);
+      st->running = TRUE;
+      st->curr_count = st->countdown;
+      step_timeout_update_timeout_label(st);
+      gdk_threads_add_timeout_seconds(1, (GSourceFunc)updateTimeoutProgressLabel, (gpointer)st);
    }
    else
    {
-      g_print("STEP(%s) is already running\n", gtk_label_get_text(self->lbl_step_description));
+      g_print("STEP(%s) is already running\n", gtk_label_get_text(st->lbl_step_description));
    }
+}
 
+static void step_timeout_executable_interface_init(StepExecutableInterface *iface)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   g_return_if_fail(iface != NULL);
+   iface->execute = step_timeout_execute;
+}
+
+G_DEFINE_TYPE_WITH_CODE(StepTimeout, step_timeout, GTK_TYPE_BOX,
+                        G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE,
+                                               step_timeout_executable_interface_init))
+
+static void step_timeout_finalize(GObject *g_object)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(STEP_IS_TIMEOUT(g_object));
+
+   G_OBJECT_CLASS (step_timeout_parent_class)->finalize (g_object);
 }
 
 static void step_timeout_class_init(StepTimeoutClass *klass)
@@ -64,6 +81,10 @@ static void step_timeout_class_init(StepTimeoutClass *klass)
 
 static void step_timeout_init(StepTimeout *self)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   g_type_ensure(STEP_TYPE_EXECUTABLE);
+
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
@@ -73,6 +94,7 @@ StepTimeout* step_timeout_new(const gchar *step_description,
                                          SequenceCallback_T on_timeout,
                                          gpointer callback_user_data)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    StepTimeout *tout;
    tout = g_object_new(STEP_TYPE_TIMEOUT, NULL);
 
@@ -85,16 +107,6 @@ StepTimeout* step_timeout_new(const gchar *step_description,
    gtk_label_set_text(tout->lbl_step_description, step_description);
 
    return tout;
-}
-
-static void step_timeout_finalize(GObject *g_object)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(STEP_IS_TIMEOUT(g_object));
-
-   G_OBJECT_CLASS (step_timeout_parent_class)->finalize (g_object);
 }
 
 static gboolean updateTimeoutProgressLabel(gpointer user_data)

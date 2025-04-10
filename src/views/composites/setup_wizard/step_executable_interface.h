@@ -17,6 +17,8 @@ struct _StepExecutableInterface
 {
    GTypeInterface g_iface;
    void (*execute) (StepExecutable *self);
+
+   gpointer padding[10];
 };
 
 void step_executable_execute(StepExecutable *self);

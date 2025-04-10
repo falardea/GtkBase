@@ -87,7 +87,7 @@ void sequence_runner_execute(SequenceRunner *self, __attribute__((unused)) gpoin
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
    // Next
-   step_timeout_execute(priv->children[0]);
+   step_executable_execute(STEP_EXECUTABLE(priv->children[0]));
 }
 
 void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
@@ -95,7 +95,7 @@ void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointe
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
    // Next
-   step_timeout_execute(priv->children[1]);
+   step_executable_execute(STEP_EXECUTABLE(priv->children[1]));
 }
 
 void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
