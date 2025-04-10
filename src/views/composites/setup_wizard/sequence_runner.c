@@ -27,7 +27,15 @@ void sequence_runner_first(SequenceRunner *self, gpointer user_data);
 void sequence_runner_second(SequenceRunner *self, gpointer user_data);
 void sequence_runner_third(SequenceRunner *self, gpointer user_data);
 
-static void sequence_runner_finalize(GObject *g_object);
+static void sequence_runner_finalize(GObject *g_object)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   g_return_if_fail(g_object != NULL);
+   g_return_if_fail(SEQUENCE_IS_RUNNER(g_object));
+
+   G_OBJECT_CLASS(sequence_runner_parent_class)->finalize(g_object);
+}
 
 static void sequence_runner_class_init(SequenceRunnerClass *klass)
 {
@@ -60,6 +68,7 @@ static void sequence_runner_init(SequenceRunner *self)
 
    gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[0]), TRUE, TRUE, 0);
    gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[1]), TRUE, TRUE, 0);
+   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->ack_step), TRUE, TRUE, 0);
 }
 
 SequenceRunner *sequence_runner_new()
@@ -73,17 +82,7 @@ SequenceRunner *sequence_runner_new()
    return myself;
 }
 
-static void sequence_runner_finalize(GObject *g_object)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(SEQUENCE_IS_RUNNER(g_object));
-
-   G_OBJECT_CLASS(sequence_runner_parent_class)->finalize(g_object);
-}
-
-void sequence_runner_execute(SequenceRunner *self, gpointer user_data)
+void sequence_runner_execute(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
@@ -91,7 +90,7 @@ void sequence_runner_execute(SequenceRunner *self, gpointer user_data)
    step_timeout_execute(priv->children[0]);
 }
 
-void sequence_runner_first(SequenceRunner *self, gpointer user_data)
+void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
@@ -99,15 +98,12 @@ void sequence_runner_first(SequenceRunner *self, gpointer user_data)
    step_timeout_execute(priv->children[1]);
 }
 
-void sequence_runner_second(SequenceRunner *self, gpointer user_data)
+void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-   // Next
-   step_executable_execute(STEP_EXECUTABLE(priv->ack_step));
 }
 
-void sequence_runner_third(SequenceRunner *self, gpointer user_data)
+void sequence_runner_third(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }

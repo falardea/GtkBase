@@ -7,16 +7,19 @@
 #define STEP_EXECUTABLE_INTERFACE_H__
 #include <glib-object.h>
 
-#define STEP_TYPE_EXECUTABLE (step_executable_get_type())
+G_BEGIN_DECLS
 
-G_DECLARE_INTERFACE(StepExecutable, step_executable, STEP, EXECUTABLE, GObject)
+#define STEP_TYPE_EXECUTABLE     (step_executable_get_type())
 
-typedef struct _StepExecutableInterface
+G_DECLARE_INTERFACE (StepExecutable, step_executable, STEP, EXECUTABLE, GObject)
+
+struct _StepExecutableInterface
 {
-   GTypeInstance parent;
+   GTypeInterface g_iface;
    void (*execute) (StepExecutable *self);
-}StepExecutableInterface;
+};
 
 void step_executable_execute(StepExecutable *self);
 
+G_END_DECLS
 #endif  // STEP_EXECUTABLE_INTERFACE_H__

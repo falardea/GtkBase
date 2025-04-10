@@ -7,6 +7,7 @@
 #define STEP_ACKNOWLEDGE_H__
 #include <gtk/gtk.h>
 #include "app_globals.h"
+#include "sequence_runner.h"
 
 G_BEGIN_DECLS
 

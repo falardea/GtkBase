@@ -13,7 +13,6 @@ struct _StepAcknowledge
    GtkImage    *img_step_bullet;
    GtkLabel    *lbl_step_description;
    GtkButton   *btn_acknowledge;
-   GtkButton   *btn_skip;
 
    void        (*on_user_acknowledge)(SequenceRunner *parent_sequence, gpointer user_data);
    gpointer    callback_user_data;
@@ -21,38 +20,40 @@ struct _StepAcknowledge
    SequenceRunner *parent_sequence;
 };
 
-void on_btn_acknowledge_clicked(GtkButton *button, gpointer user_data)
+
+static void step_acknowledge_execute(StepExecutable *self)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-}
-void on_btn_skip_clicked(GtkButton *button, gpointer user_data)
-{
-  logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-}
-static void step_acknowledge_iface_mapped_execute()
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   StepAcknowledge *ack = STEP_ACKNOWLEDGE(self);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, gtk_label_get_label(ack->lbl_step_description));
+   ack->on_user_acknowledge(ack->parent_sequence, ack->callback_user_data);
 }
 
-static void step_acknowledge_interface_init(StepExecutableInterface *iface);
+static void step_acknowledge_executable_interface_init(StepExecutableInterface *iface)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   g_return_if_fail(iface != NULL);
+   iface->execute = step_acknowledge_execute;
+}
 
 G_DEFINE_TYPE_WITH_CODE(StepAcknowledge, step_acknowledge, GTK_TYPE_BOX,
-                        G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE, step_acknowledge_interface_init))
-
-static void step_acknowledge_interface_init(StepExecutableInterface *iface)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s\n", __func__);
-   iface->execute = step_acknowledge_iface_mapped_execute;
-}
+                        G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE,
+                                               step_acknowledge_executable_interface_init))
 
 static void step_acknowledge_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    g_return_if_fail(g_object != NULL);
-   g_return_if_fail(SEQUENCE_IS_RUNNER(g_object));
+   g_return_if_fail(STEP_IS_ACKNOWLEDGE(g_object));
 
    G_OBJECT_CLASS(step_acknowledge_parent_class)->finalize(g_object);
+}
+
+void on_btn_acknowledge_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
+{
+   StepAcknowledge *sa = STEP_ACKNOWLEDGE(user_data);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   step_executable_execute(STEP_EXECUTABLE(sa));
 }
 
 static void step_acknowledge_class_init(StepAcknowledgeClass *klass)
@@ -68,10 +69,8 @@ static void step_acknowledge_class_init(StepAcknowledgeClass *klass)
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, img_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, btn_acknowledge);
-   gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, btn_skip);
 
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_acknowledge_clicked", (GCallback)on_btn_acknowledge_clicked);
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_skip_clicked", (GCallback)on_btn_skip_clicked);
 }
 
 static void step_acknowledge_init(StepAcknowledge *self)
