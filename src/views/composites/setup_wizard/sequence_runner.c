@@ -82,9 +82,9 @@ static void sequence_runner_init(SequenceRunner *self)
    priv->children[0] = STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3,
                                                         self, sequence_runner_first, NULL));
    priv->children[1] = STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2,
-                                        self, sequence_runner_second, NULL));
+                                                        self, sequence_runner_second, NULL));
    priv->children[2] = STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step",
-                                         "NEXT", self, sequence_runner_third, NULL));
+                                                            "NEXT", self, sequence_runner_third, NULL));
 
    gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[0]), TRUE, TRUE, 0);
    gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[1]), TRUE, TRUE, 0);
@@ -101,8 +101,6 @@ SequenceRunner *sequence_runner_new()
 
    return myself;
 }
-
-
 
 void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {

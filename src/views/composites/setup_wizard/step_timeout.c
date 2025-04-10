@@ -9,7 +9,7 @@
 struct _StepTimeout
 {
    GtkBox         parent;
-   GtkImage       *img_step_bullet;
+   GtkLabel       *lbl_step_bullet;
    GtkLabel       *lbl_step_description;
    GtkProgressBar *pbar_step_countdown;
    GtkLabel       *lbl_step_countdown;
@@ -31,6 +31,7 @@ void step_timeout_execute(StepExecutable *self)
 {
    StepTimeout *st = STEP_TIMEOUT(self);
 
+   gtk_label_set_markup(st->lbl_step_bullet, BLUE_SELECTED_BULLET_FORMAT_STR);
    if (!st->running)
    {
       st->running = TRUE;
@@ -73,7 +74,7 @@ static void step_timeout_class_init(StepTimeoutClass *klass)
    gobject_class->finalize = step_timeout_finalize;
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/step_timeout.ui");
-   gtk_widget_class_bind_template_child(widget_class, StepTimeout, img_step_bullet);
+   gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, pbar_step_countdown);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_countdown);
@@ -105,6 +106,7 @@ StepTimeout* step_timeout_new(const gchar *step_description,
    tout->parent_sequence = parent_sequence;
 
    gtk_label_set_text(tout->lbl_step_description, step_description);
+   gtk_label_set_markup(tout->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
 
    return tout;
 }
@@ -132,6 +134,7 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
    else
    {
       self->running = FALSE;
+      gtk_label_set_markup(self->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
       step_timeout_update_timeout_label(self);
       self->on_timeout_expired(self->parent_sequence, self->callback_user_data);
       return G_SOURCE_REMOVE;

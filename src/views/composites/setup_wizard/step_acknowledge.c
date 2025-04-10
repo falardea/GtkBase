@@ -10,7 +10,7 @@
 struct _StepAcknowledge
 {
    GtkBox      parent;
-   GtkImage    *img_step_bullet;
+   GtkLabel    *lbl_step_bullet;
    GtkLabel    *lbl_step_description;
    GtkButton   *btn_acknowledge;
 
@@ -20,11 +20,11 @@ struct _StepAcknowledge
    SequenceRunner *parent_sequence;
 };
 
-
 static void step_acknowledge_execute(StepExecutable *self)
 {
    StepAcknowledge *sa = STEP_ACKNOWLEDGE(self);
    logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, gtk_label_get_label(sa->lbl_step_description));
+   gtk_label_set_markup(sa->lbl_step_bullet, BLUE_SELECTED_BULLET_FORMAT_STR);
    gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_acknowledge), TRUE);
 }
 
@@ -54,6 +54,7 @@ void on_btn_acknowledge_clicked(__attribute__((unused)) GtkButton *button, gpoin
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    StepAcknowledge *sa = STEP_ACKNOWLEDGE(user_data);
    gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_acknowledge), FALSE);
+   gtk_label_set_markup(sa->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
    sa->on_user_acknowledge(sa->parent_sequence, sa->callback_user_data);
 }
 
@@ -67,7 +68,7 @@ static void step_acknowledge_class_init(StepAcknowledgeClass *klass)
    gobject_class->finalize = step_acknowledge_finalize;
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/step_acknowledge.ui");
-   gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, img_step_bullet);
+   gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, lbl_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, btn_acknowledge);
 
@@ -101,6 +102,7 @@ StepAcknowledge *step_acknowledge_new(const gchar *step_description,
    gtk_button_set_label(sa->btn_acknowledge, btn_label_str);
 
    gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_acknowledge), FALSE);
+   gtk_label_set_markup(sa->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
 
    return sa;
 }
