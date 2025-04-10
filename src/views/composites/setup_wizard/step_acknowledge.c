@@ -23,9 +23,9 @@ struct _StepAcknowledge
 
 static void step_acknowledge_execute(StepExecutable *self)
 {
-   StepAcknowledge *ack = STEP_ACKNOWLEDGE(self);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, gtk_label_get_label(ack->lbl_step_description));
-   ack->on_user_acknowledge(ack->parent_sequence, ack->callback_user_data);
+   StepAcknowledge *sa = STEP_ACKNOWLEDGE(self);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, gtk_label_get_label(sa->lbl_step_description));
+   gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_acknowledge), TRUE);
 }
 
 static void step_acknowledge_executable_interface_init(StepExecutableInterface *iface)
@@ -51,9 +51,10 @@ static void step_acknowledge_finalize(GObject *g_object)
 
 void on_btn_acknowledge_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
-   StepAcknowledge *sa = STEP_ACKNOWLEDGE(user_data);
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   step_executable_execute(STEP_EXECUTABLE(sa));
+   StepAcknowledge *sa = STEP_ACKNOWLEDGE(user_data);
+   gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_acknowledge), FALSE);
+   sa->on_user_acknowledge(sa->parent_sequence, sa->callback_user_data);
 }
 
 static void step_acknowledge_class_init(StepAcknowledgeClass *klass)
@@ -98,6 +99,8 @@ StepAcknowledge *step_acknowledge_new(const gchar *step_description,
 
    gtk_label_set_text(sa->lbl_step_description, step_description);
    gtk_button_set_label(sa->btn_acknowledge, btn_label_str);
+
+   gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_acknowledge), FALSE);
 
    return sa;
 }

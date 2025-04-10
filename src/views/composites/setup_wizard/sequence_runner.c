@@ -84,7 +84,7 @@ SequenceRunner *sequence_runner_new()
 
 void sequence_runner_execute(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: SEQUENCE START", __func__);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
    // Next
    step_executable_execute(STEP_EXECUTABLE(priv->children[0]));
@@ -98,12 +98,14 @@ void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointe
    step_executable_execute(STEP_EXECUTABLE(priv->children[1]));
 }
 
-void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
+void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
+   step_executable_execute(STEP_EXECUTABLE(priv->ack_step));
 }
 
 void sequence_runner_third(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: DONE", __func__);
 }
