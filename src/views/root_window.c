@@ -4,6 +4,7 @@
 #include "root_window.h"
 #include "interfaces/app_interface.h"
 #include "composites/setup_wizard/sequence_runner.h"
+#include "composites/setup_wizard/step_executable_interface.h"
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 
@@ -34,7 +35,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, g
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
 
-   sequence_runner_execute(wdgts->w_sequence_runner);
+   step_executable_execute(STEP_EXECUTABLE(wdgts->w_sequence_runner));
 }
 
 void set_msgout_buffer(const char *msgout)

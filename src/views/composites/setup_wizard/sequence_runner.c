@@ -21,7 +21,28 @@ struct _SequenceRunner
    GtkBox   *content_box;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(SequenceRunner, sequence_runner, GTK_TYPE_BOX)
+void sequence_runner_execute(StepExecutable *self);
+
+static void sequence_runner_executable_interface_init(StepExecutableInterface *iface)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   g_return_if_fail(iface != NULL);
+   iface->execute = sequence_runner_execute;
+}
+
+G_DEFINE_TYPE_WITH_CODE(SequenceRunner, sequence_runner, GTK_TYPE_BOX,
+                        G_ADD_PRIVATE(SequenceRunner)
+                              G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE,
+                                                     sequence_runner_executable_interface_init))
+
+void sequence_runner_execute(StepExecutable *self)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: SEQUENCE START", __func__);
+   SequenceRunner *sr = SEQUENCE_RUNNER(self);
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(sr);
+   // Next
+   step_executable_execute(STEP_EXECUTABLE(priv->children[0]));
+}
 
 void sequence_runner_first(SequenceRunner *self, gpointer user_data);
 void sequence_runner_second(SequenceRunner *self, gpointer user_data);
@@ -82,13 +103,7 @@ SequenceRunner *sequence_runner_new()
    return myself;
 }
 
-void sequence_runner_execute(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: SEQUENCE START", __func__);
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-   // Next
-   step_executable_execute(STEP_EXECUTABLE(priv->children[0]));
-}
+
 
 void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {

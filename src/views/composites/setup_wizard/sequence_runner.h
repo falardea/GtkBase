@@ -16,9 +16,5 @@ typedef void (*SequenceCallback_T)(SequenceRunner *parent_sequence, gpointer use
 
 SequenceRunner *sequence_runner_new();
 
-void sequence_runner_execute();
-
-void sequence_runner_validate_sequence();
-
 G_END_DECLS
 #endif  // SEQUENCE_RUNNER_H__
