@@ -8,3 +8,13 @@ window {
   color: $light-base-bg;
   font-size: 18px;
 }
+
+#progress-box
+{
+  progressbar text{
+    color: $base-fg;
+    background-color: $base-bg;
+    background-image: none;
+  }
+
+}

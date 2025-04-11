@@ -12,7 +12,6 @@ struct _StepTimeout
    GtkLabel       *lbl_step_bullet;
    GtkLabel       *lbl_step_description;
    GtkProgressBar *pbar_step_countdown;
-   GtkLabel       *lbl_step_countdown;
 
    guint          countdown;
    guint          curr_count;
@@ -24,7 +23,8 @@ struct _StepTimeout
    SequenceRunner *parent_sequence;
 };
 
-static void step_timeout_update_timeout_label(StepTimeout *self);
+static void step_timeout_update_progress(StepTimeout *self);
+static void step_timeout_set_progress_complete(StepTimeout *self);
 static gboolean updateTimeoutProgressLabel(gpointer user_data);
 
 void step_timeout_execute(StepExecutable *self)
@@ -36,7 +36,7 @@ void step_timeout_execute(StepExecutable *self)
    {
       st->running = TRUE;
       st->curr_count = st->countdown;
-      step_timeout_update_timeout_label(st);
+//      step_timeout_update_progress(st);
       gdk_threads_add_timeout_seconds(1, (GSourceFunc)updateTimeoutProgressLabel, (gpointer)st);
    }
    else
@@ -77,7 +77,6 @@ static void step_timeout_class_init(StepTimeoutClass *klass)
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, pbar_step_countdown);
-   gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_countdown);
 }
 
 static void step_timeout_init(StepTimeout *self)
@@ -96,19 +95,24 @@ StepTimeout* step_timeout_new(const gchar *step_description,
                                          gpointer callback_user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   StepTimeout *tout;
-   tout = g_object_new(STEP_TYPE_TIMEOUT, NULL);
+   StepTimeout *st;
+   st = g_object_new(STEP_TYPE_TIMEOUT, NULL);
 
-   tout->running = FALSE;
-   tout->countdown = countdown;
-   tout->on_timeout_expired = on_timeout;
-   tout->callback_user_data = callback_user_data;
-   tout->parent_sequence = parent_sequence;
+   st->running = FALSE;
+   st->countdown = countdown;
+   st->on_timeout_expired = on_timeout;
+   st->callback_user_data = callback_user_data;
+   st->parent_sequence = parent_sequence;
 
-   gtk_label_set_text(tout->lbl_step_description, step_description);
-   gtk_label_set_markup(tout->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
+   gtk_label_set_text(st->lbl_step_description, step_description);
+   gtk_label_set_markup(st->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
 
-   return tout;
+   char progress_str[64];
+   snprintf(progress_str, sizeof(progress_str), "%d s", st->countdown);
+   gtk_progress_bar_set_text(st->pbar_step_countdown, progress_str);
+   gtk_progress_bar_set_fraction(st->pbar_step_countdown, 0.0);
+
+   return st;
 }
 
 static gboolean updateTimeoutProgressLabel(gpointer user_data)
@@ -121,13 +125,13 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
    if (self->curr_count > 0)
    {
       // Timeout continuing, update the countdown text
-      if (GTK_IS_LABEL(self->lbl_step_countdown))
+      if (GTK_IS_PROGRESS_BAR(self->pbar_step_countdown))
       {
-         step_timeout_update_timeout_label(self);
+         step_timeout_update_progress(self);
       }
       else
       {
-         g_print("%s: self->lbl_step_countdown is not a label\n", __func__);
+         g_print("%s: self->pbar_step_countdown is not a label\n", __func__);
       }
       return G_SOURCE_CONTINUE;
    }
@@ -135,15 +139,28 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
    {
       self->running = FALSE;
       gtk_label_set_markup(self->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
-      step_timeout_update_timeout_label(self);
+      step_timeout_set_progress_complete(self);
       self->on_timeout_expired(self->parent_sequence, self->callback_user_data);
       return G_SOURCE_REMOVE;
    }
 }
 
-static void step_timeout_update_timeout_label(StepTimeout *self)
+static void step_timeout_update_progress(StepTimeout *self)
 {
    char buf[64];
-   snprintf(buf, sizeof(buf), "%ds", self->curr_count);
-   gtk_label_set_text(GTK_LABEL(self->lbl_step_countdown), buf);
+   snprintf(buf, sizeof(buf), "%d s", self->curr_count);
+
+   gdouble tick_val = (self->countdown > 0) ? 1.0-(self->curr_count/(gdouble)self->countdown) : (gdouble)self->countdown;
+
+   gtk_progress_bar_set_text(self->pbar_step_countdown, buf);
+   gtk_progress_bar_set_fraction(self->pbar_step_countdown, tick_val);
+}
+
+static void step_timeout_set_progress_complete(StepTimeout *self)
+{
+   char buf[64];
+   snprintf(buf, sizeof(buf), "%s", "COMPLETE");
+
+   gtk_progress_bar_set_text(self->pbar_step_countdown, buf);
+   gtk_progress_bar_set_fraction(self->pbar_step_countdown, 1);
 }

@@ -11,7 +11,7 @@ G_BEGIN_DECLS
 //#define BLUE_BULLET_FORMAT_STR           BLUE_FORMAT_STR(" \u2022")  // Note the intentional space for alignment
 
 #define BLUE_FORMAT_STR(x)               "<span foreground='#0228b1' size='xx-large'>" x "</span>"
-#define BLUE_BULLET_FORMAT_STR           BLUE_FORMAT_STR("\u2022")
+#define BLUE_BULLET_FORMAT_STR           BLUE_FORMAT_STR(" \u2022")
 #define BLUE_SELECTED_BULLET_FORMAT_STR  BLUE_FORMAT_STR("\u25ba")
 
 #define SEQUENCE_TYPE_RUNNER (sequence_runner_get_type())
