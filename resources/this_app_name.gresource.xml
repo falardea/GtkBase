@@ -23,6 +23,9 @@
         <file alias="step_acknowledge.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/step_acknowledge.ui</file>
+        <file alias="step_sequence.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/step_sequence.ui</file>
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
     </gresource>

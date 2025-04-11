@@ -104,6 +104,8 @@ set(MY_SOURCES
       src/views/composites/setup_wizard/step_acknowledge.h
       src/views/composites/setup_wizard/step_executable_interface.c
       src/views/composites/setup_wizard/step_executable_interface.h
+      src/views/composites/setup_wizard/step_sequence.c
+      src/views/composites/setup_wizard/step_sequence.h
 
 )
 

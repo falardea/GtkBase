@@ -36,7 +36,6 @@ void step_timeout_execute(StepExecutable *self)
    {
       st->running = TRUE;
       st->curr_count = st->countdown;
-//      step_timeout_update_progress(st);
       gdk_threads_add_timeout_seconds(1, (GSourceFunc)updateTimeoutProgressLabel, (gpointer)st);
    }
    else

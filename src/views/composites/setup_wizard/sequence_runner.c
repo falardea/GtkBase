@@ -7,6 +7,7 @@
 #include "step_executable_interface.h"
 #include "step_acknowledge.h"
 #include "step_timeout.h"
+#include "step_sequence.h"
 #include "utils/logging.h"
 
 typedef struct
@@ -79,16 +80,18 @@ static void sequence_runner_init(SequenceRunner *self)
 
    gtk_widget_init_template(GTK_WIDGET(self));
 
-   priv->children[0] = STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3,
-                                                        self, sequence_runner_first, NULL));
-   priv->children[1] = STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2,
-                                                        self, sequence_runner_second, NULL));
-   priv->children[2] = STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step",
-                                                            "NEXT", self, sequence_runner_third, NULL));
+//   priv->children[0] = STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3,
+//                                                        self, sequence_runner_first, NULL));
+//   priv->children[1] = STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2,
+//                                                        self, sequence_runner_second, NULL));
+//   priv->children[2] = STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step",
+//                                                            "NEXT", self, sequence_runner_third, NULL));
+   priv->children[0] = STEP_EXECUTABLE(step_sequence_new("An acknowledgement Step",
+                                                         "START SEQUENCE", self, sequence_runner_third, NULL));
 
    gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[0]), TRUE, TRUE, 0);
-   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[1]), TRUE, TRUE, 0);
-   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[2]), TRUE, TRUE, 0);
+//   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[1]), TRUE, TRUE, 0);
+//   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[2]), TRUE, TRUE, 0);
 }
 
 SequenceRunner *sequence_runner_new()
@@ -110,7 +113,7 @@ void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointe
    step_executable_execute(STEP_EXECUTABLE(priv->children[1]));
 }
 
-void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, gpointer user_data)
+void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
