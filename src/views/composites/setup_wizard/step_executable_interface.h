@@ -13,15 +13,17 @@ G_BEGIN_DECLS
 
 G_DECLARE_INTERFACE (StepExecutable, step_executable, STEP, EXECUTABLE, GObject)
 
+typedef void (*ExecutableCallback_T)(StepExecutable *parent_sequence, gpointer user_data);
+
 struct _StepExecutableInterface
 {
    GTypeInterface g_iface;
-   void (*execute) (StepExecutable *self);
+   void (*execute) (StepExecutable *self, gpointer user_data);
 
    gpointer padding[10];
 };
 
-void step_executable_execute(StepExecutable *self);
+void step_executable_execute(StepExecutable *self, gpointer user_data);
 
 G_END_DECLS
 #endif  // STEP_EXECUTABLE_INTERFACE_H__

@@ -10,18 +10,24 @@
 #include "step_sequence.h"
 #include "utils/logging.h"
 
+#define SEQUENCE_RUNNER_N_STEPS 4
 typedef struct
 {
-   StepExecutable *children[3];
+   StepExecutable *children[SEQUENCE_RUNNER_N_STEPS];
+   size_t         n_children;
+   guint          curr_step;
 } SequenceRunnerPrivate;
 
 struct _SequenceRunner
 {
    GtkBox   parent;
    GtkBox   *content_box;
+
+   void        (*on_complete)(StepExecutable *parent_sequence, gpointer user_data);
+   gpointer    callback_user_data;
 };
 
-void sequence_runner_execute(StepExecutable *self);
+void sequence_runner_execute(StepExecutable *self, gpointer user_data);
 
 static void sequence_runner_executable_interface_init(StepExecutableInterface *iface)
 {
@@ -32,21 +38,36 @@ static void sequence_runner_executable_interface_init(StepExecutableInterface *i
 
 G_DEFINE_TYPE_WITH_CODE(SequenceRunner, sequence_runner, GTK_TYPE_BOX,
                         G_ADD_PRIVATE(SequenceRunner)
-                              G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE,
-                                                     sequence_runner_executable_interface_init))
+                        G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE,
+                                               sequence_runner_executable_interface_init))
 
-void sequence_runner_execute(StepExecutable *self)
+void sequence_runner_execute(StepExecutable *self, gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s: SEQUENCE START", __func__);
    SequenceRunner *sr = SEQUENCE_RUNNER(self);
    SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(sr);
-   // Next
-   step_executable_execute(STEP_EXECUTABLE(priv->children[0]));
-}
 
-void sequence_runner_first(SequenceRunner *self, gpointer user_data);
-void sequence_runner_second(SequenceRunner *self, gpointer user_data);
-void sequence_runner_third(SequenceRunner *self, gpointer user_data);
+   if (priv->curr_step == 0)
+   {
+      // We're on the first step or we
+      step_executable_execute(STEP_EXECUTABLE(priv->children[priv->curr_step]), user_data);
+      priv->curr_step++;
+   }
+   else if (priv->curr_step < priv->n_children)
+   {
+      gtk_widget_set_visible(GTK_WIDGET(priv->children[priv->curr_step-1]), FALSE);
+      gtk_widget_set_visible(GTK_WIDGET(priv->children[priv->curr_step]), TRUE);
+      step_executable_execute(STEP_EXECUTABLE(priv->children[priv->curr_step]), user_data);
+      priv->curr_step++;
+   }
+   else
+   {
+      gtk_widget_set_visible(GTK_WIDGET(priv->children[priv->curr_step-1]), FALSE);
+      priv->curr_step = 0;
+      gtk_widget_set_visible(GTK_WIDGET(priv->children[priv->curr_step]), TRUE);
+      sr->on_complete(NULL, user_data);
+   }
+}
 
 static void sequence_runner_finalize(GObject *g_object)
 {
@@ -54,6 +75,9 @@ static void sequence_runner_finalize(GObject *g_object)
 
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(SEQUENCE_IS_RUNNER(g_object));
+
+   // SequenceRunner *sr = SEQUENCE_RUNNER(g_object);
+   // SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(sr);
 
    G_OBJECT_CLASS(sequence_runner_parent_class)->finalize(g_object);
 }
@@ -73,54 +97,52 @@ static void sequence_runner_class_init(SequenceRunnerClass *klass)
 
 static void sequence_runner_init(SequenceRunner *self)
 {
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-   g_type_ensure(STEP_TYPE_TIMEOUT);
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
 
    gtk_widget_init_template(GTK_WIDGET(self));
 
-//   priv->children[0] = STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3,
-//                                                        self, sequence_runner_first, NULL));
-//   priv->children[1] = STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2,
-//                                                        self, sequence_runner_second, NULL));
-//   priv->children[2] = STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step",
-//                                                            "NEXT", self, sequence_runner_third, NULL));
-   priv->children[0] = STEP_EXECUTABLE(step_sequence_new("An acknowledgement Step",
-                                                         "START SEQUENCE", self, sequence_runner_third, NULL));
-
-   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[0]), TRUE, TRUE, 0);
-//   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[1]), TRUE, TRUE, 0);
-//   gtk_box_pack_start(GTK_BOX(self->content_box), GTK_WIDGET(priv->children[2]), TRUE, TRUE, 0);
+   priv->curr_step = 0;
+   priv->n_children = 0;
+   sequence_runner_add_child(self,
+                             STEP_EXECUTABLE(step_sequence_new(
+                                   "Routine Start",
+                                   "START",
+                                   self,
+                                   sequence_runner_execute,
+                                   NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3, self, sequence_runner_execute, NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2, self, sequence_runner_execute, NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step", "NEXT", self, sequence_runner_execute, NULL)));
 }
 
-SequenceRunner *sequence_runner_new()
+SequenceRunner *sequence_runner_new(ExecutableCallback_T on_sequence_complete,
+                                    gpointer callback_user_data)
 {
-   SequenceRunner *myself;
-
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
+   SequenceRunner *myself;
+
    myself = g_object_new(SEQUENCE_TYPE_RUNNER, NULL);
+
+   myself->on_complete = on_sequence_complete;
+   myself->callback_user_data = callback_user_data;
 
    return myself;
 }
 
-void sequence_runner_first(SequenceRunner *self, __attribute__((unused)) gpointer user_data)
+void sequence_runner_add_child(SequenceRunner *self, StepExecutable *child)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-   // Next
-   step_executable_execute(STEP_EXECUTABLE(priv->children[1]));
-}
 
-void sequence_runner_second(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-   step_executable_execute(STEP_EXECUTABLE(priv->children[2]));
-}
+   SequenceRunner *sr = SEQUENCE_RUNNER(self);
+   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(sr);
 
-void sequence_runner_third(__attribute__((unused)) SequenceRunner *self, __attribute__((unused)) gpointer user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: DONE", __func__);
+   priv->children[priv->n_children] = child;
+   gtk_box_pack_end(GTK_BOX(sr->content_box), GTK_WIDGET(child), TRUE, TRUE, 0);
+
+   gtk_widget_set_visible(GTK_WIDGET(child), (priv->n_children) ? FALSE : TRUE); // set only the first child visible
+
+   priv->n_children++;
 }

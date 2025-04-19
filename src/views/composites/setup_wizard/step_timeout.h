@@ -19,7 +19,7 @@ G_DECLARE_FINAL_TYPE(StepTimeout, step_timeout, STEP, TIMEOUT, GtkBox)
 StepTimeout* step_timeout_new(const gchar *step_description,
                               guint countdown,
                               SequenceRunner *parent_sequence,
-                              SequenceCallback_T on_timeout,
+                              ExecutableCallback_T on_timeout,
                               gpointer callback_user_data);
 
 G_END_DECLS

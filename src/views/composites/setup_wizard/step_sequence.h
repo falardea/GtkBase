@@ -8,6 +8,8 @@
 #include <gtk/gtk.h>
 #include "app_globals.h"
 #include "sequence_runner.h"
+#include "step_executable_interface.h"
+
 G_BEGIN_DECLS
 
 #define STEP_TYPE_SEQUENCE (step_sequence_get_type())
@@ -17,7 +19,7 @@ G_DECLARE_FINAL_TYPE(StepSequence, step_sequence, STEP, SEQUENCE, GtkBox)
 StepSequence *step_sequence_new(const gchar *sequence_description,
                                 const gchar *btn_label_str,
                                 SequenceRunner *parent_sequence,
-                                SequenceCallback_T on_sequence_complete,
+                                ExecutableCallback_T on_sequence_complete,
                                 gpointer callback_user_data);
 
 G_END_DECLS

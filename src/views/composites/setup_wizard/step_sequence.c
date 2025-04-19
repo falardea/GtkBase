@@ -14,13 +14,13 @@ struct _StepSequence
    GtkLabel    *lbl_step_description;
    GtkButton   *btn_start_sequence;
 
-   void (*on_sequence_start)(SequenceRunner *parent_sequence, gpointer user_data);
+   void (*on_sequence_start)(StepExecutable *parent_sequence, gpointer user_data);
    gpointer callback_user_data;
 
    SequenceRunner *parent_sequence;
 };
 
-static void step_sequence_execute(StepExecutable *self)
+static void step_sequence_execute(StepExecutable *self, gpointer user_data)
 {
    StepSequence *sa = STEP_SEQUENCE(self);
    logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, gtk_label_get_label(sa->lbl_step_description));
@@ -55,7 +55,7 @@ void on_btn_start_sequence_clicked(__attribute__((unused)) GtkButton *button, gp
    StepSequence *sa = STEP_SEQUENCE(user_data);
    gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_start_sequence), FALSE);
    gtk_label_set_markup(sa->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
-   sa->on_sequence_start(sa->parent_sequence, sa->callback_user_data);
+   sa->on_sequence_start(STEP_EXECUTABLE(sa->parent_sequence), sa->callback_user_data);
 }
 
 static void step_sequence_class_init(StepSequenceClass *klass)
@@ -87,7 +87,7 @@ static void step_sequence_init(StepSequence *self)
 StepSequence *step_sequence_new(const gchar *step_description,
                                       const gchar *btn_label_str,
                                       SequenceRunner *parent_sequence,
-                                      SequenceCallback_T on_sequence,
+                                ExecutableCallback_T on_sequence,
                                       gpointer callback_user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);

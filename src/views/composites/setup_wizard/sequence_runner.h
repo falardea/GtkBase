@@ -5,6 +5,7 @@
 #ifndef SEQUENCE_RUNNER_H__
 #define SEQUENCE_RUNNER_H__
 #include <gtk/gtk.h>
+#include "step_executable_interface.h"
 
 G_BEGIN_DECLS
 
@@ -16,9 +17,10 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(SequenceRunner, sequence_runner, SEQUENCE, RUNNER, GtkBox)
 
-typedef void (*SequenceCallback_T)(SequenceRunner *parent_sequence, gpointer user_data);
+SequenceRunner *sequence_runner_new(ExecutableCallback_T on_sequence_complete,
+                                    gpointer callback_user_data);
 
-SequenceRunner *sequence_runner_new();
+void sequence_runner_add_child(SequenceRunner *self, StepExecutable *child);
 
 G_END_DECLS
 #endif  // SEQUENCE_RUNNER_H__

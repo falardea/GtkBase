@@ -13,12 +13,12 @@ static void step_executable_default_init(__attribute__((unused)) StepExecutableI
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
 
-void step_executable_execute(StepExecutable *self)
+void step_executable_execute(StepExecutable *self, gpointer user_data)
 {
    StepExecutableInterface *iface;
    g_return_if_fail(STEP_IS_EXECUTABLE(self));
 
    iface = STEP_EXECUTABLE_GET_IFACE(self);
 
-   iface->execute(self);
+   iface->execute(self, user_data);
 }

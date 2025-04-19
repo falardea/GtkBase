@@ -42,6 +42,7 @@ typedef struct {
    GtkWidget   *w_say_something_entry;
 
    GtkWidget   *w_app_content_box;
+   GtkWidget   *w_box_sandbox_content;
 
    AlarmsContent  *w_alarms_content_root;
    SequenceRunner *w_sequence_runner;

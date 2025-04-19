@@ -8,6 +8,12 @@
 #include "composites/alarms_content/alarms_content.h"
 #include "composites/setup_wizard/sequence_runner.h"
 
+
+void on_setup_complete(__attribute__((unused)) StepExecutable *placeholder,__attribute__((unused)) gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "Setup Complete");
+}
+
 app_widget_ref_struct *app_builder(void) {
    GtkBuilder *builder;
 
@@ -24,12 +30,13 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_say_something_entry = GTK_WIDGET(gtk_builder_get_object(builder, "say_something_entry"));
 
    appWidgetsT->w_app_content_box = GTK_WIDGET(gtk_builder_get_object(builder, "app_content_box"));
+   appWidgetsT->w_box_sandbox_content = GTK_WIDGET(gtk_builder_get_object(builder, "box_sandbox_content"));
 
 //   appWidgetsT->w_alarms_content_root = alarms_content_new();
 //   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_app_content_box), GTK_WIDGET(appWidgetsT->w_alarms_content_root), TRUE, TRUE,0);
 
-   appWidgetsT->w_sequence_runner = sequence_runner_new();
-   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_app_content_box), GTK_WIDGET(appWidgetsT->w_sequence_runner), TRUE, TRUE,0);
+   appWidgetsT->w_sequence_runner = sequence_runner_new(on_setup_complete, NULL);
+   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_box_sandbox_content), GTK_WIDGET(appWidgetsT->w_sequence_runner), TRUE, TRUE,0);
 
    gtk_builder_connect_signals(builder, appWidgetsT);
 

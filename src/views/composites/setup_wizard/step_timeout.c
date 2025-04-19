@@ -17,7 +17,7 @@ struct _StepTimeout
    guint          curr_count;
    gboolean       running;
 
-   void           (*on_timeout_expired)(SequenceRunner *parent_sequence, gpointer user_data);
+   void           (*on_timeout_expired)(StepExecutable *parent_sequence, gpointer user_data);
    gpointer       callback_user_data;
 
    SequenceRunner *parent_sequence;
@@ -27,7 +27,7 @@ static void step_timeout_update_progress(StepTimeout *self);
 static void step_timeout_set_progress_complete(StepTimeout *self);
 static gboolean updateTimeoutProgressLabel(gpointer user_data);
 
-void step_timeout_execute(StepExecutable *self)
+void step_timeout_execute(StepExecutable *self, gpointer user_data)
 {
    StepTimeout *st = STEP_TIMEOUT(self);
 
@@ -36,11 +36,12 @@ void step_timeout_execute(StepExecutable *self)
    {
       st->running = TRUE;
       st->curr_count = st->countdown;
+      step_timeout_update_progress(st);
       gdk_threads_add_timeout_seconds(1, (GSourceFunc)updateTimeoutProgressLabel, (gpointer)st);
    }
    else
    {
-      g_print("STEP(%s) is already running\n", gtk_label_get_text(st->lbl_step_description));
+      logging_llprintf(LOGLEVEL_DEBUG,"STEP(%s) is already running", gtk_label_get_text(st->lbl_step_description));
    }
 }
 
@@ -80,18 +81,15 @@ static void step_timeout_class_init(StepTimeoutClass *klass)
 
 static void step_timeout_init(StepTimeout *self)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    g_type_ensure(STEP_TYPE_EXECUTABLE);
-
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
 StepTimeout* step_timeout_new(const gchar *step_description,
-                                         guint countdown,
-                                         SequenceRunner *parent_sequence,
-                                         SequenceCallback_T on_timeout,
-                                         gpointer callback_user_data)
+                              guint countdown,
+                              SequenceRunner *parent_sequence,
+                              ExecutableCallback_T on_timeout,
+                              gpointer callback_user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    StepTimeout *st;
@@ -118,7 +116,7 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
 {
    StepTimeout *self = STEP_TIMEOUT(user_data);
 
-   g_print("%s: %d -- %d\n", __func__, self->countdown, self->curr_count);
+   logging_llprintf(LOGLEVEL_DEBUG,"%s: %d -- %d", __func__, self->countdown, self->curr_count);
    self->curr_count--;
 
    if (self->curr_count > 0)
@@ -130,7 +128,7 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
       }
       else
       {
-         g_print("%s: self->pbar_step_countdown is not a label\n", __func__);
+         logging_llprintf(LOGLEVEL_DEBUG,"%s: self->pbar_step_countdown is not a label", __func__);
       }
       return G_SOURCE_CONTINUE;
    }
@@ -139,7 +137,7 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
       self->running = FALSE;
       gtk_label_set_markup(self->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
       step_timeout_set_progress_complete(self);
-      self->on_timeout_expired(self->parent_sequence, self->callback_user_data);
+      self->on_timeout_expired(STEP_EXECUTABLE(self->parent_sequence), self->callback_user_data);
       return G_SOURCE_REMOVE;
    }
 }
