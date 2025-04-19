@@ -7,7 +7,6 @@
 #define STEP_TIMEOUT_H__
 #include <gtk/gtk.h>
 #include "app_globals.h"
-#include "sequence_runner.h"
 #include "step_executable_interface.h"
 
 G_BEGIN_DECLS
@@ -18,7 +17,7 @@ G_DECLARE_FINAL_TYPE(StepTimeout, step_timeout, STEP, TIMEOUT, GtkBox)
 
 StepTimeout* step_timeout_new(const gchar *step_description,
                               guint countdown,
-                              SequenceRunner *parent_sequence,
+                              StepExecutable *parent_sequence,
                               ExecutableCallback_T on_timeout,
                               gpointer callback_user_data);
 

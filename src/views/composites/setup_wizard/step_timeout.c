@@ -20,14 +20,14 @@ struct _StepTimeout
    void           (*on_timeout_expired)(StepExecutable *parent_sequence, gpointer user_data);
    gpointer       callback_user_data;
 
-   SequenceRunner *parent_sequence;
+   StepExecutable *parent_sequence;
 };
 
 static void step_timeout_update_progress(StepTimeout *self);
 static void step_timeout_set_progress_complete(StepTimeout *self);
 static gboolean updateTimeoutProgressLabel(gpointer user_data);
 
-void step_timeout_execute(StepExecutable *self, gpointer user_data)
+void step_timeout_execute(StepExecutable *self,__attribute__((unused)) gpointer user_data)
 {
    StepTimeout *st = STEP_TIMEOUT(self);
 
@@ -87,7 +87,7 @@ static void step_timeout_init(StepTimeout *self)
 
 StepTimeout* step_timeout_new(const gchar *step_description,
                               guint countdown,
-                              SequenceRunner *parent_sequence,
+                              StepExecutable *parent_sequence,
                               ExecutableCallback_T on_timeout,
                               gpointer callback_user_data)
 {
@@ -137,7 +137,7 @@ static gboolean updateTimeoutProgressLabel(gpointer user_data)
       self->running = FALSE;
       gtk_label_set_markup(self->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
       step_timeout_set_progress_complete(self);
-      self->on_timeout_expired(STEP_EXECUTABLE(self->parent_sequence), self->callback_user_data);
+      self->on_timeout_expired(self->parent_sequence, self->callback_user_data);
       return G_SOURCE_REMOVE;
    }
 }

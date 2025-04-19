@@ -105,16 +105,10 @@ static void sequence_runner_init(SequenceRunner *self)
 
    priv->curr_step = 0;
    priv->n_children = 0;
-   sequence_runner_add_child(self,
-                             STEP_EXECUTABLE(step_sequence_new(
-                                   "Routine Start",
-                                   "START",
-                                   self,
-                                   sequence_runner_execute,
-                                   NULL)));
-   sequence_runner_add_child(self, STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3, self, sequence_runner_execute, NULL)));
-   sequence_runner_add_child(self, STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2, self, sequence_runner_execute, NULL)));
-   sequence_runner_add_child(self, STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step", "NEXT", self, sequence_runner_execute, NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_sequence_new("Routine Start","START",STEP_EXECUTABLE(self),sequence_runner_execute,NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_timeout_new("A sample timeout step", 3, STEP_EXECUTABLE(self), sequence_runner_execute, NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_timeout_new("A second timeout step", 2, STEP_EXECUTABLE(self), sequence_runner_execute, NULL)));
+   sequence_runner_add_child(self, STEP_EXECUTABLE(step_acknowledge_new("An acknowledgement Step", "NEXT", STEP_EXECUTABLE(self), sequence_runner_execute, NULL)));
 }
 
 SequenceRunner *sequence_runner_new(ExecutableCallback_T on_sequence_complete,

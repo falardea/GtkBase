@@ -9,6 +9,10 @@
 
 G_BEGIN_DECLS
 
+#define BLUE_FORMAT_STR(x)               "<span foreground='#0228b1' size='xx-large'>" x "</span>"
+#define BLUE_BULLET_FORMAT_STR           BLUE_FORMAT_STR("\u2022")
+#define BLUE_SELECTED_BULLET_FORMAT_STR  BLUE_FORMAT_STR("\u25ba")
+
 #define STEP_TYPE_EXECUTABLE     (step_executable_get_type())
 
 G_DECLARE_INTERFACE (StepExecutable, step_executable, STEP, EXECUTABLE, GObject)
