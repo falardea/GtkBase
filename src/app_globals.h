@@ -47,6 +47,9 @@ typedef struct {
    AlarmsContent  *w_alarms_content_root;
    SequenceRunner *w_sequence_runner;
 
+   GObject *g_config_state;
+   RunModel *g_run_model;
+
 } app_widget_ref_struct;
 
 extern app_widget_ref_struct *g_app_widget_refs;

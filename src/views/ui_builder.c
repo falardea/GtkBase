@@ -43,3 +43,35 @@ app_widget_ref_struct *app_builder(void) {
    g_object_unref(builder);
    return appWidgetsT;
 }
+
+
+void build_setup_tab(GtkBuilder *builder, app_widgets *widgets)
+{
+   GET_WIDGET(tab_setup);
+   GET_WIDGET(app_content_box);
+
+   widgets->w_setup_runner = setup_runner_new(NULL, on_setup_complete, NULL);
+   RunModel *rmodel = run_model_new();
+   widgets->g_run_model = rmodel;
+
+   gtk_box_pack_end(GTK_BOX(widgets->w_app_content_box), GTK_WIDGET(widgets->w_setup_runner), TRUE, TRUE,0);
+
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(step_sequence_new("Setup Starting","START",STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL)));
+
+   SequenceRunner *sr_embed = sequence_runner_new(STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL);
+   StepSequence *step_seq = step_sequence_new("Sequence-in-Sequence-1 Starting","START",STEP_EXECUTABLE(sr_embed), setup_runner_execute,NULL);
+   StepTimeout *step_object = step_timeout_new("Sequence-in-Sequence-1 Countdown", 1, STEP_EXECUTABLE(sr_embed), setup_runner_execute, NULL);
+   StepAcknowledge *step_ack = step_acknowledge_new("Sequence-in-Sequence-1 Ack Step", "NEXT", STEP_EXECUTABLE(sr_embed), setup_runner_execute, NULL);
+
+   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(step_seq));
+   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(step_object));
+   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(step_ack));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(sr_embed));
+
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(step_timeout_new("Leaf Timeout Step 1", 1, STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(step_acknowledge_new("Leaf Ack Step 1", "NEXT", STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(step_timeout_new("Leaf Timeout Step 2", 1, STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(step_acknowledge_new("Leaf Ack Step 2", "NEXT", STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(step_timeout_new("Leaf Timeout Step 3", 1, STEP_EXECUTABLE(widgets->w_setup_runner), setup_runner_execute, NULL)));
+
+}

@@ -6,6 +6,7 @@
 #ifndef STEP_EXECUTABLE_INTERFACE_H__
 #define STEP_EXECUTABLE_INTERFACE_H__
 #include <glib-object.h>
+#include "run_model.h"
 
 G_BEGIN_DECLS
 
@@ -17,17 +18,17 @@ G_BEGIN_DECLS
 
 G_DECLARE_INTERFACE (StepExecutable, step_executable, STEP, EXECUTABLE, GObject)
 
-typedef void (*ExecutableCallback_T)(StepExecutable *parent_sequence, gpointer user_data);
+typedef void (*ExecutableCallback_T)(StepExecutable *parent_sequence, RunModel *run_model);
 
 struct _StepExecutableInterface
 {
    GTypeInterface g_iface;
-   void (*execute) (StepExecutable *self, gpointer user_data);
+   void (*execute) (StepExecutable *self, RunModel *run_model);
 
    gpointer padding[10];
 };
 
-void step_executable_execute(StepExecutable *self, gpointer user_data);
+void step_executable_execute(StepExecutable *self, RunModel *run_model);
 
 G_END_DECLS
 #endif  // STEP_EXECUTABLE_INTERFACE_H__

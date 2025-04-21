@@ -6,7 +6,7 @@
 #ifndef STEP_ACKNOWLEDGE_H__
 #define STEP_ACKNOWLEDGE_H__
 #include <gtk/gtk.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "step_executable_interface.h"
 
 G_BEGIN_DECLS

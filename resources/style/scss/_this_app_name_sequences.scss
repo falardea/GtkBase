@@ -1,0 +1,15 @@
+@import "this_app_name_colors";
+@import "this_app_name_button";
+
+#sequence-content-root
+{
+  background-image: none;
+  background-color: $ux-darkest-popup_bg;
+
+  font-size: 3.0em;
+  font-weight: bolder;
+  outline-color: $base-outline-color;
+  border-color: $ux-darkdark-blue;
+  border-radius: 30px;
+
+}
