@@ -1,8 +1,8 @@
 /**
  * @brief A place for globals
  */
-#ifndef APP_GLOBALS_H__
-#define APP_GLOBALS_H__
+#ifndef APP_WIDGETS_H__
+#define APP_WIDGETS_H__
 #include <gtk/gtk.h>
 #include "views/composites/alarms_content/alarms_content.h"
 #include "views/composites/setup_wizard/sequence_runner.h"
@@ -55,4 +55,4 @@ typedef struct {
 extern app_widget_ref_struct *g_app_widget_refs;
 
 G_END_DECLS
-#endif  /* APP_GLOBALS_H__ */
+#endif  /* APP_WIDGETS_H__ */

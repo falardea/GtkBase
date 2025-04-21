@@ -2,7 +2,7 @@
  * Created by french on 3/22/25.
  * @brief
  */
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "sequence_runner.h"
 #include "step_executable_interface.h"
 #include "step_acknowledge.h"
@@ -22,6 +22,9 @@ struct _SequenceRunner
 {
    GtkBox   parent;
    GtkBox   *content_box;
+
+   GtkProgressBar *progress_bar_box;
+   GtkBox         *sequence_banner;
 
    void        (*on_complete)(StepExecutable *parent_sequence, RunModel *run_model);
    gpointer    callback_user_data;
@@ -91,7 +94,7 @@ static void sequence_runner_class_init(SequenceRunnerClass *klass)
 
    gobject_class->finalize = sequence_runner_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/com/dekaresearch/pod/sequence_runner.ui");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/sequence_runner.ui");
    gtk_widget_class_bind_template_child_internal(widget_class, SequenceRunner, content_box);
 }
 

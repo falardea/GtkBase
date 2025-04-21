@@ -4,7 +4,7 @@
 #ifndef ROOT_WINDOW_H__
 #define ROOT_WINDOW_H__
 #include <gtk/gtk.h>
-#include "../app_globals.h"
+#include "../app_widgets.h"
 G_BEGIN_DECLS
 
 void on_min_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,

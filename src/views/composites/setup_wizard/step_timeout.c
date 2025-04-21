@@ -50,7 +50,7 @@ void step_timeout_execute(StepExecutable *self,__attribute__((unused)) RunModel 
    }
 }
 
-void on_step_timeout_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
+void step_timeout_on_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    StepTimeout *sto = STEP_TIMEOUT(user_data);
@@ -59,7 +59,7 @@ void on_step_timeout_btn_start_next_clicked(__attribute__((unused)) GtkButton *b
    sto->on_next_when_expired(STEP_EXECUTABLE(sto->parent_sequence), sto->callback_user_data);
 }
 
-void on_step_timeout_btn_cancel_skip_clicked(__attribute__((unused)) GtkButton *button,__attribute__((unused)) gpointer user_data)
+void step_timeout_on_btn_cancel_skip_clicked(__attribute__((unused)) GtkButton *button,__attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
@@ -90,15 +90,15 @@ static void step_timeout_class_init(StepTimeoutClass *klass)
 
    gobject_class->finalize = step_timeout_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/com/dekaresearch/pod/step_timeout.ui");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/step_timeout.ui");
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, pbar_step_countdown);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, btn_start_next);
    gtk_widget_class_bind_template_child(widget_class, StepTimeout, btn_cancel_skip);
 
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_next_clicked", (GCallback)on_step_timeout_btn_start_next_clicked);
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_skip_clicked", (GCallback)on_step_timeout_btn_cancel_skip_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_next_clicked", (GCallback)step_timeout_on_btn_start_next_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_skip_clicked", (GCallback)step_timeout_on_btn_cancel_skip_clicked);
 }
 
 static void step_timeout_init(StepTimeout *self)

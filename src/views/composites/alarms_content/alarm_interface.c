@@ -3,7 +3,7 @@
  * @brief
  */
 #include "alarm_interface.h"
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "alarm_model.h"
 #include "utils/logging.h"
 

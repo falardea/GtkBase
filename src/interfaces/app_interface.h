@@ -4,7 +4,7 @@
 #ifndef APP_INTERFACE_H__
 #define APP_INTERFACE_H__
 #include <stdbool.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 G_BEGIN_DECLS
 
 typedef enum {

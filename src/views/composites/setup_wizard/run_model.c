@@ -61,7 +61,7 @@ static void run_model_class_init( RunModelClass *klass )
    gobject_class->get_property = run_model_get_property;
    gobject_class->set_property = run_model_set_property;
 
-   model_properties[RUN_MODEL_N_PROPERTIES] = g_param_spec_uint("run-phase",
+   model_properties[RUN_MODEL_PROP_RUN_PHASE] = g_param_spec_uint("run-phase",
                                                           "Run Phase",
                                                           "The current run phase of the model sees itself in",
                                                           RM_NO_RUN, N_RM_PHASES-1, RM_NO_RUN,

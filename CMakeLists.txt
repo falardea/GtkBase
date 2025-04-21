@@ -71,7 +71,7 @@ add_custom_target(this_app_name-resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${G
 
 set(MY_SOURCES
     src/main.c
-    src/app_globals.h
+    src/app_widgets.h
     src/utils/parse_args.c
     src/utils/parse_args.h
     src/utils/logging.c
@@ -107,7 +107,8 @@ set(MY_SOURCES
     src/views/composites/setup_wizard/step_sequence.c
     src/views/composites/setup_wizard/step_sequence.h
     src/views/composites/setup_wizard/step_skippable_interface.h
-
+    src/views/composites/setup_wizard/run_model.c
+    src/views/composites/setup_wizard/run_model.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

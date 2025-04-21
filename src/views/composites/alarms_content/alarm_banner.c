@@ -3,7 +3,7 @@
  * @brief
  */
 #include "alarm_banner.h"
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "utils/logging.h"
 
 

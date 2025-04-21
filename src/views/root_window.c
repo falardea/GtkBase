@@ -35,7 +35,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, g
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
 
-   step_executable_execute(STEP_EXECUTABLE(wdgts->w_sequence_runner), user_data);
+   step_executable_execute(STEP_EXECUTABLE(wdgts->w_sequence_runner), wdgts->g_run_model);
 }
 
 void set_msgout_buffer(const char *msgout)

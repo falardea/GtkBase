@@ -3,7 +3,7 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "interfaces/app_interface.h"
 #include "parse_args.h"
 
