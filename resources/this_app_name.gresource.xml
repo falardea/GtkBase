@@ -14,6 +14,9 @@
         <file alias="alarm_interface.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/alarm_interface.ui</file>
+        <file alias="setup_runner.ui"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/setup_runner.ui</file>
         <file alias="sequence_runner.ui"
               compressed="true"
               preprocess="xml-stripblanks">resources/sequence_runner.ui</file>

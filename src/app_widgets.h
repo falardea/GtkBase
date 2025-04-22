@@ -5,7 +5,7 @@
 #define APP_WIDGETS_H__
 #include <gtk/gtk.h>
 #include "views/composites/alarms_content/alarms_content.h"
-#include "views/composites/setup_wizard/sequence_runner.h"
+#include "views/composites/setup_wizard/setup_runner.h"
 
 G_BEGIN_DECLS
 
@@ -45,7 +45,7 @@ typedef struct {
    GtkWidget   *w_box_sandbox_content;
 
    AlarmsContent  *w_alarms_content_root;
-   SequenceRunner *w_sequence_runner;
+   SetupRunner *w_setup_runner;
 
    GObject *g_config_state;
    RunModel *g_run_model;

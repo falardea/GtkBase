@@ -109,6 +109,8 @@ set(MY_SOURCES
     src/views/composites/setup_wizard/step_skippable_interface.h
     src/views/composites/setup_wizard/run_model.c
     src/views/composites/setup_wizard/run_model.h
+      src/views/composites/setup_wizard/setup_runner.c
+      src/views/composites/setup_wizard/setup_runner.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

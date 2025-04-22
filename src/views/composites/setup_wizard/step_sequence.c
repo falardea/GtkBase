@@ -16,7 +16,7 @@ struct _StepSequence
    GtkButton   *btn_start_next;
    GtkButton   *btn_cancel_skip;
 
-   void (*on_sequence_start)(StepExecutable *parent_sequence, RunModel *run_model);
+   void (*on_start_next)(StepExecutable *parent_sequence, RunModel *run_model);
    gpointer callback_user_data;
 
    StepExecutable *parent_sequence;
@@ -49,15 +49,25 @@ static void step_sequence_finalize(GObject *g_object)
    G_OBJECT_CLASS(step_sequence_parent_class)->finalize(g_object);
 }
 
-void step_sequence_on_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
+void on_step_sequence_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    StepSequence *sa = STEP_SEQUENCE(user_data);
    gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_start_next), FALSE);
    gtk_label_set_markup(sa->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
-   sa->on_sequence_start(STEP_EXECUTABLE(sa->parent_sequence), sa->callback_user_data);
+
+   if (sa->on_start_next != NULL)
+   {
+      sa->on_start_next(STEP_EXECUTABLE(sa), sa->callback_user_data);
+   }
+   if (sa->parent_sequence != NULL)
+   {
+      step_executable_execute(sa->parent_sequence, sa->callback_user_data);
+   }
 }
 
-void step_sequence_on_btn_cancel_skip_clicked(__attribute__((unused)) GtkButton *button,__attribute__((unused)) gpointer user_data)
+void on_step_sequence_btn_cancel_skip_clicked(__attribute__((unused)) GtkButton *button,__attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
@@ -75,8 +85,8 @@ static void step_sequence_class_init(StepSequenceClass *klass)
    gtk_widget_class_bind_template_child(widget_class, StepSequence, btn_start_next);
    gtk_widget_class_bind_template_child(widget_class, StepSequence, btn_cancel_skip);
 
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_next_clicked", (GCallback)step_sequence_on_btn_start_next_clicked);
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_skip_clicked", (GCallback)step_sequence_on_btn_cancel_skip_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_next_clicked", (GCallback)on_step_sequence_btn_start_next_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_skip_clicked", (GCallback)on_step_sequence_btn_cancel_skip_clicked);
 }
 
 static void step_sequence_init(StepSequence *self)
@@ -89,13 +99,13 @@ static void step_sequence_init(StepSequence *self)
 StepSequence *step_sequence_new(const gchar *step_description,
                                 const gchar *btn_label_str,
                                 StepExecutable *parent_sequence,
-                                ExecutableCallback_T on_sequence,
+                                ExecutableCallback_T on_start_next,
                                 gpointer callback_user_data)
 {
    StepSequence *sa;
    sa = g_object_new(STEP_TYPE_SEQUENCE, NULL);
 
-   sa->on_sequence_start = on_sequence;
+   sa->on_start_next = on_start_next;
    sa->callback_user_data = callback_user_data;
    sa->parent_sequence = parent_sequence;
 

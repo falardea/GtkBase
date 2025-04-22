@@ -6,6 +6,7 @@
 #include "ui_builder.h"
 #include "utils/logging.h"
 #include "composites/alarms_content/alarms_content.h"
+#include "composites/setup_wizard/setup_runner.h"
 #include "composites/setup_wizard/sequence_runner.h"
 #include "composites/setup_wizard/step_acknowledge.h"
 #include "composites/setup_wizard/step_sequence.h"
@@ -16,6 +17,18 @@
 void on_setup_complete(__attribute__((unused)) StepExecutable *placeholder,__attribute__((unused)) RunModel *run_model)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "Setup Complete");
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: Run Phase %d", __func__, run_model_get_run_phase(run_model));
+}
+
+void on_random_phase_update(__attribute__((unused)) StepExecutable *placeholder,__attribute__((unused)) RunModel *run_model)
+{
+   run_model_set_run_phase(run_model, RM_PHASE_2);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: Run Phase %d", __func__, run_model_get_run_phase(run_model));
+}
+
+void example_external_callback(__attribute__((unused)) StepExecutable *placeholder,__attribute__((unused)) RunModel *run_model)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, "!!!!!!!!!! Checkpoint External Call !!!!!!!!!!!!!");
 }
 
 void build_setup_tab(GtkBuilder *builder, app_widget_ref_struct *widgets)
@@ -23,31 +36,39 @@ void build_setup_tab(GtkBuilder *builder, app_widget_ref_struct *widgets)
    RunModel *rmodel = run_model_new();
    widgets->g_run_model = rmodel;
 
-   widgets->w_sequence_runner = sequence_runner_new(NULL, on_setup_complete, rmodel);
+   widgets->w_setup_runner = setup_runner_new(NULL, on_setup_complete, widgets->g_run_model);
 
-   gtk_box_pack_end(GTK_BOX(widgets->w_app_content_box), GTK_WIDGET(widgets->w_sequence_runner), TRUE, TRUE,0);
+   gtk_box_pack_end(GTK_BOX(widgets->w_app_content_box), GTK_WIDGET(widgets->w_setup_runner), TRUE, TRUE,0);
 
-   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(step_sequence_new("Setup Starting","START",STEP_EXECUTABLE(widgets->w_sequence_runner), sequence_runner_execute, rmodel)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(
+         step_sequence_new("Setup Starting","START",STEP_EXECUTABLE(widgets->w_setup_runner), NULL, widgets->g_run_model)));
 
-   SequenceRunner *sr_embed = sequence_runner_new(STEP_EXECUTABLE(widgets->w_sequence_runner), sequence_runner_execute, rmodel);
-   StepSequence *step_seq = step_sequence_new("Sequence-in-Sequence-1 Starting","START",STEP_EXECUTABLE(sr_embed), sequence_runner_execute,rmodel);
-   StepTimeout *step_object = step_timeout_new("Sequence-in-Sequence-1 Countdown", 1, STEP_EXECUTABLE(sr_embed), sequence_runner_execute, rmodel);
-   StepAcknowledge *step_ack = step_acknowledge_new("Sequence-in-Sequence-1 Ack Step", "NEXT", STEP_EXECUTABLE(sr_embed), sequence_runner_execute, rmodel);
+   SequenceRunner *sr_embed = sequence_runner_new(STEP_EXECUTABLE(widgets->w_setup_runner), NULL, widgets->g_run_model);
+   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(
+         step_sequence_new("Seq-in-Seq-1 Starting","START",STEP_EXECUTABLE(sr_embed), example_external_callback, widgets->g_run_model)));
+   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(
+         step_timeout_new("Seq-in-Seq-1 Countdown", 1, STEP_EXECUTABLE(sr_embed), NULL, widgets->g_run_model)));
+   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(
+         step_acknowledge_new("Seq-in-Seq-1 Ack Step", "NEXT", STEP_EXECUTABLE(sr_embed), NULL, widgets->g_run_model)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(sr_embed));
 
-   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(step_seq));
-   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(step_object));
-   sequence_runner_add_child(sr_embed, STEP_EXECUTABLE(step_ack));
-   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(sr_embed));
-
-   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(step_timeout_new("Leaf Timeout Step 1", 1, STEP_EXECUTABLE(widgets->w_sequence_runner), sequence_runner_execute, rmodel)));
-   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(step_timeout_new("Leaf Timeout Step 2", 1, STEP_EXECUTABLE(widgets->w_sequence_runner), sequence_runner_execute, rmodel)));
-   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(step_acknowledge_new("Leaf Ack Step 2", "NEXT", STEP_EXECUTABLE(widgets->w_sequence_runner), sequence_runner_execute, rmodel)));
-   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(step_timeout_new("Leaf Timeout Step 3", 1, STEP_EXECUTABLE(widgets->w_sequence_runner), sequence_runner_execute, rmodel)));
-
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(
+         step_timeout_new("Leaf Timeout Step 1", 1, STEP_EXECUTABLE(widgets->w_setup_runner), NULL, widgets->g_run_model)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(
+         step_acknowledge_new("Leaf Ack Step 1", "NEXT", STEP_EXECUTABLE(widgets->w_setup_runner), on_random_phase_update, widgets->g_run_model)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(
+         step_timeout_new("Leaf Timeout Step 2", 1, STEP_EXECUTABLE(widgets->w_setup_runner), NULL, widgets->g_run_model)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(
+         step_acknowledge_new("Leaf Ack Step 2", "NEXT", STEP_EXECUTABLE(widgets->w_setup_runner), NULL, widgets->g_run_model)));
+   setup_runner_add_child(widgets->w_setup_runner, STEP_EXECUTABLE(
+         step_timeout_new("Leaf Timeout Step 3", 1, STEP_EXECUTABLE(widgets->w_setup_runner), NULL, widgets->g_run_model)));
 }
 
 app_widget_ref_struct *app_builder(void) {
    GtkBuilder *builder;
+   g_type_ensure(STEP_TYPE_TIMEOUT);
+   g_type_ensure(STEP_TYPE_ACKNOWLEDGE);
+   g_type_ensure(STEP_TYPE_SEQUENCE);
 
    app_widget_ref_struct *appWidgetsT = g_slice_new(app_widget_ref_struct);
 

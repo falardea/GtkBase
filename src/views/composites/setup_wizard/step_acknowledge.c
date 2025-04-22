@@ -22,7 +22,7 @@ struct _StepAcknowledge
    StepExecutable *parent_sequence;
 };
 
-static void step_acknowledge_execute(StepExecutable *self, RunModel *run_model)
+static void step_acknowledge_execute(StepExecutable *self,__attribute__((unused)) RunModel *run_model)
 {
    StepAcknowledge *sa = STEP_ACKNOWLEDGE(self);
    logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, gtk_label_get_label(sa->lbl_step_description));
@@ -49,15 +49,23 @@ static void step_acknowledge_finalize(GObject *g_object)
    G_OBJECT_CLASS(step_acknowledge_parent_class)->finalize(g_object);
 }
 
-static void step_acknowledge_on_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
+void on_step_acknowledge_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    StepAcknowledge *sa = STEP_ACKNOWLEDGE(user_data);
    gtk_widget_set_sensitive(GTK_WIDGET(sa->btn_start_next), FALSE);
    gtk_label_set_markup(sa->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
-   sa->on_user_acknowledge(STEP_EXECUTABLE(sa->parent_sequence), sa->callback_user_data);
+
+   if (sa->on_user_acknowledge != NULL)
+   {
+      sa->on_user_acknowledge(STEP_EXECUTABLE(sa), sa->callback_user_data);
+   }
+   if (sa->parent_sequence != NULL)
+   {
+      step_executable_execute(sa->parent_sequence, sa->callback_user_data);
+   }
 }
 
-static void step_acknowledge_on_btn_cancel_skip_clicked(__attribute__((unused)) GtkButton *button,__attribute__((unused)) gpointer user_data)
+void on_step_acknowledge_btn_cancel_skip_clicked(__attribute__((unused)) GtkButton *button,__attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
@@ -75,8 +83,8 @@ static void step_acknowledge_class_init(StepAcknowledgeClass *klass)
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, btn_start_next);
    gtk_widget_class_bind_template_child(widget_class, StepAcknowledge, btn_cancel_skip);
 
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_next_clicked", (GCallback)step_acknowledge_on_btn_start_next_clicked);
-   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_skip_clicked", (GCallback)step_acknowledge_on_btn_cancel_skip_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_next_clicked", (GCallback)on_step_acknowledge_btn_start_next_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_skip_clicked", (GCallback)on_step_acknowledge_btn_cancel_skip_clicked);
 }
 
 static void step_acknowledge_init(StepAcknowledge *self)

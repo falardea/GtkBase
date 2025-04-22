@@ -3,11 +3,11 @@
  * @brief
  */
 #include "app_widgets.h"
-#include "sequence_runner.h"
+#include "setup_runner.h"
 #include "step_executable_interface.h"
-#include "step_acknowledge.h"
-#include "step_timeout.h"
-#include "step_sequence.h"
+//#include "step_acknowledge.h"
+//#include "step_timeout.h"
+//#include "step_sequence.h"
 #include "utils/logging.h"
 
 typedef struct
@@ -15,10 +15,9 @@ typedef struct
    GList          *children;
    GList          *curr_step;
    guint          n_children;
-   gboolean       complete;
-} SequenceRunnerPrivate;
+} SetupRunnerPrivate;
 
-struct _SequenceRunner
+struct _SetupRunner
 {
    GtkBox   parent;
    GtkBox   *content_box;
@@ -29,22 +28,22 @@ struct _SequenceRunner
    StepExecutable *parent_sequence;
 };
 
-static void sequence_runner_executable_interface_init(StepExecutableInterface *iface)
+static void setup_runner_executable_interface_init(StepExecutableInterface *iface)
 {
    g_return_if_fail(iface != NULL);
-   iface->execute = sequence_runner_execute;
+   iface->execute = setup_runner_execute;
 }
 
-G_DEFINE_TYPE_WITH_CODE(SequenceRunner, sequence_runner, GTK_TYPE_BOX,
-                        G_ADD_PRIVATE(SequenceRunner)
+G_DEFINE_TYPE_WITH_CODE(SetupRunner, setup_runner, GTK_TYPE_BOX,
+                        G_ADD_PRIVATE(SetupRunner)
                         G_IMPLEMENT_INTERFACE (STEP_TYPE_EXECUTABLE,
-                                               sequence_runner_executable_interface_init))
+                                               setup_runner_executable_interface_init))
 
-void sequence_runner_execute(StepExecutable *self, RunModel *run_model)
+void setup_runner_execute(StepExecutable *self, RunModel *run_model)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: SEQUENCE START", __func__);
-   SequenceRunner *sr = SEQUENCE_RUNNER(self);
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(sr);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: SETUP START", __func__);
+   SetupRunner *sr = SETUP_RUNNER(self);
+   SetupRunnerPrivate *priv = setup_runner_get_instance_private(sr);
 
    if (priv->curr_step != NULL)
    {
@@ -82,60 +81,55 @@ void sequence_runner_execute(StepExecutable *self, RunModel *run_model)
    }
 }
 
-static void sequence_runner_finalize(GObject *g_object)
+static void setup_runner_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    g_return_if_fail(g_object != NULL);
-   g_return_if_fail(SEQUENCE_IS_RUNNER(g_object));
+   g_return_if_fail(SETUP_IS_RUNNER(g_object));
 
-   G_OBJECT_CLASS(sequence_runner_parent_class)->finalize(g_object);
+   G_OBJECT_CLASS(setup_runner_parent_class)->finalize(g_object);
 }
 
-static void sequence_runner_class_init(SequenceRunnerClass *klass)
+static void setup_runner_class_init(SetupRunnerClass *klass)
 {
    GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-   gobject_class->finalize = sequence_runner_finalize;
+   gobject_class->finalize = setup_runner_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/sequence_runner.ui");
-   gtk_widget_class_bind_template_child_internal(widget_class, SequenceRunner, content_box);
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/setup_runner.ui");
+   gtk_widget_class_bind_template_child_internal(widget_class, SetupRunner, content_box);
 }
 
-static void sequence_runner_init(SequenceRunner *self)
+static void setup_runner_init(SetupRunner *self)
 {
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(self);
-
-   g_type_ensure(STEP_TYPE_TIMEOUT);
-   g_type_ensure(STEP_TYPE_ACKNOWLEDGE);
-   g_type_ensure(STEP_TYPE_SEQUENCE);
+   SetupRunnerPrivate *priv = setup_runner_get_instance_private(self);
 
    gtk_widget_init_template(GTK_WIDGET(self));
    priv->children = NULL;
    priv->curr_step = NULL;
    priv->n_children = 0;
-   priv->complete = FALSE;
 }
 
-SequenceRunner *sequence_runner_new(StepExecutable *parent_sequence,
-                                    ExecutableCallback_T on_sequence_complete,
+SetupRunner *setup_runner_new(StepExecutable *parent_sequence,
+                                    ExecutableCallback_T on_setup_complete,
                                     gpointer callback_user_data)
 {
-   SequenceRunner *myself;
+   SetupRunner *myself;
 
-   myself = g_object_new(SEQUENCE_TYPE_RUNNER, NULL);
-   myself->on_complete = on_sequence_complete;
+   myself = g_object_new(SETUP_TYPE_RUNNER, NULL);
+   myself->on_complete = on_setup_complete;
    myself->callback_user_data = callback_user_data;
    myself->parent_sequence = parent_sequence;
    return myself;
 }
 
-void sequence_runner_add_child(SequenceRunner *self, StepExecutable *child)
+void setup_runner_add_child(SetupRunner *self, StepExecutable *child)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
-   SequenceRunner *sr = SEQUENCE_RUNNER(self);
-   SequenceRunnerPrivate *priv = sequence_runner_get_instance_private(sr);
+   SetupRunner *sr = SETUP_RUNNER(self);
+   SetupRunnerPrivate *priv = setup_runner_get_instance_private(sr);
 
    priv->children = g_list_append(priv->children, child);
    priv->n_children++;
