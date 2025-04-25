@@ -17,6 +17,7 @@ typedef enum {
 } RVALUE;
 
 typedef enum {
+   LOGLEVEL_TRACE,
    LOGLEVEL_DEBUG,
    LOGLEVEL_INFO,
    LOGLEVEL_ERROR

@@ -19,6 +19,7 @@ G_BEGIN_DECLS
 G_DECLARE_INTERFACE (StepExecutable, step_executable, STEP, EXECUTABLE, GObject)
 
 typedef void (*ExecutableCallback_T)(StepExecutable *parent_sequence, RunModel *run_model);
+typedef gboolean (*ExecutableConditionCallback_T)(StepExecutable *parent_sequence, RunModel *run_model);
 
 struct _StepExecutableInterface
 {

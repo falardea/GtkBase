@@ -31,7 +31,7 @@ void example_external_callback(__attribute__((unused)) StepExecutable *placehold
    logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, "!!!!!!!!!! Checkpoint External Call !!!!!!!!!!!!!");
 }
 
-void build_setup_tab(GtkBuilder *builder, app_widget_ref_struct *widgets)
+void build_setup_tab(__attribute__((unused)) GtkBuilder *builder, app_widget_ref_struct *widgets)
 {
    RunModel *rmodel = run_model_new();
    widgets->g_run_model = rmodel;
