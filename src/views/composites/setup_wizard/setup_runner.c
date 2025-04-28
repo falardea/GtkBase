@@ -5,9 +5,6 @@
 #include "app_widgets.h"
 #include "setup_runner.h"
 #include "step_executable_interface.h"
-//#include "step_acknowledge.h"
-//#include "step_timeout.h"
-//#include "step_sequence.h"
 #include "utils/logging.h"
 
 typedef struct

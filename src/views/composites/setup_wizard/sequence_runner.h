@@ -13,12 +13,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(SequenceRunner, sequence_runner, SEQUENCE, RUNNER, GtkBox)
 
-SequenceRunner *sequence_runner_new(StepExecutable *parent_sequence,
-                                    ExecutableCallback_T on_sequence_complete,
-                                    gpointer callback_user_data);
+SequenceRunner *sequence_runner_new();
 
-// The execute function needs to be exposed in order to inject it into children
-void sequence_runner_execute(StepExecutable *self, RunModel *run_model);
 void sequence_runner_add_child(SequenceRunner *self, StepExecutable *child);
 
 G_END_DECLS

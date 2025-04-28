@@ -9,8 +9,10 @@
 
 struct _RunModel
 {
-   GObject  parent_object;
-   RUN_MODEL_PHASES run_phase;
+   GObject           parent_object;
+   RUN_MODEL_PHASES  run_phase;
+   GHashTable        *data;
+   GError            *error;
 };
 
 G_DEFINE_TYPE( RunModel, run_model, G_TYPE_OBJECT )
@@ -22,7 +24,16 @@ enum
    RUN_MODEL_N_PROPERTIES
 };
 
-static void run_model_finalize( GObject *self );
+static void run_model_finalize( GObject *self )
+{
+   RunModel *model = RUN_MODEL(self);
+   g_hash_table_destroy(model->data);
+   if(model->error)
+   {
+      g_error_free(model->error);
+   }
+   G_OBJECT_CLASS (run_model_parent_class)->finalize (self);
+}
 
 static void run_model_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec )
 {
@@ -71,34 +82,66 @@ static void run_model_class_init( RunModelClass *klass )
 }
 
 /////////////////// INSTANCE //////////////////////////////
-static void run_model_init( __attribute__((unused)) RunModel *self )
+static void run_model_init(RunModel *self)
 {
-}
-
-static void run_model_finalize( GObject *self )
-{
-   G_OBJECT_CLASS (run_model_parent_class)->finalize (self);
+   self->run_phase = RM_NO_RUN;
+   self->data = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+   self->error = NULL;
 }
 
 RunModel *run_model_new( )
 {
    RunModel *model;
-
    model = g_object_new(RUN_TYPE_MODEL,
                         "run-phase", RM_NO_RUN,
                         NULL);
-
    return model;
 }
 
 RUN_MODEL_PHASES run_model_get_run_phase( RunModel *self )
 {
-   g_return_val_if_fail( RUN_IS_MODEL( self ), FALSE );
+   g_return_val_if_fail( RUN_IS_MODEL( self ), RM_NO_RUN);
    return self->run_phase;
 }
+
 void run_model_set_run_phase( RunModel *self, RUN_MODEL_PHASES phase )
 {
    g_return_if_fail( RUN_IS_MODEL( self ) );
+   g_return_if_fail(phase < N_RM_PHASES);
    self->run_phase = phase;
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_RUN_PHASE]);
+}
+
+void run_model_set_data(RunModel *self, const gchar *key, gpointer data, GDestroyNotify destroy)
+{
+   g_return_if_fail(RUN_IS_MODEL(self));
+   g_hash_table_insert(self->data, g_strdup(key), data);
+   // TODO: Why is this here?
+   // The whole hash table is from Grok, and I'm not quite sure why this "destroy" is here
+   if (destroy)
+   {
+      g_hash_table_replace(self->data, g_strdup(key), data);
+   }
+}
+
+gpointer run_model_get_data(RunModel *self, const gchar *key)
+{
+   g_return_val_if_fail(RUN_IS_MODEL(self), NULL);
+   return g_hash_table_lookup(self->data, key);
+}
+
+void run_model_set_error(RunModel *self, GError *error)
+{
+   g_return_if_fail(RUN_IS_MODEL(self));
+   if(self->error)
+   {
+      g_error_free(self->error);
+   }
+   self->error = error;
+}
+
+GError *run_model_get_error(RunModel *self)
+{
+   g_return_val_if_fail(RUN_IS_MODEL(self), NULL);
+   return self->error;
 }

@@ -6,7 +6,7 @@
 #include <gtk/gtk.h>
 #include "views/composites/alarms_content/alarms_content.h"
 #include "views/composites/setup_wizard/setup_runner.h"
-
+#include "views/composites/setup_wizard/sequence_runner.h"
 G_BEGIN_DECLS
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
@@ -47,6 +47,7 @@ typedef struct {
 
    AlarmsContent  *w_alarms_content_root;
    SetupRunner *w_setup_runner;
+   SequenceRunner *w_sequence_runner;
 
    GObject *g_config_state;
    RunModel *g_run_model;

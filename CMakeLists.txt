@@ -106,11 +106,14 @@ set(MY_SOURCES
     src/views/composites/setup_wizard/step_executable_interface.h
     src/views/composites/setup_wizard/step_sequence.c
     src/views/composites/setup_wizard/step_sequence.h
-    src/views/composites/setup_wizard/step_skippable_interface.h
     src/views/composites/setup_wizard/run_model.c
     src/views/composites/setup_wizard/run_model.h
-      src/views/composites/setup_wizard/setup_runner.c
-      src/views/composites/setup_wizard/setup_runner.h
+    src/views/composites/setup_wizard/setup_runner.c
+    src/views/composites/setup_wizard/setup_runner.h
+    src/views/composites/setup_wizard/step_strategy.c
+    src/views/composites/setup_wizard/step_strategy.h
+    src/views/composites/setup_wizard/step_iterator.c
+    src/views/composites/setup_wizard/step_iterator.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
