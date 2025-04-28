@@ -109,7 +109,7 @@ void sequence_runner_execute(StepExecutable *self, RunModel *run_model)
       // a good idea, but let's also check the error state.
       RUN_MODEL_PHASES phase = run_model_get_run_phase(run_model);
       GError *err = run_model_get_error(run_model);
-      if(phase == RM_NO_RUN || phase == RM_FAILED || phase == RM_CANCELLED || err != NULL)
+      if(phase == RM_FAILED || phase == RM_CANCELLED || err != NULL)
       {
          // TODO: maybe have a logger attached to the rm that
          logging_llprintf(LOGLEVEL_DEBUG, "Unexpected sequence termination: phase(%d) - error(%p)", phase, err);

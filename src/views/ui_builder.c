@@ -39,9 +39,13 @@ void build_setup_tab(__attribute__((unused)) GtkBuilder *builder, app_widget_ref
    widgets->w_sequence_runner = sequence_runner_new();
    gtk_box_pack_end(GTK_BOX(widgets->w_app_content_box), GTK_WIDGET(widgets->w_sequence_runner), TRUE, TRUE, 0);
 
-   StepTimeout *timeout_leaf_one = step_timeout_new("Leaf Timeout Step 1", 3, NULL,widgets->g_run_model);
+   StepTimeout *timeout_leaf_one = step_timeout_new("Leaf Timeout Step 1", 1, NULL,widgets->g_run_model);
+   StepTimeout *timeout_leaf_two = step_timeout_new("Leaf Timeout Step 2", 2, NULL,widgets->g_run_model);
+   StepTimeout *timeout_leaf_three = step_timeout_new("Leaf Timeout Step 3", 3, NULL,widgets->g_run_model);
 
    sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(timeout_leaf_one));
+   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(timeout_leaf_two));
+   sequence_runner_add_child(widgets->w_sequence_runner, STEP_EXECUTABLE(timeout_leaf_three));
 
 /*
    RunModel *rmodel = run_model_new();

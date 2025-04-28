@@ -3,6 +3,7 @@
  */
 #include "root_window.h"
 #include "interfaces/app_interface.h"
+#include "composites/setup_wizard/step_iterator.h"
 #include "composites/setup_wizard/sequence_runner.h"
 #include "composites/setup_wizard/step_executable_interface.h"
 #include "utils/sys_interface.h"
@@ -35,7 +36,13 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, g
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
 
-   step_executable_execute(STEP_EXECUTABLE(wdgts->w_sequence_runner), wdgts->g_run_model);
+   StepIterator *iter = step_executable_get_iterator(STEP_EXECUTABLE(wdgts->w_sequence_runner), wdgts->g_run_model);
+   while(step_iterator_has_next(iter))
+   {
+      StepExecutable *step = step_iterator_next(iter);
+      step_executable_execute(step, wdgts->g_run_model);
+      iter = step_executable_get_iterator(step, wdgts->g_run_model);
+   }
 }
 
 void set_msgout_buffer(const char *msgout)

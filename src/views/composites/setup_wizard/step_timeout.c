@@ -176,7 +176,7 @@ void step_timeout_execute(StepExecutable *step, RunModel *run_model)
    StepTimeoutPrivate *priv = step_timeout_get_instance_private(self);
    RUN_MODEL_PHASES phase = run_model_get_run_phase(run_model);
    GError *err = run_model_get_error(run_model);
-   if(phase == RM_NO_RUN || phase == RM_FAILED || phase == RM_CANCELLED || err)
+   if(phase == RM_FAILED || phase == RM_CANCELLED || err)
    {
       return;
    }

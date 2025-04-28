@@ -55,6 +55,6 @@ StepExecutable *step_iterator_next(StepIterator *iter)
 
 gboolean step_iterator_has_next(StepIterator *iter)
 {
-   g_return_val_if_fail(STEP_IS_ITERATOR(iter), FALSE);
-   return iter->current != NULL;
+//   g_return_val_if_fail(STEP_IS_ITERATOR(iter), FALSE);
+   return (iter != NULL) ? (iter->current != NULL) : FALSE;
 }
