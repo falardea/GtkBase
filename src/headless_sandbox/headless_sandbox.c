@@ -14,7 +14,66 @@
 #define APPLICATION_URL                "Url"
 #define APPLICATION_VERSION_MMP        "Version"
 
+void run_experimental_hashtable_stuff();
+void run_chain_of_responsibility_stuff();
+
 void run_console_context(void)
+{
+   run_experimental_hashtable_stuff();
+}
+
+
+
+/*
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the handler interface
+typedef struct Handler Handler;
+struct Handler {
+    void (*handle)(Handler*, void*); // Function pointer to handle the request
+    Handler* next; // Pointer to the next handler in the chain
+};
+
+// Concrete handler implementation
+void juniorHandle(Handler* handler, void* request) {
+    printf("Junior handling request\n");
+    // Pass the request to the next handler in the chain
+    if (handler->next != NULL) {
+        handler->next->handle(handler->next, request);
+    }
+}
+
+void seniorHandle(Handler* handler, void* request) {
+    printf("Senior handling request\n");
+    // Pass the request to the next handler in the chain
+    if (handler->next != NULL) {
+        handler->next->handle(handler->next, request);
+    }
+}
+
+// Function to set the next handler in the chain
+void setNext(Handler* handler, Handler* nextHandler) {
+    handler->next = nextHandler;
+}
+
+int main() {
+    // Create handlers
+    Handler junior = { juniorHandle, NULL };
+    Handler senior = { seniorHandle, NULL };
+
+    // Set up the chain
+    setNext(&junior, &senior);
+
+    // Start the chain with a request
+    junior.handle(&junior, NULL);
+
+    return 0;
+}
+ */
+
+
+void run_experimental_hashtable_stuff()
 {
    logging_llprintf(LOGLEVEL_INFO, "%s", __func__);
 
