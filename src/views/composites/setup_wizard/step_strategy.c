@@ -4,7 +4,7 @@
 
 struct _StepStrategy
 {
-   GObject                       parent_instance;
+   GObject                       super;
    ExecutableConditionCallback_T condition;
    GList                         *strategies;
    GtkWidget                     *ui_presentation;

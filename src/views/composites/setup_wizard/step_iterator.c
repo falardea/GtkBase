@@ -6,7 +6,7 @@
 
 struct _StepIterator
 {
-   GObject  parent_object;
+   GObject  super;
    GList    *steps;
    GList    *current;
 };

@@ -26,7 +26,7 @@ typedef gboolean (*ExecutableConditionCallback_T)(StepExecutable *parent_sequenc
 
 struct _StepExecutableInterface
 {
-   GTypeInterface g_iface;
+   GTypeInterface super;
    void (*execute) (StepExecutable *self, RunModel *run_model);
    void (*cancel) (StepExecutable *self, RunModel *run_model);
    StepIterator *(*get_iterator)(StepExecutable *self);

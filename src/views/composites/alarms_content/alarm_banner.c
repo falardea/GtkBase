@@ -19,7 +19,7 @@
 
 struct _AlarmBanner
 {
-   GtkBox   parent;
+   GtkBox   super;
    GtkBox   *banner_hbox;
    GtkLabel *lbl_message;
    GtkLabel *lbl_bullet;

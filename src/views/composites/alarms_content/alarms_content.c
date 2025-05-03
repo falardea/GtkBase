@@ -20,7 +20,7 @@ typedef struct
 // Public?
 struct _AlarmsContent
 {
-   GtkBox   parent;
+   GtkBox   super;
    GtkBox   *content_box;
 };
 

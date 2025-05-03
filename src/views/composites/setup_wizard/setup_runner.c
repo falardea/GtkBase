@@ -16,7 +16,7 @@ typedef struct
 
 struct _SetupRunner
 {
-   GtkBox   parent;
+   GtkBox   super;
    GtkBox   *content_box;
 
    void        (*on_complete)(StepExecutable *parent_sequence, RunModel *run_model);

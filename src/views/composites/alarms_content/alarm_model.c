@@ -9,7 +9,7 @@
 
 struct _AlarmModel
 {
-   GObject  parent_object;
+   GObject           super;
    ALARM_MODEL_LEVEL alarm_level;
 };
 

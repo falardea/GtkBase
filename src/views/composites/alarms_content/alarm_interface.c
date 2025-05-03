@@ -9,7 +9,7 @@
 
 struct _AlarmInterface
 {
-   GtkBox      parent;
+   GtkBox      super;
    GtkButton   *btn_set_high_alarm;
    GtkButton   *btn_set_mid_alarm;
    GtkButton   *btn_set_low_alarm;

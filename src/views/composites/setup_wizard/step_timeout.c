@@ -20,7 +20,7 @@ typedef struct {
 
 struct _StepTimeout
 {
-   GtkBox         parent;
+   GtkBox         super;
    GtkLabel       *lbl_step_bullet;
    GtkLabel       *lbl_step_description;
    GtkProgressBar *pbar_step_countdown;

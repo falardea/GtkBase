@@ -9,7 +9,7 @@
 
 struct _StepAcknowledge
 {
-   GtkBox      parent;
+   GtkBox      super;
    GtkLabel    *lbl_step_bullet;
    GtkLabel    *lbl_step_description;
 
