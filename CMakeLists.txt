@@ -88,7 +88,14 @@ set(MY_SOURCES
     src/views/root_window.h
     src/headless_sandbox/headless_sandbox.h
     src/headless_sandbox/headless_sandbox.c
+    src/gtk_composites/log_terminal.h
     src/gtk_composites/log_terminal.c
+    src/gtk_composites/app_mode_selector.c
+    src/gtk_composites/app_mode_selector.h
+    src/gtype_composites/app_model.c
+    src/gtype_composites/app_model.h
+    src/gtk_composites/validated_entry.c
+    src/gtk_composites/validated_entry.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

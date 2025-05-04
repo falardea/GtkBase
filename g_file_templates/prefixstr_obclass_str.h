@@ -11,7 +11,7 @@ G_BEGIN_DECLS // __cplusplus guard
 
 G_DECLARE_FINAL_TYPE(PrefixstrObclassStr, prefixstr_obclass_str, PREFIXSTR, OBCLASS_STR, GObject)
 
-PrefixstrObclassStr *prefixstr_obclass_str_new(GtkWidget *parent_context);
+PrefixstrObclassStr *prefixstr_obclass_str_new();
 
 G_END_DECLS
 #endif  // PREFIXSTR_OBCLASS_STR_H__

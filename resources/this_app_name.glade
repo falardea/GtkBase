@@ -14,37 +14,68 @@
     <property name="gravity">center</property>
     <signal name="delete-event" handler="on_main_wnd_delete_event" swapped="no"/>
     <child>
-      <object class="GtkBox">
+      <object class="GtkOverlay" id="app_wnd_overlay">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="hexpand">True</property>
-        <property name="vexpand">True</property>
-        <property name="orientation">vertical</property>
-        <property name="baseline-position">top</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">10</property>
-            <property name="margin-bottom">10</property>
+            <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">10</property>
+            <property name="baseline-position">top</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="halign">center</property>
-                <property name="valign">start</property>
+                <property name="margin-left">10</property>
+                <property name="margin-right">10</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">10</property>
                 <child>
-                  <object class="GtkEntry" id="say_something_entry">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="valign">center</property>
-                    <property name="placeholder-text" translatable="yes">Say Something</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">start</property>
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkEntry" id="say_something_entry">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="valign">center</property>
+                        <property name="placeholder-text" translatable="yes">Say Something</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="do_something_button">
+                        <property name="label" translatable="yes">Do It!</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="valign">center</property>
+                        <signal name="clicked" handler="on_do_something_button_clicked" swapped="no"/>
+                        <style>
+                          <class name="remove-before-flight"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -53,92 +84,76 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="do_something_button">
-                    <property name="label" translatable="yes">Do It!</property>
+                  <object class="GtkBox" id="sandbox_content">
                     <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="has-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="valign">center</property>
-                    <signal name="clicked" handler="on_do_something_button_clicked" swapped="no"/>
-                    <style>
-                      <class name="remove-before-flight"/>
-                    </style>
+                    <property name="can-focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="sandbox_content">
+              <object class="GtkBox" id="app_gutter">
+                <property name="height-request">80</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="valign">end</property>
+                <property name="margin-left">10</property>
+                <property name="margin-right">10</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-bottom">10</property>
                 <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <property name="orientation">vertical</property>
+                <property name="spacing">10</property>
+                <property name="baseline-position">bottom</property>
                 <child>
                   <placeholder/>
                 </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox" id="app_gutter">
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="valign">end</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-bottom">10</property>
-            <property name="hexpand">True</property>
-            <property name="spacing">10</property>
-            <property name="baseline-position">bottom</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <object class="GtkButtonBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="halign">end</property>
-                <property name="vexpand">True</property>
-                <property name="orientation">vertical</property>
-                <property name="baseline-position">bottom</property>
-                <property name="layout-style">end</property>
                 <child>
-                  <object class="GtkButton" id="main_wnd_close">
-                    <property name="label" translatable="yes">Close</property>
-                    <property name="width-request">25</property>
+                  <object class="GtkButtonBox">
                     <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <signal name="clicked" handler="on_main_wnd_close_clicked" swapped="no"/>
+                    <property name="can-focus">False</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="baseline-position">bottom</property>
+                    <property name="layout-style">end</property>
+                    <child>
+                      <object class="GtkButton" id="main_wnd_close">
+                        <property name="label" translatable="yes">Close</property>
+                        <property name="width-request">25</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <signal name="clicked" handler="on_main_wnd_close_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="pack-type">end</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
@@ -151,10 +166,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
+            <property name="index">-1</property>
           </packing>
         </child>
       </object>

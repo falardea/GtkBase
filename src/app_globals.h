@@ -5,6 +5,7 @@
 #define APP_GLOBALS_H__
 #include <gtk/gtk.h>
 #include "gtk_composites/log_terminal.h"
+#include "gtk_composites/app_mode_selector.h"
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -26,14 +27,22 @@ extern const char* ERROR_STR;
 extern const int   LOGGING_MAX_MSG_LENGTH;
 
 typedef struct {
+   GtkApplicationWindow *main_wnd;
+   GtkOverlay           *app_wnd_overlay;
+
    GtkWidget   *w_msg_out_textview;
    GtkWidget   *w_say_something_entry;
 
    GtkWidget   *w_sandbox_content;
+   AppModeSelector *mode_selector;
+
+
    GtkWidget   *app_gutter;
    LogTerminal *msg_out;
+
 } app_widget_ref_struct;
 
 extern app_widget_ref_struct *g_app_widget_refs;
+app_widget_ref_struct *get_app_widgets_pointer(void);
 
 #endif  /* APP_GLOBALS_H__ */

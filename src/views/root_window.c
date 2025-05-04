@@ -6,6 +6,7 @@
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 #include "gtk_composites/log_terminal.h"
+#include "gtk_composites/validated_entry.h"
 
 static const char *MSG_OUT_CURSOR_NAME = "msgOutCursor";
 static GtkTextMark *msgOutCursor;
@@ -23,6 +24,9 @@ gboolean on_main_wnd_delete_event(__attribute__((unused)) GtkWidget *srcWidget,
    return FALSE;
 }
 
+
+gboolean validation_callback(gchar *text_to_validate);
+
 void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, __attribute__((unused)) gpointer *user_data)
 {
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
@@ -31,7 +35,60 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    } else {
       print_log_level_msgout(LOGLEVEL_INFO, "nothing to say?");
    }
+
+   /*GtkWidget *dialog;
+   dialog = gtk_message_dialog_new(GTK_WINDOW(wdgts->main_wnd), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Your message here");
+
+   // Set the dialog to be transient for the parent window to ensure it stays on top of the parent
+   gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(wdgts->main_wnd));
+
+   // Set the dialog position to be centered on the parent window
+   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+
+   // Optionally, set a specific position
+   // gtk_window_move(GTK_WINDOW(dialog), x_position, y_position);
+
+   gtk_dialog_run(GTK_DIALOG(dialog));
+   gtk_widget_destroy(dialog);*/
+
+   GtkWidget *popup = validated_entry_new("Validated Input Example",
+                                          "A general informational area for a form->submit type UI/UX.  This could "
+                                          "also be a tree, with configuration items, configured by a boxed-type structure "
+                                          "for application-ui state, may a run-state object too...",
+                                          "What's the magic word",
+                                          "guess",
+                                          "unlock",
+                                          "Validate Input", "Cancel",
+                                          (ValidateFormCallback_T)validation_callback);
+   gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->app_wnd_overlay), popup);
+   gtk_widget_show_all(popup);
 }
+
+gboolean validation_callback(gchar *text_to_validate)
+{
+   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
+   app_widget_ref_struct *wdgts = get_app_widgets_pointer();
+
+   if (strlen(text_to_validate) > 0 && strcmp(text_to_validate, "Abracadabra") == 0)
+   {
+      logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, text_to_validate);
+      return TRUE;
+   }
+   return FALSE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////
 
 void print_log_level_msgout(LOGLEVEL loglevel, const char *_format, ...)
 {
