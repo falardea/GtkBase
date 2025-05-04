@@ -37,7 +37,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="halign">center</property>
-                <property name="valign">center</property>
+                <property name="valign">start</property>
                 <property name="spacing">10</property>
                 <child>
                   <object class="GtkEntry" id="say_something_entry">
@@ -59,6 +59,7 @@
                     <property name="can-focus">True</property>
                     <property name="has-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="valign">center</property>
                     <signal name="clicked" handler="on_do_something_button_clicked" swapped="no"/>
                     <style>
                       <class name="remove-before-flight"/>
@@ -72,9 +73,26 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="sandbox_content">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -85,7 +103,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="app_gutter">
+            <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="valign">end</property>
@@ -96,40 +115,7 @@
             <property name="spacing">10</property>
             <property name="baseline-position">bottom</property>
             <child>
-              <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <property name="hscrollbar-policy">never</property>
-                <property name="window-placement-set">False</property>
-                <property name="shadow-type">in</property>
-                <property name="min-content-width">120</property>
-                <property name="min-content-height">80</property>
-                <property name="max-content-width">120</property>
-                <property name="max-content-height">80</property>
-                <child>
-                  <object class="GtkTextView" id="msg_out_textview">
-                    <property name="width-request">220</property>
-                    <property name="height-request">40</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <property name="editable">False</property>
-                    <property name="wrap-mode">char</property>
-                    <property name="cursor-visible">False</property>
-                    <property name="accepts-tab">False</property>
-                    <property name="input-purpose">terminal</property>
-                    <property name="monospace">True</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
               <object class="GtkButtonBox">

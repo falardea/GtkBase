@@ -6,6 +6,7 @@
 #include "sys_interface.h"
 #include "logging.h"
 
+const char* TRACE_STR = "TRACE";
 const char* DEBUG_STR = "DEBUG";
 const char* INFO_STR = "INFO";
 const char* ERROR_STR = "ERROR";
@@ -18,8 +19,10 @@ const char *get_log_level_str(LOGLEVEL level)
       return ERROR_STR;
    else if (level == LOGLEVEL_INFO)
       return INFO_STR;
-   else
+   else if (level == LOGLEVEL_DEBUG)
       return DEBUG_STR;
+   else
+      return TRACE_STR;
 }
 
 int logging_llprintf(LOGLEVEL level, const char *_format, ...) {

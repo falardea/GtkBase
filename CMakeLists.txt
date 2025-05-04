@@ -88,6 +88,7 @@ set(MY_SOURCES
     src/views/root_window.h
     src/headless_sandbox/headless_sandbox.h
     src/headless_sandbox/headless_sandbox.c
+    src/gtk_composites/log_terminal.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

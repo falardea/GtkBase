@@ -4,6 +4,7 @@
 #ifndef APP_GLOBALS_H__
 #define APP_GLOBALS_H__
 #include <gtk/gtk.h>
+#include "gtk_composites/log_terminal.h"
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -13,6 +14,7 @@ typedef enum {
 } RVALUE;
 
 typedef enum {
+   LOGLEVEL_TRACE,
    LOGLEVEL_DEBUG,
    LOGLEVEL_INFO,
    LOGLEVEL_ERROR
@@ -26,6 +28,10 @@ extern const int   LOGGING_MAX_MSG_LENGTH;
 typedef struct {
    GtkWidget   *w_msg_out_textview;
    GtkWidget   *w_say_something_entry;
+
+   GtkWidget   *w_sandbox_content;
+   GtkWidget   *app_gutter;
+   LogTerminal *msg_out;
 } app_widget_ref_struct;
 
 extern app_widget_ref_struct *g_app_widget_refs;

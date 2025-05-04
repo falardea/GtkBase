@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/resource_path">
-        <file preprocess="xml-stripblanks">resources/this_app_name.glade</file>
+        <file alias="main_app_wnd" compressed="true" preprocess="xml-stripblanks">resources/this_app_name.glade</file>
+        <file alias="log_terminal" compressed="true" preprocess="xml-stripblanks">resources/log_terminal.ui</file>
+
         <file>resources/style/this_app_name_style.css</file>
     </gresource>
 </gresources>
