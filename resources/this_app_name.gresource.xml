@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/resource_path">
-        <file alias="main_app_wnd" compressed="true" preprocess="xml-stripblanks">resources/this_app_name.glade</file>
+        <!-- GtkBuilder resource files using *.glade to differentiate from composite templates -->
+        <file alias="main_app_wnd"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/this_app_name.glade</file>
 
-        <file alias="validated_entry" compressed="true" preprocess="xml-stripblanks">resources/validated_entry.ui</file>
-        <file alias="log_terminal" compressed="true" preprocess="xml-stripblanks">resources/log_terminal.ui</file>
-        <file alias="app_mode_selector" compressed="true" preprocess="xml-stripblanks">resources/app_mode_selector.ui</file>
+        <!-- Composite Templates using *.ui to differentiate from "builder" templates -->
+        <file alias="validated_entry"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/validated_entry.ui</file>
+        <file alias="log_terminal"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/log_terminal.ui</file>
+        <file alias="app_mode_selector"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/app_mode_selector.ui</file>
 
+        <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
+
+
     </gresource>
 </gresources>
