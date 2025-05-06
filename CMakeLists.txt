@@ -96,6 +96,8 @@ set(MY_SOURCES
     src/gtype_composites/app_model.h
     src/gtk_composites/validated_entry.c
     src/gtk_composites/validated_entry.h
+      src/gtk_composites/hw_test_panel/hw_sim_panel.c
+      src/gtk_composites/hw_test_panel/hw_sim_panel.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

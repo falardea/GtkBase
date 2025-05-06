@@ -25,6 +25,14 @@ app_widget_ref_struct *app_builder(void) {
    }
 
    appWidgetsT->main_wnd = GTK_APPLICATION_WINDOW(gtk_builder_get_object(builder, "main_wnd"));
+
+#if HW_SIM_PERSISTS
+   widgets->hw_sim_panel = hw_sim_panel_new();
+   gtk_widget_show(GTK_WIDGET(widgets->hw_sim_panel));
+#endif
+
+
+
    appWidgetsT->app_wnd_overlay = GTK_OVERLAY(gtk_builder_get_object(builder, "app_wnd_overlay"));
    gtk_window_set_position(GTK_WINDOW(appWidgetsT->main_wnd), GTK_WIN_POS_CENTER);
 
