@@ -9,34 +9,39 @@ struct _HwSimPanel
 {
    GtkWindow      super;
 
+   GtkBox         *memcheck_response_box;
+   GtkBox         *pumping_response_box;
+   GtkBox         *heating_response_box;
+
    GtkButton      *hw_sim_panel_close;
+   GtkButton      *btn_memcheck_response;
    GtkButton      *btn_pump_enable_response;
    GtkButton      *btn_heat_enable_response;
 
-   GtkCheckButton *ckbtn_heat_enable_failure;
+   GtkCheckButton *ckbtn_memcheck_failure;
    GtkCheckButton *ckbtn_pump_enable_failure;
+   GtkCheckButton *ckbtn_heat_enable_failure;
 };
 
 G_DEFINE_TYPE(HwSimPanel, hw_sim_panel, GTK_TYPE_WINDOW)
 
 static void hw_sim_panel_finalize(GObject *g_object)
 {
-//   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-   g_print("%s\n", __func__);
-
+   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(HW_IS_SIM_PANEL(g_object));
-//   HwSimPanel *self = HW_SIM_PANEL(g_object);
-
    G_OBJECT_CLASS(hw_sim_panel_parent_class)->finalize(g_object);
 }
 
-gboolean on_hw_sim_panel_delete_event(GtkWidget *srcWidget, GdkEvent *event, gpointer uData);
-static void on_hw_sim_panel_destroy(GtkWidget *self);
 static void on_hw_sim_panel_close_clicked(GtkWidget *button, gpointer *user_data);
+static void on_hw_sim_panel_destroy(GtkWidget *self);
+gboolean on_hw_sim_panel_delete_event(GtkWidget *srcWidget, GdkEvent *event, gpointer uData);
+
+static void on_btn_memcheck_response_clicked(GtkButton *button, gpointer *user_data);
 static void on_btn_pump_enable_response_clicked(GtkButton *button, gpointer *user_data);
 static void on_btn_heat_enable_response_clicked(GtkButton *button, gpointer *user_data);
 
+static void on_ckbtn_memcheck_failure_toggled(GtkToggleButton *button, gpointer *user_data);
 static void on_ckbtn_pump_enable_failure_toggled(GtkToggleButton *button, gpointer *user_data);
 static void on_ckbtn_heat_enable_failure_toggled(GtkToggleButton *button, gpointer *user_data);
 
@@ -47,23 +52,29 @@ static void hw_sim_panel_class_init(HwSimPanelClass *klass)
    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
    gobject_class->finalize = hw_sim_panel_finalize;
-//   widget_class->delete_event = (void *)on_hw_sim_panel_delete_event;
-//   widget_class->destroy =(void *)on_hw_sim_panel_destroy;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/hw_sim_panel");
-
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/com/dekaresearch/pod/hw_sim_panel");
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, hw_sim_panel_close);
+   gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, memcheck_response_box);
+   gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, pumping_response_box);
+   gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, heating_response_box);
+   gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, btn_memcheck_response);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, btn_pump_enable_response);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, btn_heat_enable_response);
+   gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, ckbtn_memcheck_failure);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, ckbtn_heat_enable_failure);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, ckbtn_pump_enable_failure);
 
+   // Might be a bit overkill with all these close/destroy/delete... but we probably still aren't freeing the memory correctly for this
    gtk_widget_class_bind_template_callback_full(widget_class, "on_hw_sim_panel_delete_event", (GCallback)on_hw_sim_panel_delete_event);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_hw_sim_panel_destroy", (GCallback)on_hw_sim_panel_destroy);
-
    gtk_widget_class_bind_template_callback_full(widget_class, "on_hw_sim_panel_close_clicked", (GCallback)on_hw_sim_panel_close_clicked);
+
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_memcheck_response_clicked", (GCallback)on_btn_memcheck_response_clicked);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_pump_enable_response_clicked", (GCallback)on_btn_pump_enable_response_clicked);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_heat_enable_response_clicked", (GCallback)on_btn_heat_enable_response_clicked);
+
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_ckbtn_memcheck_failure_toggled", (GCallback)on_ckbtn_memcheck_failure_toggled);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_ckbtn_pump_enable_failure_toggled", (GCallback)on_ckbtn_pump_enable_failure_toggled);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_ckbtn_heat_enable_failure_toggled", (GCallback)on_ckbtn_heat_enable_failure_toggled);
 }
@@ -75,47 +86,64 @@ static void hw_sim_panel_init(HwSimPanel *self)
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-HwSimPanel *hw_sim_panel_new()
+void hw_sim_panel_rx_memcheck_signal(__attribute__((unused))GtkWidget *source, gboolean sig_val, gpointer user_data)
+{
+   HwSimPanel *self = HW_SIM_PANEL(user_data);
+
+   gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), sig_val);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+
+HwSimPanel *hw_sim_panel_new(RunModel *model)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    HwSimPanel *self;
    self = g_object_new(HW_TYPE_SIM_PANEL, NULL);
 
+//   g_object_bind_property(appWidgetsT->w_dial, "old_value", appWidgetsT->w_dial_label, "value", G_BINDING_DEFAULT);
+
+   g_signal_connect (G_OBJECT(model), "albumin-loaded", G_CALLBACK(hw_sim_panel_rx_memcheck_signal), self);
+
    return self;
 }
 
 /////////////////////
-static void on_hw_sim_panel_close_clicked(GtkWidget *button, gpointer *user_data)
+static void on_btn_memcheck_response_clicked(__attribute__((unused))GtkButton *button,__attribute__((unused)) gpointer *user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+static void on_btn_pump_enable_response_clicked(__attribute__((unused))GtkButton *button,__attribute__((unused)) gpointer *user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+static void on_btn_heat_enable_response_clicked(__attribute__((unused))GtkButton *button,__attribute__((unused)) gpointer *user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+
+static void on_ckbtn_memcheck_failure_toggled(__attribute__((unused))GtkToggleButton *button,__attribute__((unused)) gpointer *user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+static void on_ckbtn_pump_enable_failure_toggled(__attribute__((unused))GtkToggleButton *button,__attribute__((unused)) gpointer *user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+static void on_ckbtn_heat_enable_failure_toggled(__attribute__((unused))GtkToggleButton *button,__attribute__((unused)) gpointer *user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+
+static void on_hw_sim_panel_close_clicked(GtkWidget *button,__attribute__((unused)) gpointer *user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    gtk_window_close(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(button))));
 }
-
-static void on_btn_pump_enable_response_clicked(GtkButton *button, gpointer *user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-}
-static void on_btn_heat_enable_response_clicked(GtkButton *button, gpointer *user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-}
-
-static void on_ckbtn_pump_enable_failure_toggled(GtkToggleButton *button, gpointer *user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-}
-static void on_ckbtn_heat_enable_failure_toggled(GtkToggleButton *button, gpointer *user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-}
-
 static void on_hw_sim_panel_destroy(GtkWidget *self)
 {
    gtk_widget_destroyed(self, &self);
 }
-
-gboolean on_hw_sim_panel_delete_event(__attribute__((unused)) GtkWidget *srcWidget,
-                                  __attribute__((unused)) GdkEvent *event,
+gboolean on_hw_sim_panel_delete_event(__attribute__((unused)) GtkWidget *srcWidget,__attribute__((unused)) GdkEvent *event,
                                   __attribute__((unused)) gpointer uData) {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
 #if HW_SIM_PERSISTS
