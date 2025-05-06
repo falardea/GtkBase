@@ -5,6 +5,9 @@
         <file alias="main_app_wnd"
               compressed="true"
               preprocess="xml-stripblanks">resources/this_app_name.glade</file>
+        <file alias="hw_sim_panel"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/hw_sim_panel.glade</file>
 
         <!-- Composite Templates using *.ui to differentiate from "builder" templates -->
         <file alias="validated_entry"

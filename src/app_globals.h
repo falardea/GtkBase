@@ -9,6 +9,8 @@
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
+#define HW_SIM_PERSISTS 0
+
 typedef enum {
    RVALUE_SUCCESS,
    RVALUE_ERROR
@@ -39,6 +41,10 @@ typedef struct {
 
    GtkWidget   *app_gutter;
    LogTerminal *msg_out;
+
+#if HW_SIM_PERSISTS
+   HwSimPanel *hw_sim_panel;
+#endif
 
 } app_widget_ref_struct;
 
