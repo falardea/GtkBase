@@ -53,7 +53,7 @@ static void hw_sim_panel_class_init(HwSimPanelClass *klass)
 
    gobject_class->finalize = hw_sim_panel_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/com/dekaresearch/pod/hw_sim_panel");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(widget_class), "/resource_path/hw_sim_panel");
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, hw_sim_panel_close);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, memcheck_response_box);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, pumping_response_box);
@@ -94,15 +94,15 @@ void hw_sim_panel_rx_memcheck_signal(__attribute__((unused))GtkWidget *source, g
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
 
-HwSimPanel *hw_sim_panel_new(RunModel *model)
+HwSimPanel *hw_sim_panel_new(AppModel *model)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    HwSimPanel *self;
    self = g_object_new(HW_TYPE_SIM_PANEL, NULL);
 
-//   g_object_bind_property(appWidgetsT->w_dial, "old_value", appWidgetsT->w_dial_label, "value", G_BINDING_DEFAULT);
+//   g_object_bind_property(G_OBJECT(model), "run-mode", self, ??, G_BINDING_DEFAULT);
 
-   g_signal_connect (G_OBJECT(model), "albumin-loaded", G_CALLBACK(hw_sim_panel_rx_memcheck_signal), self);
+   // g_signal_connect (G_OBJECT(model), "run-mode", G_CALLBACK(hw_sim_panel_rx_memcheck_signal), self);
 
    return self;
 }

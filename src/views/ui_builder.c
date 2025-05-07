@@ -31,7 +31,7 @@ app_widget_ref_struct *app_builder(void) {
    gtk_widget_show(GTK_WIDGET(widgets->hw_sim_panel));
 #endif
 
-
+   appWidgetsT->app_model = app_model_new();
 
    appWidgetsT->app_wnd_overlay = GTK_OVERLAY(gtk_builder_get_object(builder, "app_wnd_overlay"));
    gtk_window_set_position(GTK_WINDOW(appWidgetsT->main_wnd), GTK_WIN_POS_CENTER);

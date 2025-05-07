@@ -6,6 +6,7 @@
 #include <gtk/gtk.h>
 #include "gtk_composites/log_terminal.h"
 #include "gtk_composites/app_mode_selector.h"
+#include "gtype_composites/app_model.h"
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -41,6 +42,8 @@ typedef struct {
 
    GtkWidget   *app_gutter;
    LogTerminal *msg_out;
+
+   AppModel    *app_model;
 
 #if HW_SIM_PERSISTS
    HwSimPanel *hw_sim_panel;

@@ -95,7 +95,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    if (panel == NULL || !HW_IS_SIM_PANEL(panel))
    {
       print_log_level_msgout(LOGLEVEL_DEBUG, ">>>>>>>>>>>>>>>> Building");
-      panel = hw_sim_panel_new();
+      panel = hw_sim_panel_new(wdgts->app_model);
       gtk_widget_show(GTK_WIDGET(panel));
    }
    else
@@ -118,17 +118,6 @@ gboolean validation_callback(gchar *text_to_validate)
    }
    return FALSE;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //////////////////////////////////////////////////////
 
