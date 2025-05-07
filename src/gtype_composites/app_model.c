@@ -21,6 +21,14 @@ enum
    APP_MODEL_N_PROPERTIES
 };
 
+enum
+{
+   APP_MODEL_SIGNAL_MODE_CHANGE,
+   APP_MODEL_N_SIGNALS
+};
+
+void (* app_model_listener_response) (AppModel *model, APP_RUN_MODE *mode);
+
 static void app_model_finalize( GObject *self )
 {
    G_OBJECT_CLASS (app_model_parent_class)->finalize (self);
@@ -52,6 +60,7 @@ static void app_model_get_property( GObject *object, guint prop_id, GValue *valu
    }
 }
 
+static guint      app_model_mode_change_sig[APP_MODEL_N_SIGNALS] = {0, };
 static GParamSpec *model_properties[APP_MODEL_N_PROPERTIES] = {NULL, };
 
 static void app_model_class_init( AppModelClass *klass )
@@ -68,8 +77,16 @@ static void app_model_class_init( AppModelClass *klass )
                                                           "The app run mode of the model",
                                                           RUN_MODE_NOT_SET, N_APP_RUN_MODES-1, RUN_MODE_NOT_SET,
                                                           G_PARAM_READWRITE );
-
    g_object_class_install_properties( gobject_class, APP_MODEL_N_PROPERTIES, model_properties);
+
+   app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE] = g_signal_new_class_handler("mode-change-signal",
+                                                                                        G_TYPE_FROM_CLASS(klass),
+                                                                                        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                                                                        (GCallback)app_model_listener_response,
+                                                                                        NULL,
+                                                                                        NULL,
+                                                                                        g_cclosure_marshal_VOID__INT,
+                                                                                        G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
 static void app_model_init(AppModel *self)
@@ -101,5 +118,10 @@ void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
    g_return_if_fail( APP_IS_MODEL( self ) );
    g_return_if_fail(mode < N_APP_RUN_MODES);
    self->run_mode = mode;
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: pre-signal", __func__);
+
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[APP_MODEL_PROP_RUN_MODE]);
+
+   g_signal_emit(G_OBJECT(self), app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode);
 }

@@ -86,12 +86,12 @@ static void hw_sim_panel_init(HwSimPanel *self)
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-void hw_sim_panel_rx_memcheck_signal(__attribute__((unused))GtkWidget *source, gboolean sig_val, gpointer user_data)
+void hw_sim_panel_rx_memcheck_signal(__attribute__((unused))GtkWidget *source, APP_RUN_MODE sig_val, gpointer user_data)
 {
    HwSimPanel *self = HW_SIM_PANEL(user_data);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: %d", __func__, sig_val);
 
    gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), sig_val);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
 
 HwSimPanel *hw_sim_panel_new(AppModel *model)
@@ -102,7 +102,7 @@ HwSimPanel *hw_sim_panel_new(AppModel *model)
 
 //   g_object_bind_property(G_OBJECT(model), "run-mode", self, ??, G_BINDING_DEFAULT);
 
-   // g_signal_connect (G_OBJECT(model), "run-mode", G_CALLBACK(hw_sim_panel_rx_memcheck_signal), self);
+   g_signal_connect (G_OBJECT(model), "mode-change-signal", G_CALLBACK(hw_sim_panel_rx_memcheck_signal), self);
 
    return self;
 }

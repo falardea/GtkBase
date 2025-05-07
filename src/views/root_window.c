@@ -76,7 +76,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    gtk_dialog_run(GTK_DIALOG(dialog));
    gtk_widget_destroy(dialog);*/
 
-   GtkWidget *popup = validated_entry_new("Validated Input Example",
+   /*GtkWidget *popup = validated_entry_new("Validated Input Example",
                                           "A general informational area for a form->submit type UI/UX.  This could "
                                           "also be a tree, with configuration items, configured by a boxed-type structure "
                                           "for application-ui state, may a run-state object too...",
@@ -86,7 +86,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
                                           "Validate Input", "Cancel",
                                           (ValidateFormCallback_T)validation_callback);
    gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->app_wnd_overlay), popup);
-   gtk_widget_show_all(popup);
+   gtk_widget_show_all(popup);*/
 
 
 #if HW_SIM_PERSISTS
