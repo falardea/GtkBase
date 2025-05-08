@@ -5,6 +5,11 @@
 #include "hw_sim_panel.h"
 #include "utils/logging.h"
 
+typedef struct
+{
+   AppModel *model;
+}HwSimPanelPrivate;
+
 struct _HwSimPanel
 {
    GtkWindow      super;
@@ -23,7 +28,7 @@ struct _HwSimPanel
    GtkCheckButton *ckbtn_heat_enable_failure;
 };
 
-G_DEFINE_TYPE(HwSimPanel, hw_sim_panel, GTK_TYPE_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE(HwSimPanel, hw_sim_panel, GTK_TYPE_WINDOW)
 
 static void hw_sim_panel_finalize(GObject *g_object)
 {
@@ -84,14 +89,17 @@ static void hw_sim_panel_init(HwSimPanel *self)
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    g_return_if_fail(HW_IS_SIM_PANEL(self));
    gtk_widget_init_template(GTK_WIDGET(self));
+   HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
+   priv->model = NULL;
 }
 
-void hw_sim_panel_rx_memcheck_signal(__attribute__((unused))GtkWidget *source, APP_RUN_MODE sig_val, gpointer user_data)
+void hw_sim_panel_rx_mode_change(GObject *source, APP_RUN_MODE sig_val, gpointer user_data)
 {
    HwSimPanel *self = HW_SIM_PANEL(user_data);
+
    logging_llprintf(LOGLEVEL_DEBUG, "%s: %d", __func__, sig_val);
 
-   gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), sig_val);
+   gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), TRUE);
 }
 
 HwSimPanel *hw_sim_panel_new(AppModel *model)
@@ -100,9 +108,14 @@ HwSimPanel *hw_sim_panel_new(AppModel *model)
    HwSimPanel *self;
    self = g_object_new(HW_TYPE_SIM_PANEL, NULL);
 
+   HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
+   priv->model = model;
+
 //   g_object_bind_property(G_OBJECT(model), "run-mode", self, ??, G_BINDING_DEFAULT);
 
-   g_signal_connect (G_OBJECT(model), "mode-change-signal", G_CALLBACK(hw_sim_panel_rx_memcheck_signal), self);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: pre-connect", __func__);
+
+   g_signal_connect (G_OBJECT(priv->model), "mode-changed", G_CALLBACK(hw_sim_panel_rx_mode_change), self);
 
    return self;
 }

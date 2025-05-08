@@ -27,7 +27,7 @@ enum
    APP_MODEL_N_SIGNALS
 };
 
-void (* app_model_listener_response) (AppModel *model, APP_RUN_MODE *mode);
+void (* app_model_listener_response) (AppModel *model, APP_RUN_MODE mode);
 
 static void app_model_finalize( GObject *self )
 {
@@ -79,7 +79,7 @@ static void app_model_class_init( AppModelClass *klass )
                                                           G_PARAM_READWRITE );
    g_object_class_install_properties( gobject_class, APP_MODEL_N_PROPERTIES, model_properties);
 
-   app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE] = g_signal_new_class_handler("mode-change-signal",
+   app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE] = g_signal_new_class_handler("mode-changed",
                                                                                         G_TYPE_FROM_CLASS(klass),
                                                                                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                                                                         (GCallback)app_model_listener_response,
@@ -119,9 +119,6 @@ void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
    g_return_if_fail(mode < N_APP_RUN_MODES);
    self->run_mode = mode;
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: pre-signal", __func__);
-
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[APP_MODEL_PROP_RUN_MODE]);
-
    g_signal_emit(G_OBJECT(self), app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode);
 }

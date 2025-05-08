@@ -3,7 +3,7 @@
  */
 #include "css_styler.h"
 
-void apply_app_styling(__attribute__((unused)) app_widget_ref_struct *appWidgetsT) {
+void apply_app_styling(__attribute__((unused)) app_widgets *appWidgetsT) {
    GtkCssProvider *cssProvider = gtk_css_provider_new();
 
    gtk_css_provider_load_from_resource(cssProvider,

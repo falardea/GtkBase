@@ -6,6 +6,6 @@
 #include <gtk/gtk.h>
 #include "app_globals.h"
 
-app_widget_ref_struct *app_builder(void);
+app_widgets *app_builder(void);
 
 #endif  /* UI_BUILDER_H__ */

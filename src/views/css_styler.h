@@ -5,6 +5,6 @@
 #define CSS_STYLER_H__
 #include "ui_builder.h"
 
-void apply_app_styling(app_widget_ref_struct *appWidgetsT);
+void apply_app_styling(app_widgets *appWidgetsT);
 
 #endif  /* CSS_STYLER_H__ */

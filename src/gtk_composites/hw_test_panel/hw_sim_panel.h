@@ -6,6 +6,7 @@
 #define HW_SIM_PANEL_H__
 #include <gtk/gtk.h>
 #include "gtype_composites/app_model.h"
+
 G_BEGIN_DECLS // __cplusplus guard
 
 #define HW_TYPE_SIM_PANEL (hw_sim_panel_get_type())

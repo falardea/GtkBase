@@ -11,6 +11,9 @@
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
 #define HW_SIM_PERSISTS 0
+#if HW_SIM_PERSISTS
+#include "gtk_composites/hw_test_panel/hw_sim_panel.h"
+#endif
 
 typedef enum {
    RVALUE_SUCCESS,
@@ -49,9 +52,9 @@ typedef struct {
    HwSimPanel *hw_sim_panel;
 #endif
 
-} app_widget_ref_struct;
+} app_widgets;
 
-extern app_widget_ref_struct *g_app_widget_refs;
-app_widget_ref_struct *get_app_widgets_pointer(void);
+extern app_widgets *g_app_widgets;
+app_widgets *get_app_widgets_pointer(void);
 
 #endif  /* APP_GLOBALS_H__ */

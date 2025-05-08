@@ -54,7 +54,7 @@ gboolean validation_callback(gchar *text_to_validate);
 
 void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, __attribute__((unused)) gpointer *user_data)
 {
-   app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
+   app_widgets *wdgts = (app_widgets *) user_data;
    if (gtk_entry_buffer_get_length(gtk_entry_get_buffer(GTK_ENTRY(wdgts->w_say_something_entry))) > 0){
       print_log_level_msgout(LOGLEVEL_INFO, "%s", gtk_entry_get_text(GTK_ENTRY(wdgts->w_say_something_entry)));
    } else {
@@ -109,7 +109,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
 gboolean validation_callback(gchar *text_to_validate)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-   app_widget_ref_struct *wdgts = get_app_widgets_pointer();
+   app_widgets *wdgts = get_app_widgets_pointer();
 
    if (strlen(text_to_validate) > 0 && strcmp(text_to_validate, "Abracadabra") == 0)
    {
@@ -124,6 +124,8 @@ gboolean validation_callback(gchar *text_to_validate)
 void print_log_level_msgout(LOGLEVEL loglevel, const char *_format, ...)
 {
    if (loglevel >= get_app_log_level()) {
+      app_widgets *wdgts = get_app_widgets_pointer();
+
       bool use_ts = get_app_log_w_timestamp_flag();
 
       // We're not going to "flag" out the timestamp in the memory sizing here, because... who cares if it's too big?
@@ -142,6 +144,6 @@ void print_log_level_msgout(LOGLEVEL loglevel, const char *_format, ...)
                use_ts ? timestamp:"", use_ts?":":"", get_log_level_str(loglevel), line_out);
 
       logging_llprintf(loglevel, "%s", line_out);
-      log_terminal_set_message_out(g_app_widget_refs->msg_out, ll_msg_out);
+      log_terminal_set_message_out(wdgts->msg_out, ll_msg_out);
    }
 }

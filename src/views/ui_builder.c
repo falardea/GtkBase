@@ -7,15 +7,15 @@
 #include "utils/logging.h"
 // #include "gtk_composites/log_terminal.h"
 
-app_widget_ref_struct *get_app_widgets_pointer(void)
+app_widgets *get_app_widgets_pointer(void)
 {
-   return g_app_widget_refs;
+   return g_app_widgets;
 }
 
-app_widget_ref_struct *app_builder(void) {
+app_widgets *app_builder(void) {
    GtkBuilder *builder;
 
-   app_widget_ref_struct *appWidgetsT = g_slice_new(app_widget_ref_struct);
+   app_widgets *appWidgetsT = g_slice_new(app_widgets);
 
    builder = gtk_builder_new();
 
@@ -26,12 +26,11 @@ app_widget_ref_struct *app_builder(void) {
 
    appWidgetsT->main_wnd = GTK_APPLICATION_WINDOW(gtk_builder_get_object(builder, "main_wnd"));
 
-#if HW_SIM_PERSISTS
-   widgets->hw_sim_panel = hw_sim_panel_new();
-   gtk_widget_show(GTK_WIDGET(widgets->hw_sim_panel));
-#endif
-
    appWidgetsT->app_model = app_model_new();
+#if HW_SIM_PERSISTS
+   appWidgetsT->hw_sim_panel = hw_sim_panel_new(appWidgetsT->app_model);
+   gtk_widget_show(GTK_WIDGET(appWidgetsT->hw_sim_panel));
+#endif
 
    appWidgetsT->app_wnd_overlay = GTK_OVERLAY(gtk_builder_get_object(builder, "app_wnd_overlay"));
    gtk_window_set_position(GTK_WINDOW(appWidgetsT->main_wnd), GTK_WIN_POS_CENTER);

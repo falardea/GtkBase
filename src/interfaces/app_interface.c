@@ -20,7 +20,7 @@ const char *APP_STATE_UNINITIALIZED_STR = "APP_STATE_UNINITIALIZED";
 const char *APP_STATE_SUCCESS_STR = "APP_STATE_SUCCESS";
 const char *APP_STATE_ERROR_STR = "APP_STATE_ERROR";
 
-app_widget_ref_struct *g_app_widget_refs;
+app_widgets *g_app_widgets;
 
 void app_init(int argc, char **argv) {
    RVALUE retVal;
@@ -43,9 +43,9 @@ void app_init(int argc, char **argv) {
    {
       gtk_init(&argc, &argv);
 
-      g_app_widget_refs = app_builder();
+      g_app_widgets = app_builder();
 
-      apply_app_styling(g_app_widget_refs);
+      apply_app_styling(g_app_widgets);
    }
 
    set_app_state(APP_STATE_SUCCESS);

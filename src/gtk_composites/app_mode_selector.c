@@ -42,8 +42,6 @@ void on_btn_restore_mode_clicked(__attribute__((unused)) GtkButton *button, gpoi
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
    app_model_set_run_mode(priv->model, RUN_MODE_RESTORE);
-
-   gtk_stack_set_visible_child_name(GTK_STACK(self), "mode_run_context");
 }
 void on_btn_standard_mode_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
@@ -53,8 +51,6 @@ void on_btn_standard_mode_clicked(__attribute__((unused)) GtkButton *button, gpo
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
    app_model_set_run_mode(priv->model, RUN_MODE_STANDARD);
-
-   gtk_stack_set_visible_child_name(GTK_STACK(self), "mode_run_context");
 }
 void on_btn_test_mode_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
@@ -64,8 +60,6 @@ void on_btn_test_mode_clicked(__attribute__((unused)) GtkButton *button, gpointe
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
    app_model_set_run_mode(priv->model, RUN_MODE_TEST);
-
-   gtk_stack_set_visible_child_name(GTK_STACK(self), "mode_run_context");
 }
 
 static void app_mode_selector_class_init(AppModeSelectorClass *klass)
