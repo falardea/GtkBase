@@ -98,6 +98,8 @@ set(MY_SOURCES
     src/gtk_composites/validated_entry.h
     src/gtk_composites/hw_sim_panel.c
     src/gtk_composites/hw_sim_panel.h
+    src/gtk_composites/mode_prompt.c
+    src/gtk_composites/mode_prompt.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

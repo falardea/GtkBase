@@ -6,7 +6,7 @@
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 #include "gtk_composites/log_terminal.h"
-#include "gtk_composites/validated_entry.h"
+#include "gtk_composites/mode_prompt.h"
 #include "gtk_composites/hw_sim_panel.h"
 
 
@@ -45,9 +45,6 @@ gboolean on_main_wnd_delete_event(__attribute__((unused)) GtkWidget *srcWidget,
    return FALSE;
 }
 
-
-gboolean validation_callback(gchar *text_to_validate);
-
 void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, __attribute__((unused)) gpointer *user_data)
 {
    app_widgets *wdgts = (app_widgets *) user_data;
@@ -72,18 +69,6 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    gtk_dialog_run(GTK_DIALOG(dialog));
    gtk_widget_destroy(dialog);*/
 
-   /*GtkWidget *popup = validated_entry_new("Validated Input Example",
-                                          "A general informational area for a form->submit type UI/UX.  This could "
-                                          "also be a tree, with configuration items, configured by a boxed-type structure "
-                                          "for application-ui state, may a run-state object too...",
-                                          "What's the magic word",
-                                          "guess",
-                                          "unlock",
-                                          "Validate Input", "Cancel",
-                                          (ValidateFormCallback_T)validation_callback);
-   gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->app_wnd_overlay), popup);
-   gtk_widget_show_all(popup);*/
-
    if (wdgts->hw_sim_panel == NULL || !HW_IS_SIM_PANEL(wdgts->hw_sim_panel))
    {
       wdgts->hw_sim_panel = hw_sim_panel_new(wdgts->app_model);
@@ -91,17 +76,6 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    gtk_widget_show(GTK_WIDGET(wdgts->hw_sim_panel));
 }
 
-gboolean validation_callback(gchar *text_to_validate)
-{
-   app_widgets *wdgts = get_app_widgets_pointer();
-
-   if (strlen(text_to_validate) > 0 && strcmp(text_to_validate, "Abracadabra") == 0)
-   {
-      logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, text_to_validate);
-      return TRUE;
-   }
-   return FALSE;
-}
 
 //////////////////////////////////////////////////////
 

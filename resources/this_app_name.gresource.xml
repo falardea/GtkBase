@@ -13,6 +13,9 @@
         <file alias="validated_entry"
               compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/validated_entry.ui</file>
+        <file alias="mode_prompt"
+              compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/mode_prompt.ui</file>
         <file alias="log_terminal"
               compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/log_terminal.ui</file>

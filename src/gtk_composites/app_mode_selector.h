@@ -10,7 +10,7 @@ G_BEGIN_DECLS // __cplusplus guard
 
 #define APP_TYPE_MODE_SELECTOR (app_mode_selector_get_type())
 
-G_DECLARE_FINAL_TYPE(AppModeSelector, app_mode_selector, APP, MODE_SELECTOR, GtkStack)
+G_DECLARE_FINAL_TYPE(AppModeSelector, app_mode_selector, APP, MODE_SELECTOR, GtkBox)
 
 AppModeSelector *app_mode_selector_new(AppModel *model);
 

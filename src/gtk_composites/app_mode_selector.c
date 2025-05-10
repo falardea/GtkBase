@@ -3,7 +3,7 @@
  * @brief
  */
 #include "app_mode_selector.h"
-
+#include "mode_prompt.h"
 #include "utils/logging.h"
 
 typedef struct {
@@ -12,7 +12,7 @@ typedef struct {
 
 struct _AppModeSelector
 {
-   GtkStack       super;
+   GtkBox         super;
    GtkBox         *mode_run_context;
    GtkButtonBox   *mode_select_page;
 
@@ -21,7 +21,7 @@ struct _AppModeSelector
    GtkButton      *btn_test_mode;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(AppModeSelector, app_mode_selector, GTK_TYPE_STACK)
+G_DEFINE_TYPE_WITH_PRIVATE(AppModeSelector, app_mode_selector, GTK_TYPE_BOX)
 
 static void app_mode_selector_finalize(GObject *g_object)
 {
@@ -43,12 +43,30 @@ void on_btn_restore_mode_clicked(__attribute__((unused)) GtkButton *button, gpoi
 
    app_model_set_run_mode(priv->model, RUN_MODE_RESTORE);
 }
+
+
+gboolean validation_callback(gchar *text_to_validate)
+{
+   app_widgets *wdgts = get_app_widgets_pointer();
+
+   if (strlen(text_to_validate) > 0 && strcmp(text_to_validate, "Abracadabra") == 0)
+   {
+      logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, text_to_validate);
+      return TRUE;
+   }
+   return FALSE;
+}
+
 void on_btn_standard_mode_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
 
    AppModeSelector *self = APP_MODE_SELECTOR(user_data);
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
+
+   // GtkWidget *popup = mode_prompt_new((ValidateFormCallback_T)validation_callback);
+   // gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->app_wnd_overlay), popup);
+   // gtk_widget_show_all(popup);
 
    app_model_set_run_mode(priv->model, RUN_MODE_STANDARD);
 }
@@ -92,16 +110,6 @@ static void app_mode_selector_init(AppModeSelector *self)
    priv->model = NULL;
 }
 
-
-static void app_mode_select_rx_mode_change(GObject *source, gboolean mode, gpointer user_data)
-{
-   AppModeSelector *self = APP_MODE_SELECTOR(user_data);
-
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>>>>> run-mode = %d", __func__, mode);
-
-   gtk_widget_set_sensitive(GTK_WIDGET(self->btn_restore_mode), TRUE);
-}
-
 AppModeSelector *app_mode_selector_new(AppModel *model)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
@@ -110,6 +118,5 @@ AppModeSelector *app_mode_selector_new(AppModel *model)
    self = g_object_new(APP_TYPE_MODE_SELECTOR, NULL);
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    priv->model = model;
-   g_signal_connect (G_OBJECT(priv->model), APP_RUN_MODE_SIGNAL_STR, G_CALLBACK(app_mode_select_rx_mode_change), self);
    return self;
 }

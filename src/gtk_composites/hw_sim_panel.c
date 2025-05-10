@@ -32,11 +32,17 @@ struct _HwSimPanel
 
 G_DEFINE_TYPE_WITH_PRIVATE(HwSimPanel, hw_sim_panel, GTK_TYPE_WINDOW)
 
+void hw_sim_panel_rx_mode_change(AppModel *source, APP_RUN_MODE mode, gpointer user_data);
+
 static void hw_sim_panel_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(HW_IS_SIM_PANEL(g_object));
+   HwSimPanel *self = HW_SIM_PANEL(g_object);
+
+   g_signal_handlers_disconnect_by_func(self->model, G_CALLBACK(hw_sim_panel_rx_mode_change), self);
+
    G_OBJECT_CLASS(hw_sim_panel_parent_class)->finalize(g_object);
 }
 
@@ -89,16 +95,6 @@ static void hw_sim_panel_init(HwSimPanel *self)
    self->model = NULL;
 }
 
-void hw_sim_panel_rx_mode_change(__attribute__((unused))GObject *source, gboolean mode, gpointer user_data)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>>>>> run-mode = %d", __func__, mode);
-
-   HwSimPanel *self = HW_SIM_PANEL(user_data);
-
-
-   gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), TRUE);
-}
-
 HwSimPanel *hw_sim_panel_new(AppModel *model)
 {
    HwSimPanel *self;
@@ -133,6 +129,15 @@ static void on_ckbtn_pump_enable_failure_toggled(__attribute__((unused))GtkToggl
 static void on_ckbtn_heat_enable_failure_toggled(__attribute__((unused))GtkToggleButton *button,__attribute__((unused)) gpointer *user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+
+void hw_sim_panel_rx_mode_change(__attribute__((unused))AppModel *source, APP_RUN_MODE mode, gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>>>>> run-mode = %d", __func__, mode);
+
+   HwSimPanel *self = HW_SIM_PANEL(user_data);
+
+   gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), TRUE);
 }
 
 static void on_hw_sim_panel_close_clicked(GtkWidget *button,__attribute__((unused)) gpointer *user_data)

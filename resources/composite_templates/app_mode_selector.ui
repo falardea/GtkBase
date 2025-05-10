@@ -2,81 +2,93 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <template class="AppModeSelector" parent="GtkStack">
+  <template class="AppModeSelector" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="transition-duration">500</property>
-    <property name="transition-type">over-left-right</property>
+    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkButtonBox" id="mode_select_page">
-        <property name="name">ams-start-page</property>
+      <object class="GtkStack">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">25</property>
-        <property name="layout-style">center</property>
+        <property name="transition-duration">500</property>
+        <property name="transition-type">over-left-right</property>
         <child>
-          <object class="GtkButton" id="btn_restore_mode">
-            <property name="label" translatable="yes">Restore</property>
+          <object class="GtkButtonBox" id="mode_select_page">
+            <property name="name">ams-start-page</property>
             <property name="visible">True</property>
-            <property name="sensitive">False</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <signal name="clicked" handler="on_btn_restore_mode_clicked" object="AppModeSelector" swapped="no"/>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">25</property>
+            <property name="layout-style">center</property>
+            <child>
+              <object class="GtkButton" id="btn_restore_mode">
+                <property name="label" translatable="yes">Restore</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="on_btn_restore_mode_clicked" object="AppModeSelector" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_standard_mode">
+                <property name="label" translatable="yes">Standard</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="on_btn_standard_mode_clicked" object="AppModeSelector" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_test_mode">
+                <property name="label" translatable="yes">Test</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="on_btn_test_mode_clicked" object="AppModeSelector" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="name">mode_select_page</property>
+            <property name="title" translatable="yes">mode_select_page</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="btn_standard_mode">
-            <property name="label" translatable="yes">Standard</property>
+          <object class="GtkBox" id="mode_run_context">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <signal name="clicked" handler="on_btn_standard_mode_clicked" object="AppModeSelector" swapped="no"/>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
+            <property name="name">mode_run_context</property>
+            <property name="title" translatable="yes">mode_run_context</property>
             <property name="position">1</property>
           </packing>
         </child>
-        <child>
-          <object class="GtkButton" id="btn_test_mode">
-            <property name="label" translatable="yes">Test</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <signal name="clicked" handler="on_btn_test_mode_clicked" object="AppModeSelector" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
       </object>
       <packing>
-        <property name="name">mode_select_page</property>
-        <property name="title" translatable="yes">mode_select_page</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkBox" id="mode_run_context">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-      <packing>
-        <property name="name">mode_run_context</property>
-        <property name="title" translatable="yes">mode_run_context</property>
-        <property name="position">1</property>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
       </packing>
     </child>
   </template>
