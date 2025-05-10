@@ -4,7 +4,7 @@
 #ifndef SYS_INTERFACE_H__
 #define SYS_INTERFACE_H__
 #include <stdbool.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 
 RVALUE set_display_env(void);
 

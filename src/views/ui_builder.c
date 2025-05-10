@@ -2,7 +2,7 @@
  * @brief The implementation
  */
 #include <gtk/gtk.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "ui_builder.h"
 #include "utils/logging.h"
 // #include "gtk_composites/log_terminal.h"
@@ -24,12 +24,15 @@ app_widgets *app_builder(void) {
       return NULL;
    }
 
+   appWidgetsT->app_model = app_model_new();
+
    appWidgetsT->main_wnd = GTK_APPLICATION_WINDOW(gtk_builder_get_object(builder, "main_wnd"));
 
-   appWidgetsT->app_model = app_model_new();
 #if HW_SIM_PERSISTS
    appWidgetsT->hw_sim_panel = hw_sim_panel_new(appWidgetsT->app_model);
    gtk_widget_show(GTK_WIDGET(appWidgetsT->hw_sim_panel));
+#else
+   appWidgetsT->hw_sim_panel = NULL;
 #endif
 
    appWidgetsT->app_wnd_overlay = GTK_OVERLAY(gtk_builder_get_object(builder, "app_wnd_overlay"));

@@ -3,7 +3,7 @@
  * @brief
  */
 #include <gtk/gtk.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 #include "utils/logging.h"
 #include "validated_entry.h"
 

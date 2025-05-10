@@ -4,7 +4,7 @@
 #ifndef LOGGING_H__
 #define LOGGING_H__
 #include <stdarg.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 
 // #define LOG_INFO(format, ...) logging_llprintf(LOGLEVEL_INFO, "%s: %s\n", __func__, format __VA_OPT__(,) __VA_ARGS__)
 // #define LOG_DEBUG(format, ...) logging_llprintf(LOGLEVEL_DEBUG, "%s: %s\n", __func__, format __VA_OPT__(,) __VA_ARGS__)

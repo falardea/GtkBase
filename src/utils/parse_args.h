@@ -3,7 +3,7 @@
  */
 #ifndef PARSE_ARGS_H__
 #define PARSE_ARGS_H__
-#include "app_globals.h"
+#include "app_widgets.h"
 
 RVALUE parse_input_args(int argc, char **argv);
 

@@ -7,28 +7,25 @@
 #include "utils/logging.h"
 #include "gtk_composites/log_terminal.h"
 #include "gtk_composites/validated_entry.h"
-#include "gtk_composites/hw_test_panel/hw_sim_panel.h"
+#include "gtk_composites/hw_sim_panel.h"
 
 
 static const char *MSG_OUT_CURSOR_NAME = "msgOutCursor";
 static GtkTextMark *msgOutCursor;
 static char timestamp[20];  // not sure why it felt better to allocate the memory once
 
-#if !HW_SIM_PERSISTS
-static HwSimPanel *panel = NULL;
-#endif
 
 void on_main_wnd_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,
                                 __attribute__((unused)) gpointer uData) {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    GtkWidget *parent_wnd = gtk_widget_get_toplevel(srcWidget);
 
-#if HW_SIM_PERSISTS
-   // If the windows is created and just shows/hides, then we need to destroy it
-   // explicitly
    app_widgets *wdgts = get_app_widgets_pointer();
-   gtk_widget_destroy(GTK_WIDGET(wdgts->hw_sim_panel));
-#endif
+   if (wdgts->hw_sim_panel != NULL && GTK_IS_WIDGET(wdgts->hw_sim_panel))
+   {
+      gtk_widget_destroy(GTK_WIDGET(wdgts->hw_sim_panel));
+   }
+
    gtk_widget_destroy(parent_wnd);
    gtk_main_quit();
 }
@@ -38,12 +35,11 @@ gboolean on_main_wnd_delete_event(__attribute__((unused)) GtkWidget *srcWidget,
                                     __attribute__((unused)) gpointer uData) {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
 
-#if HW_SIM_PERSISTS
-   // If the windows is created and just shows/hides, then we need to destroy it
-   // explicitly
    app_widgets *wdgts = get_app_widgets_pointer();
-   gtk_widget_destroy(GTK_WIDGET(wdgts->hw_sim_panel));
-#endif
+   if (wdgts->hw_sim_panel != NULL && GTK_IS_WIDGET(wdgts->hw_sim_panel))
+   {
+      gtk_widget_destroy(GTK_WIDGET(wdgts->hw_sim_panel));
+   }
 
    gtk_main_quit();
    return FALSE;
@@ -88,27 +84,15 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->app_wnd_overlay), popup);
    gtk_widget_show_all(popup);*/
 
-
-#if HW_SIM_PERSISTS
+   if (wdgts->hw_sim_panel == NULL || !HW_IS_SIM_PANEL(wdgts->hw_sim_panel))
+   {
+      wdgts->hw_sim_panel = hw_sim_panel_new(wdgts->app_model);
+   }
    gtk_widget_show(GTK_WIDGET(wdgts->hw_sim_panel));
-#else
-   if (panel == NULL || !HW_IS_SIM_PANEL(panel))
-   {
-      print_log_level_msgout(LOGLEVEL_DEBUG, ">>>>>>>>>>>>>>>> Building");
-      panel = hw_sim_panel_new(wdgts->app_model);
-      gtk_widget_show(GTK_WIDGET(panel));
-   }
-   else
-   {
-      print_log_level_msgout(LOGLEVEL_DEBUG, ">>>>>>>>>>>>>>>> Showing");
-      gtk_widget_show(GTK_WIDGET(panel));
-   }
-#endif
 }
 
 gboolean validation_callback(gchar *text_to_validate)
 {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    app_widgets *wdgts = get_app_widgets_pointer();
 
    if (strlen(text_to_validate) > 0 && strcmp(text_to_validate, "Abracadabra") == 0)

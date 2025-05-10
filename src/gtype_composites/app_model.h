@@ -13,6 +13,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(AppModel, app_model, APP, MODEL, GObject)
 
+#define APP_RUN_MODE_SIGNAL_STR  "run-mode-changed"
+
 typedef enum
 {
    RUN_MODE_NOT_SET = 0,

@@ -4,7 +4,7 @@
 #ifndef UI_BUILDER_H__
 #define UI_BUILDER_H__
 #include <gtk/gtk.h>
-#include "app_globals.h"
+#include "app_widgets.h"
 
 app_widgets *app_builder(void);
 

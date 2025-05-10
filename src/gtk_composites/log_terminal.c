@@ -11,9 +11,7 @@ struct _LogTerminal
 {
    GtkScrolledWindow             super;
    GtkTextView                   *message_out;
-
    GtkTextMark                   *msgOutCursor;
-
 };
 
 G_DEFINE_TYPE(LogTerminal, log_terminal, GTK_TYPE_SCROLLED_WINDOW)
@@ -21,20 +19,15 @@ G_DEFINE_TYPE(LogTerminal, log_terminal, GTK_TYPE_SCROLLED_WINDOW)
 static void log_terminal_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(LOG_IS_TERMINAL(g_object));
    // LogTerminal *self = LOG_TERMINAL(g_object);
-
-
 
    G_OBJECT_CLASS(log_terminal_parent_class)->finalize(g_object);
 }
 
 static void log_terminal_class_init(LogTerminalClass *klass)
 {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-
    GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
@@ -62,8 +55,6 @@ LogTerminal *log_terminal_new()
 
 void log_terminal_set_message_out(LogTerminal *self, const char *msgout)
 {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-
    GtkTextBuffer  *tvBuff  =  gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->message_out));
    GtkTextIter    endIter;
    gtk_text_buffer_get_end_iter(tvBuff, &endIter);

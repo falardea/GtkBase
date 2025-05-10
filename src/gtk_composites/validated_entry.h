@@ -4,7 +4,7 @@
  */
 #ifndef VALIDATED_ENTRY_H__
 #define VALIDATED_ENTRY_H__
-#include "app_globals.h"
+#include "app_widgets.h"
 G_BEGIN_DECLS
 
 #define VALIDATED_TYPE_ENTRY             ( validated_entry_get_type () )

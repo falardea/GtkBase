@@ -10,6 +10,8 @@ struct _AppModel
 {
    GObject           super;
    APP_RUN_MODE      run_mode;
+
+   gboolean          run_mode_change;
 };
 
 G_DEFINE_TYPE( AppModel, app_model, G_TYPE_OBJECT )
@@ -27,7 +29,7 @@ enum
    APP_MODEL_N_SIGNALS
 };
 
-void (* app_model_listener_response) (AppModel *model, APP_RUN_MODE mode);
+void (* app_model_listener_response) (AppModel *model, gboolean mode_changed);
 
 static void app_model_finalize( GObject *self )
 {
@@ -79,19 +81,20 @@ static void app_model_class_init( AppModelClass *klass )
                                                           G_PARAM_READWRITE );
    g_object_class_install_properties( gobject_class, APP_MODEL_N_PROPERTIES, model_properties);
 
-   app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE] = g_signal_new_class_handler("mode-changed",
+   app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE] = g_signal_new_class_handler(APP_RUN_MODE_SIGNAL_STR,
                                                                                         G_TYPE_FROM_CLASS(klass),
                                                                                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                                                                         (GCallback)app_model_listener_response,
                                                                                         NULL,
                                                                                         NULL,
-                                                                                        g_cclosure_marshal_VOID__INT,
-                                                                                        G_TYPE_NONE, 1, G_TYPE_INT);
+                                                                                        g_cclosure_marshal_VOID__BOOLEAN,
+                                                                                        G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 }
 
 static void app_model_init(AppModel *self)
 {
    self->run_mode = RUN_MODE_NOT_SET;
+   self->run_mode_change = FALSE;
 }
 
 AppModel *app_model_new()
@@ -117,8 +120,10 @@ void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
 
    g_return_if_fail( APP_IS_MODEL( self ) );
    g_return_if_fail(mode < N_APP_RUN_MODES);
+   self->run_mode_change = (self->run_mode != mode);
    self->run_mode = mode;
 
+   logging_llprintf(LOGLEVEL_DEBUG, ">>>>>>>>>>>> run-mode-change = %d", mode);
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[APP_MODEL_PROP_RUN_MODE]);
-   g_signal_emit(G_OBJECT(self), app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode);
+   g_signal_emit(G_OBJECT(self), app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode_change);
 }

@@ -92,16 +92,24 @@ static void app_mode_selector_init(AppModeSelector *self)
    priv->model = NULL;
 }
 
+
+static void app_mode_select_rx_mode_change(GObject *source, gboolean mode, gpointer user_data)
+{
+   AppModeSelector *self = APP_MODE_SELECTOR(user_data);
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>>>>> run-mode = %d", __func__, mode);
+
+   gtk_widget_set_sensitive(GTK_WIDGET(self->btn_restore_mode), TRUE);
+}
+
 AppModeSelector *app_mode_selector_new(AppModel *model)
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    g_return_val_if_fail(model != NULL, NULL);
-
    AppModeSelector *self;
    self = g_object_new(APP_TYPE_MODE_SELECTOR, NULL);
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
-
    priv->model = model;
-
+   g_signal_connect (G_OBJECT(priv->model), APP_RUN_MODE_SIGNAL_STR, G_CALLBACK(app_mode_select_rx_mode_change), self);
    return self;
 }

@@ -1,8 +1,8 @@
 /**
  * @brief A place for globals
  */
-#ifndef APP_GLOBALS_H__
-#define APP_GLOBALS_H__
+#ifndef APP_WIDGETS_H__
+#define APP_WIDGETS_H__
 #include <gtk/gtk.h>
 #include "gtk_composites/log_terminal.h"
 #include "gtk_composites/app_mode_selector.h"
@@ -11,9 +11,7 @@
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
 #define HW_SIM_PERSISTS 0
-#if HW_SIM_PERSISTS
-#include "gtk_composites/hw_test_panel/hw_sim_panel.h"
-#endif
+#include "gtk_composites/hw_sim_panel.h"
 
 typedef enum {
    RVALUE_SUCCESS,
@@ -48,13 +46,11 @@ typedef struct {
 
    AppModel    *app_model;
 
-#if HW_SIM_PERSISTS
    HwSimPanel *hw_sim_panel;
-#endif
 
 } app_widgets;
 
 extern app_widgets *g_app_widgets;
 app_widgets *get_app_widgets_pointer(void);
 
-#endif  /* APP_GLOBALS_H__ */
+#endif  /* APP_WIDGETS_H__ */
