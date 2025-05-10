@@ -43,7 +43,7 @@ app_widgets *app_builder(void) {
 
 
    appWidgetsT->w_sandbox_content = GTK_WIDGET(gtk_builder_get_object(builder, "sandbox_content"));
-   appWidgetsT->mode_selector = app_mode_selector_new(appWidgetsT->app_model);
+   appWidgetsT->mode_selector = app_mode_selector_new(appWidgetsT->app_model, appWidgetsT->app_wnd_overlay);
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_sandbox_content), GTK_WIDGET(appWidgetsT->mode_selector), TRUE, TRUE, 0);
    gtk_widget_show(appWidgetsT->w_sandbox_content);
 

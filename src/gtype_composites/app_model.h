@@ -30,5 +30,8 @@ AppModel *app_model_new();
 APP_RUN_MODE app_model_get_run_mode( AppModel *self );
 void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode );
 
+gchar *app_model_get_run_description(AppModel *self);
+void app_model_set_run_description(AppModel *self, const gchar *run_description);
+
 G_END_DECLS
 #endif  // APP_MODEL_H__

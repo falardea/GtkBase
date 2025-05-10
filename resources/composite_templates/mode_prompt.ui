@@ -64,7 +64,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="entry_run_description">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="halign">center</property>
@@ -83,7 +83,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="entry_run_description">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                   </object>
@@ -149,7 +149,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="entry_to_validate">
+                  <object class="GtkEntry" id="entry_service_password">
                     <property name="name">validated_entry</property>
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -203,12 +203,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_validate_and_submit">
+              <object class="GtkButton" id="btn_start_run">
                 <property name="label" translatable="yes">Start Run</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="on_btn_validate_and_submit_clicked" object="ModePrompt" swapped="no"/>
+                <signal name="clicked" handler="on_btn_start_run_clicked" object="ModePrompt" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

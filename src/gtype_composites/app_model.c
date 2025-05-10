@@ -10,6 +10,8 @@ struct _AppModel
 {
    GObject           super;
    APP_RUN_MODE      run_mode;
+
+   gchar             *run_description;
 };
 
 G_DEFINE_TYPE( AppModel, app_model, G_TYPE_OBJECT )
@@ -29,9 +31,14 @@ enum
 
 void (* app_model_listener_response) (AppModel *model, APP_RUN_MODE mode);
 
-static void app_model_finalize( GObject *self )
+static void app_model_finalize( GObject *g_obj )
 {
-   G_OBJECT_CLASS (app_model_parent_class)->finalize (self);
+   AppModel *self = APP_MODEL(g_obj);
+   if(self->run_description)
+   {
+      g_free(self->run_description);
+   }
+   G_OBJECT_CLASS (app_model_parent_class)->finalize (g_obj);
 }
 
 static void app_model_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec )
@@ -110,7 +117,6 @@ APP_RUN_MODE app_model_get_run_mode( AppModel *self )
    g_return_val_if_fail( APP_IS_MODEL( self ), RUN_MODE_NOT_SET);
    return self->run_mode;
 }
-
 void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
 {
    logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
@@ -119,6 +125,21 @@ void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
    g_return_if_fail(mode < N_APP_RUN_MODES);
    self->run_mode = mode;
 
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: mode=%d", __func__, self->run_mode);
+
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[APP_MODEL_PROP_RUN_MODE]);
    g_signal_emit(G_OBJECT(self), app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode);
+}
+
+gchar *app_model_get_run_description(AppModel *self)
+{
+   return g_strdup_inline(self->run_description);
+}
+void app_model_set_run_description(AppModel *self, const gchar *run_description)
+{
+   g_return_if_fail(run_description != NULL);
+   self->run_description = g_strdup(run_description);
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, self->run_description);
+
 }

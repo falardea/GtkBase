@@ -5,6 +5,8 @@
   <template class="AppModeSelector" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkStack">
@@ -53,6 +55,7 @@
               <object class="GtkButton" id="btn_test_mode">
                 <property name="label" translatable="yes">Test</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="on_btn_test_mode_clicked" object="AppModeSelector" swapped="no"/>
@@ -86,7 +89,7 @@
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
+        <property name="expand">True</property>
         <property name="fill">True</property>
         <property name="position">0</property>
       </packing>

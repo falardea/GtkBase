@@ -12,7 +12,7 @@ G_BEGIN_DECLS // __cplusplus guard
 
 G_DECLARE_FINAL_TYPE(AppModeSelector, app_mode_selector, APP, MODE_SELECTOR, GtkBox)
 
-AppModeSelector *app_mode_selector_new(AppModel *model);
+AppModeSelector *app_mode_selector_new(AppModel *model, GtkOverlay *popup_container);
 
 G_END_DECLS
 #endif  // APP_MODE_SELECTOR_H__

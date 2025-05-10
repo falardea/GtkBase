@@ -10,18 +10,12 @@ G_BEGIN_DECLS
 #define MODE_TYPE_PROMPT             ( mode_prompt_get_type () )
 G_DECLARE_FINAL_TYPE(ModePrompt, mode_prompt, MODE, PROMPT, GtkBox )
 
-typedef gboolean (*ValidateFormCallback_T)(const gchar *text_to_validate);
+typedef gboolean (*RunValidationCallback_T)(const gchar *run_description, gpointer user_data);
+typedef gboolean (*ServiceValidationCallback_T)(const gchar *service_pass, const gchar *run_description, gpointer user_data);
 
-GtkWidget*        mode_prompt_new       (ValidateFormCallback_T return_callback);
-
-gboolean mode_prompt_get_sensitive( ModePrompt *self );
-void mode_prompt_set_sensitive( ModePrompt *self, gboolean sensitive );
-
-gboolean mode_prompt_get_valid( ModePrompt *self);
-void mode_prompt_set_valid( ModePrompt *self, gboolean valid);
-
-gchar *mode_prompt_get_default_text_fallback( ModePrompt *self );
-void mode_prompt_set_default_text_fallback( ModePrompt *self, const gchar *name );
+GtkWidget* mode_prompt_new(RunValidationCallback_T run_callback,
+                           ServiceValidationCallback_T service_callback,
+                           gpointer user_data);
 
 G_END_DECLS
 #endif  // MODE_PROMPT_H__
