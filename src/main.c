@@ -3,7 +3,7 @@
  */
 #include <gtk/gtk.h>
 #include "version.h"
-#include "interfaces/app_interface.h"
+#include "pseudo_app_model/app_interface.h"
 #include "headless_sandbox/headless_sandbox.h"
 #include "utils/logging.h"
 

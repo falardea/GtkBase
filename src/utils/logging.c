@@ -2,7 +2,7 @@
  * @brief The implementation
  */
 #include <stdio.h>
-#include "interfaces/app_interface.h"
+#include "pseudo_app_model/app_interface.h"
 #include "sys_interface.h"
 #include "logging.h"
 

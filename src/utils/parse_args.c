@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "app_widgets.h"
-#include "interfaces/app_interface.h"
+#include "pseudo_app_model/app_interface.h"
 #include "parse_args.h"
 
 static void print_usage(char *argv) {

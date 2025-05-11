@@ -5,13 +5,14 @@
 #ifndef SERVICE_CONTEXT_H__
 #define SERVICE_CONTEXT_H__
 #include <gtk/gtk.h>
+#include "gtype_composites/app_model.h"
 G_BEGIN_DECLS // __cplusplus guard
 
 #define SERVICE_TYPE_CONTEXT (service_context_get_type())
 
 G_DECLARE_FINAL_TYPE(ServiceContext, service_context, SERVICE, CONTEXT, GtkBox)
 
-ServiceContext *service_context_new();
+ServiceContext *service_context_new(AppModel *model);
 
 G_END_DECLS
 #endif  // SERVICE_CONTEXT_H__

@@ -6,7 +6,8 @@
 
 struct _StandardContext
 {
-   GtkBox                       super;
+   GtkBox super;
+   AppModel *model;
 };
 
 G_DEFINE_TYPE(StandardContext, standard_context, GTK_TYPE_BOX)
@@ -32,11 +33,15 @@ static void standard_context_class_init(StandardContextClass *klass)
 static void standard_context_init(StandardContext *self)
 {
    gtk_widget_init_template(GTK_WIDGET(self));
+   self->model = NULL;
 }
 
-StandardContext *standard_context_new()
+StandardContext *standard_context_new(AppModel *model)
 {
    StandardContext *self;
    self = g_object_new(STANDARD_TYPE_CONTEXT, NULL);
+
+   self->model = model;
+
    return self;
 }

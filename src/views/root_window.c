@@ -2,7 +2,7 @@
  * @brief The implementation
  */
 #include "root_window.h"
-#include "interfaces/app_interface.h"
+#include "pseudo_app_model/app_interface.h"
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
 #include "gtk_composites/peripheral/log_terminal.h"

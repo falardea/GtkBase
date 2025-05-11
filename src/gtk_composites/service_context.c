@@ -6,7 +6,9 @@
 
 struct _ServiceContext
 {
-   GtkBox                       super;
+   GtkBox super;
+
+   AppModel *model;
 };
 
 G_DEFINE_TYPE(ServiceContext, service_context, GTK_TYPE_BOX)
@@ -32,11 +34,13 @@ static void service_context_class_init(ServiceContextClass *klass)
 static void service_context_init(ServiceContext *self)
 {
    gtk_widget_init_template(GTK_WIDGET(self));
+   self->model = NULL;
 }
 
-ServiceContext *service_context_new()
+ServiceContext *service_context_new(AppModel *model)
 {
    ServiceContext *self;
    self = g_object_new(SERVICE_TYPE_CONTEXT, NULL);
+   self->model = model;
    return self;
 }

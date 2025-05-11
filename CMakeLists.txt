@@ -78,8 +78,8 @@ set(MY_SOURCES
     src/utils/logging.h
     src/utils/sys_interface.c
     src/utils/sys_interface.h
-    src/interfaces/app_interface.c
-    src/interfaces/app_interface.h
+    src/pseudo_app_model/app_interface.c
+    src/pseudo_app_model/app_interface.h
     src/views/ui_builder.c
     src/views/ui_builder.h
     src/views/css_styler.c

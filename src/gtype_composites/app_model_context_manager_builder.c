@@ -11,10 +11,11 @@ GtkBox *build_context_for_app_mode(AppModel *model)
 {
    if (app_model_get_run_mode(model) == RUN_MODE_STANDARD)
    {
-      return GTK_BOX(standard_context_new());
+      // if setup complete, load the re-calibration context
+      return GTK_BOX(standard_context_new(model));
    }
    else
    {
-      return GTK_BOX(service_context_new());
+      return GTK_BOX(service_context_new(model));
    }
 }
