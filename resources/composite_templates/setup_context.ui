@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <template class="ServiceContext" parent="GtkBox">
+  <template class="SetupContext" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="orientation">vertical</property>
@@ -15,7 +15,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">SERVICE CONTEXT</property>
+            <property name="label" translatable="yes">SETUP CONTEXT</property>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -24,11 +24,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
-            <property name="label" translatable="yes">Run BIT</property>
+          <object class="GtkButton" id="btn_setup_complete">
+            <property name="label" translatable="yes">Complete Setup</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_btn_setup_complete_clicked" object="SetupContext" swapped="no"/>
           </object>
           <packing>
             <property name="expand">True</property>

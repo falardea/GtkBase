@@ -18,6 +18,8 @@ G_DEFINE_TYPE(LogTerminal, log_terminal, GTK_TYPE_SCROLLED_WINDOW)
 
 static void log_terminal_finalize(GObject *g_object)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(LOG_IS_TERMINAL(g_object));
    // LogTerminal *self = LOG_TERMINAL(g_object);

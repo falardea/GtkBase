@@ -13,7 +13,6 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="transition-duration">500</property>
-        <property name="transition-type">slide-left-right</property>
         <child>
           <object class="GtkButtonBox" id="mode_select_page">
             <property name="name">ams-start-page</property>
@@ -72,7 +71,16 @@
                     <property name="can-focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <placeholder/>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">UPPER SENSOR VIEW</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -82,7 +90,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkNotebook">
+                  <object class="GtkNotebook" id="context_notebook">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="tab-pos">bottom</property>
@@ -97,7 +105,7 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="setup_context_label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Setup</property>

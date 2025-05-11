@@ -8,18 +8,23 @@
               preprocess="xml-stripblanks">resources/hw_sim_panel.glade</file>
 
         <!-- Composite Templates using *.ui to differentiate from "builder" templates -->
-        <file alias="validated_entry" compressed="true"
-              preprocess="xml-stripblanks">resources/composite_templates/validated_entry.ui</file>
-        <file alias="mode_prompt" compressed="true"
-              preprocess="xml-stripblanks">resources/composite_templates/mode_prompt.ui</file>
         <file alias="log_terminal" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/log_terminal.ui</file>
+
         <file alias="app_mode_selector" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/app_mode_selector.ui</file>
+        <file alias="mode_prompt" compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/mode_prompt.ui</file>
+
+        <file alias="run_viewer" compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/run_viewer.ui</file>
+
         <file alias="standard_context" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/standard_context.ui</file>
         <file alias="service_context" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/service_context.ui</file>
+        <file alias="setup_context" compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/setup_context.ui</file>
 
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>

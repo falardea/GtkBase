@@ -31,9 +31,6 @@ static void mode_prompt_finalize( GObject *oSelf )
 {
    g_return_if_fail(oSelf != NULL);
    g_return_if_fail(MODE_IS_PROMPT(oSelf));
-   ModePrompt *self = MODE_PROMPT(oSelf);
-
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    G_OBJECT_CLASS (mode_prompt_parent_class)->finalize (oSelf);
 }
@@ -46,15 +43,13 @@ static void on_ckbtn_enable_service_toggled(GtkToggleButton *enable_chkbx, gpoin
 
 static void on_btn_start_run_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    ModePrompt *self = MODE_PROMPT(user_data);
    gtk_style_context_remove_class(gtk_widget_get_style_context(GTK_WIDGET(self->entry_run_description)), "error");
    gtk_style_context_remove_class(gtk_widget_get_style_context(GTK_WIDGET(self->entry_service_password)), "error");
 
    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self->ckbtn_enable_service)))
    {
-      gboolean valid_input = (* self->service_validator) (self->mode_selector,
+      gboolean valid_input = (self->service_validator)(self->mode_selector,
             gtk_entry_get_text(self->entry_service_password),
             gtk_entry_get_text(self->entry_run_description),
             self->user_callback_data);
@@ -72,7 +67,8 @@ static void on_btn_start_run_clicked(__attribute__((unused)) GtkButton *button, 
    }
    else
    {
-      gboolean valid_input = (* self->run_validator) (self->mode_selector,
+
+      gboolean valid_input = (self->run_validator)(self->mode_selector,
             gtk_entry_get_text(self->entry_run_description),
             self->user_callback_data);
       if(valid_input)

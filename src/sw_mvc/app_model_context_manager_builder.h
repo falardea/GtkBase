@@ -5,11 +5,11 @@
 #ifndef APP_MODEL_CONTEXT_MANAGER_BUILDER_H__
 #define APP_MODEL_CONTEXT_MANAGER_BUILDER_H__
 #include <gtk/gtk.h>
-#include "app_model.h"
+#include "run_model.h"
 
 G_BEGIN_DECLS
 
-GtkBox *build_context_for_app_mode(AppModel *model);
+ContextMediator *build_context_for_run_mode(RunModel *model);
 
 G_END_DECLS
 #endif  // APP_MODEL_CONTEXT_MANAGER_BUILDER_H__

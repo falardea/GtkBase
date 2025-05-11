@@ -27,15 +27,17 @@ struct _HwSimPanel
    GtkCheckButton *ckbtn_pump_enable_failure;
    GtkCheckButton *ckbtn_heat_enable_failure;
 
-   AppModel *model;
+   RunModel *model;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(HwSimPanel, hw_sim_panel, GTK_TYPE_WINDOW)
 
-void hw_sim_panel_rx_mode_change(AppModel *source, APP_RUN_MODE mode, gpointer user_data);
+void hw_sim_panel_rx_mode_change(RunModel *source, RUN_MODEL_MODE mode, gpointer user_data);
 
 static void hw_sim_panel_finalize(GObject *g_object)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(HW_IS_SIM_PANEL(g_object));
    HwSimPanel *self = HW_SIM_PANEL(g_object);
@@ -88,18 +90,20 @@ static void hw_sim_panel_class_init(HwSimPanelClass *klass)
 
 static void hw_sim_panel_init(HwSimPanel *self)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(HW_IS_SIM_PANEL(self));
    gtk_widget_init_template(GTK_WIDGET(self));
    HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
    self->model = NULL;
 }
 
-HwSimPanel *hw_sim_panel_new(AppModel *model)
+HwSimPanel *hw_sim_panel_new(RunModel *model)
 {
    HwSimPanel *self;
    self = g_object_new(HW_TYPE_SIM_PANEL, NULL);
    self->model = model;
-   g_signal_connect (G_OBJECT(model), APP_RUN_MODE_SIGNAL_STR, G_CALLBACK(hw_sim_panel_rx_mode_change), self);
+   g_signal_connect (G_OBJECT(model), RUN_MODEL_MODE_CHANGE_SIGNAL_STR, G_CALLBACK(hw_sim_panel_rx_mode_change), self);
    return self;
 }
 
@@ -130,7 +134,7 @@ static void on_ckbtn_heat_enable_failure_toggled(__attribute__((unused))GtkToggl
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
 
-void hw_sim_panel_rx_mode_change(__attribute__((unused))AppModel *source, APP_RUN_MODE mode, gpointer user_data)
+void hw_sim_panel_rx_mode_change(__attribute__((unused))RunModel *source, RUN_MODEL_MODE mode, gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>>>>> run-mode = %d", __func__, mode);
 

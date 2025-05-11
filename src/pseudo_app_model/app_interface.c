@@ -67,7 +67,6 @@ const char *get_state_str(APP_INTERFACE_STATE state)
 
 void set_app_state(APP_INTERFACE_STATE state) {
    sAppModel.app_state = state;
-   logging_llprintf(LOGLEVEL_INFO, "setting app model init state: %s", get_state_str(state));
 }
 APP_INTERFACE_STATE get_app_state(void) {
    return sAppModel.app_state;

@@ -7,7 +7,8 @@
 #include "utils/logging.h"
 
 typedef struct {
-   AppModel *model;
+   ContextMediator   *setup_context;
+   RunModel          *model;
 } AppModeSelectorPrivate;
 
 struct _AppModeSelector
@@ -18,6 +19,8 @@ struct _AppModeSelector
    GtkButtonBox   *mode_select_page;
    GtkBox         *config_page;
 
+   GtkNotebook    *context_notebook;
+   GtkLabel       *setup_context_label;
    GtkBox         *setup_context_box;
 
    GtkButton      *btn_start_new_run;
@@ -31,27 +34,42 @@ G_DEFINE_TYPE_WITH_PRIVATE(AppModeSelector, app_mode_selector, GTK_TYPE_BOX)
 
 static void app_mode_selector_finalize(GObject *g_object)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(APP_IS_MODE_SELECTOR(g_object));
    // AppModeSelector *self = APP_MODE_SELECTOR(g_object);
    // AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
+   // if (priv->setup_context != NULL)
+   // {
+   //    gtk_widget_destroy(GTK_WIDGET(priv->setup_context));
+   // }
+
    G_OBJECT_CLASS(app_mode_selector_parent_class)->finalize(g_object);
 }
 
+gboolean app_mode_selector_load_context(AppModeSelector *self)
+{
+   AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
+
+   run_model_set_ui_context(priv->model);
+   priv->setup_context = run_model_get_ui_context(priv->model);
+   gtk_box_pack_start(self->setup_context_box, GTK_WIDGET(priv->setup_context), TRUE, TRUE, 0);
+   gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
+
+   return G_SOURCE_REMOVE;
+}
 gboolean standard_validation_callback(AppModeSelector *self, gchar *description_to_validate, gpointer user_data)
 {
-   AppModel *model = APP_MODEL(user_data);
+   RunModel *model = RUN_MODEL(user_data);
+   // AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
    if (strlen(description_to_validate) > 0)
    {
-      logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, description_to_validate);
-
-      app_model_set_run_mode(model, RUN_MODE_STANDARD);
-      app_model_set_run_description(model, description_to_validate);
-      app_model_set_setup_ui_context(model, self->setup_context_box);
-
-      gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
+      run_model_set_run_mode(model, RUN_MODE_STANDARD);
+      run_model_set_run_description(model, description_to_validate);
+      g_idle_add((GSourceFunc)app_mode_selector_load_context, self);
 
       return TRUE;
    }
@@ -59,16 +77,15 @@ gboolean standard_validation_callback(AppModeSelector *self, gchar *description_
 }
 gboolean service_validation_callback(AppModeSelector *self, gchar *password_to_validate, gchar *description, gpointer user_data)
 {
-   AppModel *model = APP_MODEL(user_data);
+   RunModel *model = RUN_MODEL(user_data);
+   AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
    if (strlen(password_to_validate) > 0 && strcmp(password_to_validate, "Abracadabra") == 0) {
       logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, password_to_validate);
 
-      app_model_set_run_mode(model, RUN_MODE_TEST);
-      app_model_set_run_description(model, (description != NULL) ? description : "SERVICE");
-      app_model_set_setup_ui_context(model, self->setup_context_box);
-
-      gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
+      run_model_set_run_mode(model, RUN_MODE_TEST);
+      run_model_set_run_description(model, (description != NULL) ? description : "SERVICE");
+      g_idle_add((GSourceFunc)app_mode_selector_load_context, self);
 
       return TRUE;
    }
@@ -85,6 +102,9 @@ void on_btn_start_new_run_clicked(__attribute__((unused)) GtkButton *button, gpo
                                       priv->model);
    gtk_overlay_add_overlay(GTK_OVERLAY(self->popup_container), popup);
    gtk_widget_show_all(popup);
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
 }
 void on_btn_config_page_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
@@ -106,27 +126,31 @@ static void app_mode_selector_class_init(AppModeSelectorClass *klass)
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/app_mode_selector");
    gtk_widget_class_bind_template_child(widget_class, AppModeSelector, page_stack);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, run_page);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, mode_select_page);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, config_page);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, setup_context_box);
 
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, mode_select_page);
    gtk_widget_class_bind_template_child(widget_class, AppModeSelector, btn_start_new_run);
    gtk_widget_class_bind_template_child(widget_class, AppModeSelector, btn_config_page);
+
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, config_page);
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, btn_config_back);
+
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, run_page);
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, context_notebook);
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, setup_context_label);
+   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, setup_context_box);
 
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_new_run_clicked", (GCallback)on_btn_start_new_run_clicked);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_config_page_clicked", (GCallback)on_btn_config_page_clicked);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_config_back_clicked", (GCallback)on_btn_config_back_clicked);
 }
-
 static void app_mode_selector_init(AppModeSelector *self)
 {
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    gtk_widget_init_template(GTK_WIDGET(self));
+   priv->setup_context = NULL;
    priv->model = NULL;
 }
-
-AppModeSelector *app_mode_selector_new(AppModel *model, GtkOverlay *popup_container)
+AppModeSelector *app_mode_selector_new(RunModel *model, GtkOverlay *popup_container)
 {
    g_return_val_if_fail(model != NULL, NULL);
    AppModeSelector *self;
@@ -134,6 +158,7 @@ AppModeSelector *app_mode_selector_new(AppModel *model, GtkOverlay *popup_contai
 
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    priv->model = model;
+
 
    self->popup_container = popup_container;
 

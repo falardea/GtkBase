@@ -68,7 +68,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
 
    if (wdgts->hw_sim_panel == NULL || !HW_IS_SIM_PANEL(wdgts->hw_sim_panel))
    {
-      wdgts->hw_sim_panel = hw_sim_panel_new(wdgts->app_model);
+      wdgts->hw_sim_panel = hw_sim_panel_new(wdgts->run_model);
    }
    gtk_widget_show(GTK_WIDGET(wdgts->hw_sim_panel));
 }
