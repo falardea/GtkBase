@@ -5,7 +5,7 @@
 #ifndef APP_MODE_SELECTOR_H__
 #define APP_MODE_SELECTOR_H__
 #include <gtk/gtk.h>
-#include "gtype_composites/app_model.h"
+#include "sw_mvc/app_model.h"
 G_BEGIN_DECLS // __cplusplus guard
 
 #define APP_TYPE_MODE_SELECTOR (app_mode_selector_get_type())

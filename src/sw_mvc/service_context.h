@@ -5,7 +5,7 @@
 #ifndef SERVICE_CONTEXT_H__
 #define SERVICE_CONTEXT_H__
 #include <gtk/gtk.h>
-#include "gtype_composites/app_model.h"
+#include "sw_mvc/app_model.h"
 G_BEGIN_DECLS // __cplusplus guard
 
 #define SERVICE_TYPE_CONTEXT (service_context_get_type())

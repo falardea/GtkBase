@@ -5,7 +5,7 @@
 #ifndef HW_SIM_PANEL_H__
 #define HW_SIM_PANEL_H__
 #include <gtk/gtk.h>
-#include "gtype_composites/app_model.h"
+#include "sw_mvc/app_model.h"
 
 G_BEGIN_DECLS // __cplusplus guard
 

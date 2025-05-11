@@ -92,18 +92,18 @@ set(MY_SOURCES
     src/gtk_composites/peripheral/log_terminal.c
     src/gtk_composites/app_mode_selector.c
     src/gtk_composites/app_mode_selector.h
-    src/gtype_composites/app_model.c
-    src/gtype_composites/app_model.h
+    src/sw_mvc/app_model.c
+    src/sw_mvc/app_model.h
     src/gtk_composites/peripheral/hw_sim_panel.c
     src/gtk_composites/peripheral/hw_sim_panel.h
     src/gtk_composites/mode_prompt.c
     src/gtk_composites/mode_prompt.h
-    src/gtk_composites/service_context.c
-    src/gtk_composites/service_context.h
-    src/gtk_composites/standard_context.c
-    src/gtk_composites/standard_context.h
-    src/gtype_composites/app_model_context_manager_builder.c
-    src/gtype_composites/app_model_context_manager_builder.h
+    src/sw_mvc/service_context.c
+    src/sw_mvc/service_context.h
+    src/sw_mvc/standard_context.c
+    src/sw_mvc/standard_context.h
+    src/sw_mvc/app_model_context_manager_builder.c
+    src/sw_mvc/app_model_context_manager_builder.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

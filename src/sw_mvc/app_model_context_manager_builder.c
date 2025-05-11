@@ -4,8 +4,8 @@
  */
 #include "app_model_context_manager_builder.h"
 
-#include "gtk_composites/standard_context.h"
-#include "gtk_composites/service_context.h"
+#include "standard_context.h"
+#include "service_context.h"
 
 GtkBox *build_context_for_app_mode(AppModel *model)
 {

@@ -6,7 +6,7 @@
 #include <gtk/gtk.h>
 #include "gtk_composites/peripheral/log_terminal.h"
 #include "gtk_composites/app_mode_selector.h"
-#include "gtype_composites/app_model.h"
+#include "sw_mvc/app_model.h"
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
