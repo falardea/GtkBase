@@ -104,6 +104,8 @@ set(MY_SOURCES
     src/sw_mvc/standard_context.h
     src/sw_mvc/app_model_context_manager_builder.c
     src/sw_mvc/app_model_context_manager_builder.h
+    src/sw_mvc/model_view_iface.c
+    src/sw_mvc/model_view_iface.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
