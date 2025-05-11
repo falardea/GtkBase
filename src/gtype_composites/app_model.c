@@ -4,6 +4,7 @@
  */
 #include <glib-object.h>
 #include "app_model.h"
+#include "app_model_context_manager_builder.h"
 #include "utils/logging.h"
 
 struct _AppModel
@@ -12,6 +13,9 @@ struct _AppModel
    APP_RUN_MODE      run_mode;
 
    gchar             *run_description;
+
+   // This is where we're going to put our context specific setup
+   GtkBox            *setup_ui_context;
 };
 
 G_DEFINE_TYPE( AppModel, app_model, G_TYPE_OBJECT )
@@ -38,6 +42,8 @@ static void app_model_finalize( GObject *g_obj )
    {
       g_free(self->run_description);
    }
+
+
    G_OBJECT_CLASS (app_model_parent_class)->finalize (g_obj);
 }
 
@@ -112,15 +118,11 @@ AppModel *app_model_new()
 
 APP_RUN_MODE app_model_get_run_mode( AppModel *self )
 {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-
    g_return_val_if_fail( APP_IS_MODEL( self ), RUN_MODE_NOT_SET);
    return self->run_mode;
 }
 void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
 {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-
    g_return_if_fail( APP_IS_MODEL( self ) );
    g_return_if_fail(mode < N_APP_RUN_MODES);
    self->run_mode = mode;
@@ -129,6 +131,8 @@ void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode )
 
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[APP_MODEL_PROP_RUN_MODE]);
    g_signal_emit(G_OBJECT(self), app_model_mode_change_sig[APP_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode);
+
+
 }
 
 gchar *app_model_get_run_description(AppModel *self)
@@ -139,7 +143,19 @@ void app_model_set_run_description(AppModel *self, const gchar *run_description)
 {
    g_return_if_fail(run_description != NULL);
    self->run_description = g_strdup(run_description);
+}
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, self->run_description);
+GtkBox *app_model_get_setup_ui_context(AppModel *self)
+{
+   return self->setup_ui_context;
+}
+void app_model_set_setup_ui_context(AppModel *self, GtkBox *parent_context)
+{
+   g_return_if_fail(parent_context != NULL);
 
+   self->setup_ui_context = build_context_for_app_mode(self);
+   if (self->setup_ui_context != NULL)
+   {
+      gtk_box_pack_start(parent_context, GTK_WIDGET(self->setup_ui_context), TRUE, TRUE, 0);
+   }
 }

@@ -36,7 +36,6 @@ void hw_sim_panel_rx_mode_change(AppModel *source, APP_RUN_MODE mode, gpointer u
 
 static void hw_sim_panel_finalize(GObject *g_object)
 {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(HW_IS_SIM_PANEL(g_object));
    HwSimPanel *self = HW_SIM_PANEL(g_object);

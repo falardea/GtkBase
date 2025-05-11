@@ -5,9 +5,9 @@
 #include "interfaces/app_interface.h"
 #include "utils/sys_interface.h"
 #include "utils/logging.h"
-#include "gtk_composites/log_terminal.h"
+#include "gtk_composites/peripheral/log_terminal.h"
 #include "gtk_composites/mode_prompt.h"
-#include "gtk_composites/hw_sim_panel.h"
+#include "gtk_composites/peripheral/hw_sim_panel.h"
 
 
 static const char *MSG_OUT_CURSOR_NAME = "msgOutCursor";
@@ -17,7 +17,6 @@ static char timestamp[20];  // not sure why it felt better to allocate the memor
 
 void on_main_wnd_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,
                                 __attribute__((unused)) gpointer uData) {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
    GtkWidget *parent_wnd = gtk_widget_get_toplevel(srcWidget);
 
    app_widgets *wdgts = get_app_widgets_pointer();
@@ -33,8 +32,6 @@ void on_main_wnd_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,
 gboolean on_main_wnd_delete_event(__attribute__((unused)) GtkWidget *srcWidget,
                                     __attribute__((unused)) GdkEvent *event,
                                     __attribute__((unused)) gpointer uData) {
-   logging_llprintf(LOGLEVEL_TRACE, "%s", __func__);
-
    app_widgets *wdgts = get_app_widgets_pointer();
    if (wdgts->hw_sim_panel != NULL && GTK_IS_WIDGET(wdgts->hw_sim_panel))
    {

@@ -88,18 +88,22 @@ set(MY_SOURCES
     src/views/root_window.h
     src/headless_sandbox/headless_sandbox.h
     src/headless_sandbox/headless_sandbox.c
-    src/gtk_composites/log_terminal.h
-    src/gtk_composites/log_terminal.c
+    src/gtk_composites/peripheral/log_terminal.h
+    src/gtk_composites/peripheral/log_terminal.c
     src/gtk_composites/app_mode_selector.c
     src/gtk_composites/app_mode_selector.h
     src/gtype_composites/app_model.c
     src/gtype_composites/app_model.h
-    src/gtk_composites/validated_entry.c
-    src/gtk_composites/validated_entry.h
-    src/gtk_composites/hw_sim_panel.c
-    src/gtk_composites/hw_sim_panel.h
+    src/gtk_composites/peripheral/hw_sim_panel.c
+    src/gtk_composites/peripheral/hw_sim_panel.h
     src/gtk_composites/mode_prompt.c
     src/gtk_composites/mode_prompt.h
+    src/gtk_composites/service_context.c
+    src/gtk_composites/service_context.h
+    src/gtk_composites/standard_context.c
+    src/gtk_composites/standard_context.h
+    src/gtype_composites/app_model_context_manager_builder.c
+    src/gtype_composites/app_model_context_manager_builder.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

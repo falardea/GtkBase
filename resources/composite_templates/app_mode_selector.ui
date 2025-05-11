@@ -9,11 +9,11 @@
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkStack">
+      <object class="GtkStack" id="page_stack">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="transition-duration">500</property>
-        <property name="transition-type">over-left-right</property>
+        <property name="transition-type">slide-left-right</property>
         <child>
           <object class="GtkButtonBox" id="mode_select_page">
             <property name="name">ams-start-page</property>
@@ -23,13 +23,12 @@
             <property name="spacing">25</property>
             <property name="layout-style">center</property>
             <child>
-              <object class="GtkButton" id="btn_restore_mode">
-                <property name="label" translatable="yes">Restore</property>
+              <object class="GtkButton" id="btn_start_new_run">
+                <property name="label" translatable="yes">Standard</property>
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="on_btn_restore_mode_clicked" object="AppModeSelector" swapped="no"/>
+                <signal name="clicked" handler="on_btn_start_new_run_clicked" object="AppModeSelector" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -38,32 +37,17 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_standard_mode">
-                <property name="label" translatable="yes">Standard</property>
+              <object class="GtkButton" id="btn_config_page">
+                <property name="label" translatable="yes">Config</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="on_btn_standard_mode_clicked" object="AppModeSelector" swapped="no"/>
+                <signal name="clicked" handler="on_btn_config_page_clicked" object="AppModeSelector" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btn_test_mode">
-                <property name="label" translatable="yes">Test</property>
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="on_btn_test_mode_clicked" object="AppModeSelector" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -73,18 +57,166 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="mode_run_context">
+          <object class="GtkBox" id="run_page">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <placeholder/>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkNotebook">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="tab-pos">bottom</property>
+                    <child>
+                      <object class="GtkBox" id="setup_context_box">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Setup</property>
+                      </object>
+                      <packing>
+                        <property name="tab-fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">RUNNING</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Running</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="tab-fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">OTHER CONTEXT</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Other Context</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                        <property name="tab-fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </object>
           <packing>
-            <property name="name">mode_run_context</property>
-            <property name="title" translatable="yes">mode_run_context</property>
+            <property name="name">run_page</property>
+            <property name="title" translatable="yes">run_page</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="config_page">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">CONFIGURATION PAGE</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButtonBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="layout-style">spread</property>
+                <child>
+                  <object class="GtkButton" id="btn_config_back">
+                    <property name="label" translatable="yes">Back</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <signal name="clicked" handler="on_btn_config_back_clicked" object="AppModeSelector" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="name">config_page</property>
+            <property name="title" translatable="yes">config_page</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

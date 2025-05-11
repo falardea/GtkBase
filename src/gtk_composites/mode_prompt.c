@@ -19,6 +19,7 @@ struct _ModePrompt
    // GtkButton      *btn_start_run;
    // GtkButton      *btn_cancel;
 
+   AppModeSelector               *mode_selector;
    RunValidationCallback_T       run_validator;
    ServiceValidationCallback_T   service_validator;
    gpointer                      user_callback_data;
@@ -53,9 +54,10 @@ static void on_btn_start_run_clicked(__attribute__((unused)) GtkButton *button, 
 
    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self->ckbtn_enable_service)))
    {
-      gboolean valid_input = (* self->service_validator) (gtk_entry_get_text(self->entry_service_password),
-                                                          gtk_entry_get_text(self->entry_run_description),
-                                                          self->user_callback_data);
+      gboolean valid_input = (* self->service_validator) (self->mode_selector,
+            gtk_entry_get_text(self->entry_service_password),
+            gtk_entry_get_text(self->entry_run_description),
+            self->user_callback_data);
 
       if(valid_input)
       {
@@ -70,8 +72,9 @@ static void on_btn_start_run_clicked(__attribute__((unused)) GtkButton *button, 
    }
    else
    {
-      gboolean valid_input = (* self->run_validator) (gtk_entry_get_text(self->entry_run_description),
-                                                      self->user_callback_data);
+      gboolean valid_input = (* self->run_validator) (self->mode_selector,
+            gtk_entry_get_text(self->entry_run_description),
+            self->user_callback_data);
       if(valid_input)
       {
          gtk_container_remove(GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(self))), GTK_WIDGET(self));
@@ -114,7 +117,8 @@ static void mode_prompt_init(ModePrompt *self)
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-GtkWidget *mode_prompt_new(RunValidationCallback_T run_callback,
+GtkWidget *mode_prompt_new(AppModeSelector *mode_selector,
+                           RunValidationCallback_T run_callback,
                            ServiceValidationCallback_T service_callback,
                            gpointer user_data)
 {
@@ -124,6 +128,7 @@ GtkWidget *mode_prompt_new(RunValidationCallback_T run_callback,
    ModePrompt *self;
    self = g_object_new(MODE_TYPE_PROMPT, NULL);
 
+   self->mode_selector = mode_selector;
    self->run_validator = run_callback;
    self->service_validator = service_callback;
    self->user_callback_data = user_data;

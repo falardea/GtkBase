@@ -4,14 +4,14 @@
 #ifndef APP_WIDGETS_H__
 #define APP_WIDGETS_H__
 #include <gtk/gtk.h>
-#include "gtk_composites/log_terminal.h"
+#include "gtk_composites/peripheral/log_terminal.h"
 #include "gtk_composites/app_mode_selector.h"
 #include "gtype_composites/app_model.h"
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
 #define HW_SIM_PERSISTS 0
-#include "gtk_composites/hw_sim_panel.h"
+#include "gtk_composites/peripheral/hw_sim_panel.h"
 
 typedef enum {
    RVALUE_SUCCESS,

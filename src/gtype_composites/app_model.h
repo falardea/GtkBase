@@ -5,7 +5,7 @@
 #ifndef APP_MODEL_H__
 #define APP_MODEL_H__
 
-#include <glib-object.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -32,6 +32,9 @@ void app_model_set_run_mode( AppModel *self, APP_RUN_MODE mode );
 
 gchar *app_model_get_run_description(AppModel *self);
 void app_model_set_run_description(AppModel *self, const gchar *run_description);
+
+GtkBox *app_model_get_setup_ui_context(AppModel *self);
+void app_model_set_setup_ui_context(AppModel *self, GtkBox *setup_context);
 
 G_END_DECLS
 #endif  // APP_MODEL_H__
