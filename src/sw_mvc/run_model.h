@@ -16,7 +16,10 @@ typedef struct _ContextMediator ContextMediator;
 
 G_DECLARE_FINAL_TYPE(RunModel, run_model, RUN, MODEL, GObject)
 
-#define RUN_MODEL_MODE_CHANGE_SIGNAL_STR  "run-mode-changed"
+#define RUN_MODEL_MODE_CHANGE_PROP_STR          "mode-changed"
+#define RUN_MODEL_MODE_CHANGE_SIGNAL_STR        "run-mode-changed"
+#define RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR    "step-changed"
+#define RUN_MODEL_SETUP_STEP_CHANGE_SIGNAL_STR  "setup-step-changed"
 
 typedef enum
 {
@@ -38,17 +41,18 @@ typedef enum
    RUN_SETUP_COMPLETE,
    RUN_SETUP_FAILED,
    RUN_SETUP_N_STEPS
-} RUN_SETUP_PHASES;
+} RUN_SETUP_STEPS;
+
+typedef void (*RunModelSetterCallback_T)(RunModel *self, gpointer user_data);
 
 /* Methods for our newly declared GObject derived GType*/
-RunModel *run_model_new(GtkLabel *context_label,
-                        GtkBox *parent_context);
+RunModel *run_model_new();
 
 RUN_MODEL_MODE run_model_get_run_mode(RunModel *self );
 void run_model_set_run_mode(RunModel *self, RUN_MODEL_MODE mode );
 
-RUN_SETUP_PHASES run_model_get_last_completed_phase(RunModel *self );
-void run_model_set_last_completed_phase(RunModel *self, RUN_SETUP_PHASES phase );
+RUN_SETUP_STEPS run_model_get_last_completed_step(RunModel *self );
+void run_model_set_last_completed_step(RunModel *self, RUN_SETUP_STEPS step );
 
 gchar *run_model_get_run_description(RunModel *self);
 void run_model_set_run_description(RunModel *self, const gchar *run_description);

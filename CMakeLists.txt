@@ -98,12 +98,12 @@ set(MY_SOURCES
     src/gtk_composites/peripheral/hw_sim_panel.h
     src/gtk_composites/mode_prompt.c
     src/gtk_composites/mode_prompt.h
-    src/sw_mvc/service_context.c
-    src/sw_mvc/service_context.h
-    src/sw_mvc/standard_context.c
-    src/sw_mvc/standard_context.h
+    src/gtk_composites/service_context.c
+    src/gtk_composites/service_context.h
+    src/gtk_composites/standard_context.c
+    src/gtk_composites/standard_context.h
       src/sw_mvc/run_viewer.c
-    src/sw_mvc/run_viewer.h
+      src/sw_mvc/run_viewer.h
       src/sw_mvc/setup_view.c
       src/sw_mvc/setup_view.h
 )

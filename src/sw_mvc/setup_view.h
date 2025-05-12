@@ -10,5 +10,7 @@ G_DECLARE_FINAL_TYPE(SetupViewer, setup_viewer, SETUP, VIEWER, GtkBox)
 
 SetupViewer *setup_viewer_new(RunModel *model);
 
+void setup_viewer_connect_model_signals(SetupViewer *self, RunModel *model);
+
 G_END_DECLS
 #endif  // SETUP_VIEW_H__

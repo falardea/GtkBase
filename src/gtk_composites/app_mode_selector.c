@@ -9,7 +9,6 @@
 
 typedef struct {
    RunViewer         *run_viewer;
-   RunModel          *model;
 } AppModeSelectorPrivate;
 
 struct _AppModeSelector
@@ -25,6 +24,7 @@ struct _AppModeSelector
    GtkButton      *btn_config_back;
 
    GtkOverlay     *popup_container;
+   RunModel       *model;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(AppModeSelector, app_mode_selector, GTK_TYPE_BOX)
@@ -70,11 +70,10 @@ gboolean service_validation_callback(AppModeSelector *self, gchar *password_to_v
 void on_btn_start_new_run_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    AppModeSelector *self = APP_MODE_SELECTOR(user_data);
-   AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
    GtkWidget *popup = mode_prompt_new(self, (RunValidationCallback_T)standard_validation_callback,
                                       (ServiceValidationCallback_T)service_validation_callback,
-                                      priv->model);
+                                      self->model);
    gtk_overlay_add_overlay(GTK_OVERLAY(self->popup_container), popup);
 }
 void on_btn_config_page_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
@@ -113,12 +112,7 @@ static void app_mode_selector_class_init(AppModeSelectorClass *klass)
 }
 static void app_mode_selector_init(AppModeSelector *self)
 {
-   AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    gtk_widget_init_template(GTK_WIDGET(self));
-
-   priv->run_viewer = run_viewer_new(priv->model);
-   gtk_box_pack_start(self->run_page, GTK_WIDGET(priv->run_viewer), TRUE, TRUE, 0);
-   priv->model = NULL;
 }
 AppModeSelector *app_mode_selector_new(RunModel *model, GtkOverlay *popup_container)
 {
@@ -126,12 +120,17 @@ AppModeSelector *app_mode_selector_new(RunModel *model, GtkOverlay *popup_contai
    self = g_object_new(APP_TYPE_MODE_SELECTOR, NULL);
 
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
-   priv->model = model;
+   self->model = model;
    self->popup_container = popup_container;
+
+   priv->run_viewer = run_viewer_new(self->model);
+   gtk_box_pack_start(self->run_page, GTK_WIDGET(priv->run_viewer), TRUE, TRUE, 0);
 
    // We're the builder of the run_viewer, and the model will not be set during construction,
    // so we need to wait until we've built everything before connecting signals.
-   run_viewer_connect_model_signals(priv->run_viewer, priv->model);
+//   run_viewer_connect_model_signals(priv->run_viewer, self->model);
 
+   run_model_set_run_mode(self->model, RUN_MODE_NOT_SET);
+   run_model_set_last_completed_step(self->model, RUN_SETUP_UNINITIALIZED);
    return self;
 }
