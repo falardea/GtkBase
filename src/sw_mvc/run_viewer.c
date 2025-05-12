@@ -101,3 +101,30 @@ RunViewer *run_viewer_new(RunModel *model)
    self->model = model;
    return self;
 }
+
+void run_viewer_set_view_for_mode(RunViewer *self, RunModel *model)
+{
+   // This could be a broadcast to all children in the view to update based on a model change
+   RunViewerPrivate *priv = run_viewer_get_instance_private(self);
+   if (run_model_get_run_mode(model) ==  RUN_MODE_STANDARD)
+   {
+      if (run_model_get_last_completed_phase(model) != RUN_SETUP_COMPLETE)
+      {
+         gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), TRUE);
+         gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
+         gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), FALSE);
+      }
+      else
+      {
+         gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), FALSE);
+         gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), TRUE);
+         gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), FALSE);
+      }
+   }
+   else
+   {
+      gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), FALSE);
+      gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
+      gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), TRUE);
+   }
+}

@@ -50,6 +50,8 @@ gboolean app_mode_selector_load_context(AppModeSelector *self)
 {
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
+   run_viewer_set_view_for_mode(priv->run_viewer, priv->model);
+
    gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
 
    return G_SOURCE_REMOVE;

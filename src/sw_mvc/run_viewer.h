@@ -14,5 +14,7 @@ G_DECLARE_FINAL_TYPE(RunViewer, run_viewer, RUN, VIEWER, GtkBox)
 
 RunViewer *run_viewer_new(RunModel *model);
 
+void run_viewer_set_view_for_mode(RunViewer *self, RunModel *model);
+
 G_END_DECLS
 #endif  // RUN_VIEWER_H__
