@@ -3,11 +3,12 @@
  * @brief
  */
 #include "hw_sim_panel.h"
+#include "basic_led_indicator.h"
 #include "utils/logging.h"
 
 typedef struct
 {
-   gboolean keep_alive;
+   BasicLedIndicator *fluid_loaded;
 }HwSimPanelPrivate;
 
 struct _HwSimPanel
@@ -17,6 +18,7 @@ struct _HwSimPanel
    GtkBox         *memcheck_response_box;
    GtkBox         *pumping_response_box;
    GtkBox         *heating_response_box;
+   GtkBox         *fuild_loaded_icon_box;
 
    GtkButton      *hw_sim_panel_close;
    GtkButton      *btn_memcheck_response;
@@ -64,6 +66,7 @@ static void hw_sim_panel_class_init(HwSimPanelClass *klass)
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, memcheck_response_box);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, pumping_response_box);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, heating_response_box);
+   gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, fuild_loaded_icon_box);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, btn_memcheck_response);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, btn_pump_enable_response);
    gtk_widget_class_bind_template_child_internal(widget_class, HwSimPanel, btn_heat_enable_response);
@@ -87,8 +90,6 @@ static void hw_sim_panel_init(HwSimPanel *self)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    gtk_widget_init_template(GTK_WIDGET(self));
-   HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
-   self->model = NULL;
 }
 
 HwSimPanel *hw_sim_panel_new(RunModel *model)
@@ -96,6 +97,11 @@ HwSimPanel *hw_sim_panel_new(RunModel *model)
    HwSimPanel *self;
    self = g_object_new(HW_TYPE_SIM_PANEL, NULL);
    self->model = model;
+
+   HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
+   priv->fluid_loaded = BASIC_LED_INDICATOR(basic_led_indicator_new());
+   gtk_box_pack_end(GTK_BOX(self->fuild_loaded_icon_box), GTK_WIDGET(priv->fluid_loaded), TRUE, TRUE, 0);
+
    g_signal_connect (G_OBJECT(model), RUN_MODEL_MODE_CHANGE_SIGNAL_STR, G_CALLBACK(hw_sim_panel_rx_mode_change), self);
    return self;
 }
@@ -132,8 +138,9 @@ void hw_sim_panel_rx_mode_change(__attribute__((unused))RunModel *source, RUN_MO
    logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>>>>> run-mode = %d", __func__, mode);
 
    HwSimPanel *self = HW_SIM_PANEL(user_data);
+   HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
 
-   gtk_widget_set_sensitive(GTK_WIDGET(self->memcheck_response_box), TRUE);
+   basic_led_indicator_set_enabled(priv->fluid_loaded, mode);
 }
 
 static void on_hw_sim_panel_close_clicked(GtkWidget *button,__attribute__((unused)) gpointer *user_data)

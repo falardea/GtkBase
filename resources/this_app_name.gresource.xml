@@ -6,6 +6,8 @@
               preprocess="xml-stripblanks">resources/this_app_name.glade</file>
         <file alias="hw_sim_panel" compressed="true"
               preprocess="xml-stripblanks">resources/hw_sim_panel.glade</file>
+        <file alias="basic_led_indicator" compressed="true"
+              preprocess="xml-stripblanks">resources/basic_led_indicator.glade</file>
 
         <!-- Composite Templates using *.ui to differentiate from "builder" templates -->
         <file alias="log_terminal" compressed="true"
@@ -30,5 +32,8 @@
 
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
+        <!-- Images -->
+        <file alias="LED_green">resources/images/LED_green.svg</file>
+        <file alias="LED_red">resources/images/LED_red.svg</file>
     </gresource>
 </gresources>

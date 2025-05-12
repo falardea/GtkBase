@@ -120,8 +120,6 @@ static void run_model_class_init( RunModelClass *klass )
 static void run_model_init(RunModel *self)
 {
    RunModelPrivate *priv = run_model_get_instance_private(self);
-   self->run_mode = RUN_MODE_NOT_SET;
-   self->last_completed_phase = RUN_SETUP_UNINITIALIZED;
 }
 
 RunModel *run_model_new()
@@ -130,6 +128,8 @@ RunModel *run_model_new()
    model = g_object_new(RUN_TYPE_MODEL,
                         RUN_MODEL_MODE_CHANGE_PROP_STR, RUN_MODE_NOT_SET,
                         NULL);
+   model->run_mode = RUN_MODE_NOT_SET;
+   model->last_completed_phase = RUN_SETUP_UNINITIALIZED;
    return model;
 }
 

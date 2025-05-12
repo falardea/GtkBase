@@ -96,6 +96,8 @@ set(MY_SOURCES
     src/sw_mvc/run_model.h
     src/gtk_composites/peripheral/hw_sim_panel.c
     src/gtk_composites/peripheral/hw_sim_panel.h
+      src/gtk_composites/peripheral/basic_led_indicator.c
+      src/gtk_composites/peripheral/basic_led_indicator.h
     src/gtk_composites/mode_prompt.c
     src/gtk_composites/mode_prompt.h
     src/gtk_composites/service_context.c
@@ -106,6 +108,7 @@ set(MY_SOURCES
       src/sw_mvc/run_viewer.h
       src/sw_mvc/setup_view.c
       src/sw_mvc/setup_view.h
+
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
