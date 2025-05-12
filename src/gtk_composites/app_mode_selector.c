@@ -4,10 +4,11 @@
  */
 #include "app_mode_selector.h"
 #include "mode_prompt.h"
+#include "sw_mvc/run_viewer.h"
 #include "utils/logging.h"
 
 typedef struct {
-   ContextMediator   *setup_context;
+   RunViewer         *run_viewer;
    RunModel          *model;
 } AppModeSelectorPrivate;
 
@@ -18,10 +19,6 @@ struct _AppModeSelector
    GtkBox         *run_page;
    GtkButtonBox   *mode_select_page;
    GtkBox         *config_page;
-
-   GtkNotebook    *context_notebook;
-   GtkLabel       *setup_context_label;
-   GtkBox         *setup_context_box;
 
    GtkButton      *btn_start_new_run;
    GtkButton      *btn_config_page;
@@ -53,9 +50,6 @@ gboolean app_mode_selector_load_context(AppModeSelector *self)
 {
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
 
-   run_model_set_ui_context(priv->model);
-   priv->setup_context = run_model_get_ui_context(priv->model);
-   gtk_box_pack_start(self->setup_context_box, GTK_WIDGET(priv->setup_context), TRUE, TRUE, 0);
    gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
 
    return G_SOURCE_REMOVE;
@@ -135,9 +129,6 @@ static void app_mode_selector_class_init(AppModeSelectorClass *klass)
    gtk_widget_class_bind_template_child(widget_class, AppModeSelector, btn_config_back);
 
    gtk_widget_class_bind_template_child(widget_class, AppModeSelector, run_page);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, context_notebook);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, setup_context_label);
-   gtk_widget_class_bind_template_child(widget_class, AppModeSelector, setup_context_box);
 
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_start_new_run_clicked", (GCallback)on_btn_start_new_run_clicked);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_config_page_clicked", (GCallback)on_btn_config_page_clicked);
@@ -147,7 +138,9 @@ static void app_mode_selector_init(AppModeSelector *self)
 {
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    gtk_widget_init_template(GTK_WIDGET(self));
-   priv->setup_context = NULL;
+
+   priv->run_viewer = run_viewer_new(priv->model);
+   gtk_box_pack_start(self->run_page, GTK_WIDGET(priv->run_viewer), TRUE, TRUE, 0);
    priv->model = NULL;
 }
 AppModeSelector *app_mode_selector_new(RunModel *model, GtkOverlay *popup_container)
@@ -158,7 +151,6 @@ AppModeSelector *app_mode_selector_new(RunModel *model, GtkOverlay *popup_contai
 
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    priv->model = model;
-
 
    self->popup_container = popup_container;
 

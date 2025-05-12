@@ -5,8 +5,14 @@
 #include "run_viewer.h"
 #include "utils/logging.h"
 
+#include "setup_context.h"
+#include "service_context.h"
+#include "standard_context.h"
+
 typedef struct {
-   GtkWidget   *setup_interface;
+   StandardContext   *standard_ctx;
+   ServiceContext    *service_ctx;
+   SetupContext      *setup_ctx;
 }RunViewerPrivate;
 
 struct _RunViewer
@@ -28,7 +34,7 @@ struct _RunViewer
    RunModel       *model;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(RunViewer, run_viewer, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE(RunViewer, run_viewer, GTK_TYPE_BOX)
 
 static void run_viewer_finalize(GObject *g_object)
 {
@@ -42,6 +48,8 @@ static void run_viewer_finalize(GObject *g_object)
 
 static void run_viewer_class_init(RunViewerClass *klass)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
@@ -66,14 +74,30 @@ static void run_viewer_init(RunViewer *self)
 {
    RunViewerPrivate *priv = run_viewer_get_instance_private(self);
    gtk_widget_init_template(GTK_WIDGET(self));
-   priv->setup_interface = NULL;
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   priv->standard_ctx = standard_context_new(self->model);
+
+   priv->service_ctx = service_context_new(self->model);
+   priv->setup_ctx = setup_context_new(self->model);
+
+   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->setup_ctx), TRUE, TRUE, 0);
+
+   gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), TRUE);
+   gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
+   gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), FALSE);
+
+   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->standard_ctx), TRUE, TRUE, 0);
+   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->service_ctx), TRUE, TRUE, 0);
 }
 
 RunViewer *run_viewer_new(RunModel *model)
 {
-   g_return_val_if_fail(model != NULL, NULL);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    RunViewer *self;
    self = g_object_new(RUN_TYPE_VIEWER, NULL);
+   self->model = model;
    return self;
 }

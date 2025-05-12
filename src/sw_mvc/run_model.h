@@ -6,7 +6,6 @@
 #define RUN_MODEL_H__
 
 #include <gtk/gtk.h>
-#include "context_mediator.h"
 
 G_BEGIN_DECLS
 
@@ -53,9 +52,6 @@ void run_model_set_last_completed_phase(RunModel *self, RUN_SETUP_PHASES phase )
 
 gchar *run_model_get_run_description(RunModel *self);
 void run_model_set_run_description(RunModel *self, const gchar *run_description);
-
-ContextMediator *run_model_get_ui_context(RunModel *self);
-void run_model_set_ui_context(RunModel *self);
 
 G_END_DECLS
 #endif  // RUN_MODEL_H__

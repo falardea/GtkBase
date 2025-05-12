@@ -3,7 +3,6 @@
  * @brief
  */
 #include "setup_context.h"
-#include "context_mediator.h"
 #include "utils/logging.h"
 
 struct _SetupContext
@@ -12,23 +11,10 @@ struct _SetupContext
    GtkBox *root_content;
    GtkButton *btn_setup_complete;
 
-   ContextMediatorUpdateFn_T setup_context_update_model_view;
-
    RunModel *model;
 };
 
-void setup_context_update_model_view(ContextMediator *iface_self, RunModel *model);
-
-static void setup_context_iface_init(ContextMediatorInterface *iface)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(iface != NULL);
-   iface->update_model_view = setup_context_update_model_view;
-}
-
-G_DEFINE_TYPE_WITH_CODE(SetupContext, setup_context, GTK_TYPE_BOX,
-                        G_IMPLEMENT_INTERFACE(CONTEXT_TYPE_MEDIATOR, setup_context_iface_init))
+G_DEFINE_TYPE(SetupContext, setup_context, GTK_TYPE_BOX)
 
 static void setup_context_finalize(GObject *g_object)
 {
@@ -45,8 +31,6 @@ void on_btn_setup_complete_clicked(__attribute__((unused)) GtkButton *button, gp
    SetupContext *self = SETUP_CONTEXT(user_data);
 
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   setup_context_update_model_view(CONTEXT_MEDIATOR(self), self->model);
 }
 
 static void setup_context_class_init(SetupContextClass *klass)
@@ -66,9 +50,6 @@ static void setup_context_class_init(SetupContextClass *klass)
 static void setup_context_init(SetupContext *self)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_type_ensure(CONTEXT_TYPE_MEDIATOR);
-
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
@@ -82,10 +63,4 @@ SetupContext *setup_context_new(RunModel *model)
    self->model = model;
 
    return self;
-}
-
-void setup_context_update_model_view(ContextMediator *iface_self, RunModel *model)
-{
-   SetupContext *self = SETUP_CONTEXT(iface_self);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }

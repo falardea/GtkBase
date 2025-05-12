@@ -4,12 +4,11 @@
  */
 #include <glib-object.h>
 #include "run_model.h"
-#include "app_model_context_manager_builder.h"
 #include "utils/logging.h"
 
 typedef struct
 {
-   ContextMediator   *current_context;
+   gboolean keep_alive;
 }RunModelPrivate;
 
 struct _RunModel
@@ -111,7 +110,6 @@ static void run_model_init(RunModel *self)
    RunModelPrivate *priv = run_model_get_instance_private(self);
    self->run_mode = RUN_MODE_NOT_SET;
    self->last_completed_phase = RUN_SETUP_UNINITIALIZED;
-   priv->current_context = NULL;
 }
 
 RunModel *run_model_new(GtkLabel *context_label, GtkBox *parent_context)
@@ -168,16 +166,4 @@ void run_model_set_run_description(RunModel *self, const gchar *run_description)
 
    g_return_if_fail(run_description != NULL);
    self->run_description = g_strdup(run_description);
-}
-
-ContextMediator *run_model_get_ui_context(RunModel *self)
-{
-   RunModelPrivate *priv = run_model_get_instance_private(self);
-
-   return priv->current_context;
-}
-void run_model_set_ui_context(RunModel *self)
-{
-   RunModelPrivate *priv = run_model_get_instance_private(self);
-   priv->current_context = build_context_for_run_mode(self);
 }

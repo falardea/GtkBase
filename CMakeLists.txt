@@ -104,8 +104,6 @@ set(MY_SOURCES
     src/sw_mvc/standard_context.h
     src/sw_mvc/app_model_context_manager_builder.c
     src/sw_mvc/app_model_context_manager_builder.h
-    src/sw_mvc/context_mediator.c
-    src/sw_mvc/context_mediator.h
     src/sw_mvc/setup_context.c
     src/sw_mvc/setup_context.h
     src/sw_mvc/run_viewer.c

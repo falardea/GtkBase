@@ -24,7 +24,6 @@ app_widgets *app_builder(void) {
       return NULL;
    }
 
-   g_type_ensure(CONTEXT_TYPE_MEDIATOR);
    appWidgetsT->run_model = run_model_new(NULL, NULL);
 
    appWidgetsT->main_wnd = GTK_APPLICATION_WINDOW(gtk_builder_get_object(builder, "main_wnd"));

@@ -3,7 +3,6 @@
  * @brief
  */
 #include "standard_context.h"
-#include "context_mediator.h"
 #include "utils/logging.h"
 
 struct _StandardContext
@@ -11,23 +10,10 @@ struct _StandardContext
    GtkBox super;
    GtkBox *root_content;
 
-   ContextMediatorUpdateFn_T standard_context_update_model_view;
-
    RunModel *model;
 };
 
-void standard_context_update_model_view(ContextMediator *iface_self, RunModel *model);
-
-static void standard_context_iface_init(ContextMediatorInterface *iface)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(iface != NULL);
-   iface->update_model_view = standard_context_update_model_view;
-}
-
-G_DEFINE_TYPE_WITH_CODE(StandardContext, standard_context, GTK_TYPE_BOX,
-                        G_IMPLEMENT_INTERFACE(CONTEXT_TYPE_MEDIATOR, standard_context_iface_init))
+G_DEFINE_TYPE(StandardContext, standard_context, GTK_TYPE_BOX)
 
 static void standard_context_finalize(GObject *g_object)
 {
@@ -56,7 +42,6 @@ static void standard_context_class_init(StandardContextClass *klass)
 
 static void standard_context_init(StandardContext *self)
 {
-   g_type_ensure(CONTEXT_TYPE_MEDIATOR);
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    gtk_widget_init_template(GTK_WIDGET(self));
@@ -71,9 +56,4 @@ StandardContext *standard_context_new(RunModel *model)
    self->model = model;
 
    return self;
-}
-
-void standard_context_update_model_view(ContextMediator *iface_self, RunModel *model)
-{
-   StandardContext *self = STANDARD_CONTEXT(iface_self);
 }

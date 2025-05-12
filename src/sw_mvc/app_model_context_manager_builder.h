@@ -9,7 +9,7 @@
 
 G_BEGIN_DECLS
 
-ContextMediator *build_context_for_run_mode(RunModel *model);
+GtkBox *build_context_for_run_mode(RunModel *model);
 
 G_END_DECLS
 #endif  // APP_MODEL_CONTEXT_MANAGER_BUILDER_H__
