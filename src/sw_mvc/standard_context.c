@@ -18,12 +18,6 @@ G_DEFINE_TYPE(StandardContext, standard_context, GTK_TYPE_BOX)
 static void standard_context_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(STANDARD_IS_CONTEXT(g_object));
-   StandardContext *self = STANDARD_CONTEXT(g_object);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    G_OBJECT_CLASS(standard_context_parent_class)->finalize(g_object);
 }
 

@@ -18,6 +18,8 @@
 
         <file alias="run_viewer" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/run_viewer.ui</file>
+        <file alias="setup_viewer" compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/setup_viewer.ui</file>
 
         <file alias="standard_context" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/standard_context.ui</file>

@@ -18,10 +18,6 @@ G_DEFINE_TYPE(ServiceContext, service_context, GTK_TYPE_BOX)
 static void service_context_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(SERVICE_IS_CONTEXT(g_object));
-   ServiceContext *self = SERVICE_CONTEXT(g_object);
    G_OBJECT_CLASS(service_context_parent_class)->finalize(g_object);
 }
 

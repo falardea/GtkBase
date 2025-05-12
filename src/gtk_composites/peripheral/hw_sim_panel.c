@@ -37,13 +37,8 @@ void hw_sim_panel_rx_mode_change(RunModel *source, RUN_MODEL_MODE mode, gpointer
 static void hw_sim_panel_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(HW_IS_SIM_PANEL(g_object));
    HwSimPanel *self = HW_SIM_PANEL(g_object);
-
    g_signal_handlers_disconnect_by_func(self->model, G_CALLBACK(hw_sim_panel_rx_mode_change), self);
-
    G_OBJECT_CLASS(hw_sim_panel_parent_class)->finalize(g_object);
 }
 
@@ -91,8 +86,6 @@ static void hw_sim_panel_class_init(HwSimPanelClass *klass)
 static void hw_sim_panel_init(HwSimPanel *self)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(HW_IS_SIM_PANEL(self));
    gtk_widget_init_template(GTK_WIDGET(self));
    HwSimPanelPrivate *priv = hw_sim_panel_get_instance_private(self);
    self->model = NULL;

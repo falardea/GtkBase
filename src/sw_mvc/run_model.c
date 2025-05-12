@@ -128,12 +128,8 @@ RUN_MODEL_MODE run_model_get_run_mode( RunModel *self )
 }
 void run_model_set_run_mode( RunModel *self, RUN_MODEL_MODE mode )
 {
-   g_return_if_fail( RUN_IS_MODEL( self ) );
-   g_return_if_fail(mode < N_RUM_MODEL_MODES);
    self->run_mode = mode;
-
    logging_llprintf(LOGLEVEL_DEBUG, "%s: mode=%d", __func__, self->run_mode);
-
    g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_RUN_MODE]);
    g_signal_emit(G_OBJECT(self), run_model_mode_change_sig[RUN_MODEL_SIGNAL_MODE_CHANGE], 0, self->run_mode);
 }
@@ -148,9 +144,6 @@ RUN_SETUP_PHASES run_model_get_last_completed_phase(RunModel *self )
 void run_model_set_last_completed_phase(RunModel *self, RUN_SETUP_PHASES phase )
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   g_return_if_fail( RUN_IS_MODEL( self ) );
-   g_return_if_fail(phase < RUN_SETUP_N_STEPS);
-
    // ----------------------
    self->last_completed_phase = phase;
    // ----------------------
@@ -158,12 +151,10 @@ void run_model_set_last_completed_phase(RunModel *self, RUN_SETUP_PHASES phase )
 
 gchar *run_model_get_run_description(RunModel *self)
 {
-   return g_strdup_inline(self->run_description);
+   return g_strdup(self->run_description);
 }
 void run_model_set_run_description(RunModel *self, const gchar *run_description)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(run_description != NULL);
    self->run_description = g_strdup(run_description);
 }

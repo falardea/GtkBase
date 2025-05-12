@@ -102,10 +102,10 @@ set(MY_SOURCES
     src/sw_mvc/service_context.h
     src/sw_mvc/standard_context.c
     src/sw_mvc/standard_context.h
-    src/sw_mvc/setup_context.c
-    src/sw_mvc/setup_context.h
-    src/sw_mvc/run_viewer.c
+      src/sw_mvc/run_viewer.c
     src/sw_mvc/run_viewer.h
+      src/sw_mvc/setup_view.c
+      src/sw_mvc/setup_view.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

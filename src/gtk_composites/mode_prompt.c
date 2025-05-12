@@ -29,9 +29,7 @@ G_DEFINE_TYPE(ModePrompt, mode_prompt, GTK_TYPE_BOX )
 
 static void mode_prompt_finalize( GObject *oSelf )
 {
-   g_return_if_fail(oSelf != NULL);
-   g_return_if_fail(MODE_IS_PROMPT(oSelf));
-
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    G_OBJECT_CLASS (mode_prompt_parent_class)->finalize (oSelf);
 }
 

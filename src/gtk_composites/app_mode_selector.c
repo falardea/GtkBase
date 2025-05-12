@@ -32,30 +32,9 @@ G_DEFINE_TYPE_WITH_PRIVATE(AppModeSelector, app_mode_selector, GTK_TYPE_BOX)
 static void app_mode_selector_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(APP_IS_MODE_SELECTOR(g_object));
-   // AppModeSelector *self = APP_MODE_SELECTOR(g_object);
-   // AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
-
-   // if (priv->setup_context != NULL)
-   // {
-   //    gtk_widget_destroy(GTK_WIDGET(priv->setup_context));
-   // }
-
    G_OBJECT_CLASS(app_mode_selector_parent_class)->finalize(g_object);
 }
 
-gboolean app_mode_selector_load_context(AppModeSelector *self)
-{
-   AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
-
-   run_viewer_set_view_for_mode(priv->run_viewer, priv->model);
-
-   gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
-
-   return G_SOURCE_REMOVE;
-}
 gboolean standard_validation_callback(AppModeSelector *self, gchar *description_to_validate, gpointer user_data)
 {
    RunModel *model = RUN_MODEL(user_data);
@@ -63,9 +42,9 @@ gboolean standard_validation_callback(AppModeSelector *self, gchar *description_
 
    if (strlen(description_to_validate) > 0)
    {
-      run_model_set_run_mode(model, RUN_MODE_STANDARD);
       run_model_set_run_description(model, description_to_validate);
-      g_idle_add((GSourceFunc)app_mode_selector_load_context, self);
+      run_model_set_run_mode(model, RUN_MODE_STANDARD);
+      gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
 
       return TRUE;
    }
@@ -79,9 +58,9 @@ gboolean service_validation_callback(AppModeSelector *self, gchar *password_to_v
    if (strlen(password_to_validate) > 0 && strcmp(password_to_validate, "Abracadabra") == 0) {
       logging_llprintf(LOGLEVEL_DEBUG, "%s: %s", __func__, password_to_validate);
 
-      run_model_set_run_mode(model, RUN_MODE_TEST);
       run_model_set_run_description(model, (description != NULL) ? description : "SERVICE");
-      g_idle_add((GSourceFunc)app_mode_selector_load_context, self);
+      run_model_set_run_mode(model, RUN_MODE_TEST);
+      gtk_stack_set_visible_child(self->page_stack, GTK_WIDGET(self->run_page));
 
       return TRUE;
    }
@@ -97,10 +76,6 @@ void on_btn_start_new_run_clicked(__attribute__((unused)) GtkButton *button, gpo
                                       (ServiceValidationCallback_T)service_validation_callback,
                                       priv->model);
    gtk_overlay_add_overlay(GTK_OVERLAY(self->popup_container), popup);
-   gtk_widget_show_all(popup);
-
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
 }
 void on_btn_config_page_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
@@ -147,14 +122,16 @@ static void app_mode_selector_init(AppModeSelector *self)
 }
 AppModeSelector *app_mode_selector_new(RunModel *model, GtkOverlay *popup_container)
 {
-   g_return_val_if_fail(model != NULL, NULL);
    AppModeSelector *self;
    self = g_object_new(APP_TYPE_MODE_SELECTOR, NULL);
 
    AppModeSelectorPrivate *priv = app_mode_selector_get_instance_private(self);
    priv->model = model;
-
    self->popup_container = popup_container;
+
+   // We're the builder of the run_viewer, and the model will not be set during construction,
+   // so we need to wait until we've built everything before connecting signals.
+   run_viewer_connect_model_signals(priv->run_viewer, priv->model);
 
    return self;
 }

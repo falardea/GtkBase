@@ -5,14 +5,14 @@
 #include "run_viewer.h"
 #include "utils/logging.h"
 
-#include "setup_context.h"
+#include "setup_view.h"
 #include "service_context.h"
 #include "standard_context.h"
 
 typedef struct {
    StandardContext   *standard_ctx;
    ServiceContext    *service_ctx;
-   SetupContext      *setup_ctx;
+   SetupViewer       *setup_viewer;
 }RunViewerPrivate;
 
 struct _RunViewer
@@ -39,10 +39,6 @@ G_DEFINE_TYPE_WITH_PRIVATE(RunViewer, run_viewer, GTK_TYPE_BOX)
 static void run_viewer_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   g_return_if_fail(g_object != NULL);
-   g_return_if_fail(RUN_IS_VIEWER(g_object));
-
    G_OBJECT_CLASS(run_viewer_parent_class)->finalize(g_object);
 }
 
@@ -78,19 +74,20 @@ static void run_viewer_init(RunViewer *self)
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    priv->standard_ctx = standard_context_new(self->model);
-
    priv->service_ctx = service_context_new(self->model);
-   priv->setup_ctx = setup_context_new(self->model);
+   priv->setup_viewer = setup_viewer_new(self->model);
 
-   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->setup_ctx), TRUE, TRUE, 0);
+   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->setup_viewer), TRUE, TRUE, 0);
+   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->standard_ctx), TRUE, TRUE, 0);
+   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->service_ctx), TRUE, TRUE, 0);
 
-   gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), TRUE);
+   gtk_widget_set_visible(GTK_WIDGET(priv->setup_viewer), TRUE);
    gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
    gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), FALSE);
 
-   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->standard_ctx), TRUE, TRUE, 0);
-   gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->service_ctx), TRUE, TRUE, 0);
 }
+
+gboolean run_viewer_mode_change_listener(RunModel *model, RUN_MODEL_MODE mode, gpointer user_data);
 
 RunViewer *run_viewer_new(RunModel *model)
 {
@@ -98,33 +95,45 @@ RunViewer *run_viewer_new(RunModel *model)
 
    RunViewer *self;
    self = g_object_new(RUN_TYPE_VIEWER, NULL);
+
    self->model = model;
+
    return self;
 }
 
-void run_viewer_set_view_for_mode(RunViewer *self, RunModel *model)
+void run_viewer_connect_model_signals(RunViewer *self, RunModel *model)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   g_return_if_fail(model != NULL);
+   g_signal_connect (G_OBJECT(model), RUN_MODEL_MODE_CHANGE_SIGNAL_STR, G_CALLBACK(run_viewer_mode_change_listener), self);
+}
+
+gboolean run_viewer_mode_change_listener(RunModel *model, RUN_MODEL_MODE mode, gpointer user_data)
 {
    // This could be a broadcast to all children in the view to update based on a model change
+   RunViewer *self = RUN_VIEWER(user_data);
+
    RunViewerPrivate *priv = run_viewer_get_instance_private(self);
    if (run_model_get_run_mode(model) ==  RUN_MODE_STANDARD)
    {
       if (run_model_get_last_completed_phase(model) != RUN_SETUP_COMPLETE)
       {
-         gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), TRUE);
+         gtk_widget_set_visible(GTK_WIDGET(priv->setup_viewer), TRUE);
          gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
          gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), FALSE);
       }
       else
       {
-         gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), FALSE);
+         gtk_widget_set_visible(GTK_WIDGET(priv->setup_viewer), FALSE);
          gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), TRUE);
          gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), FALSE);
       }
    }
    else
    {
-      gtk_widget_set_visible(GTK_WIDGET(priv->setup_ctx), FALSE);
+      gtk_widget_set_visible(GTK_WIDGET(priv->setup_viewer), FALSE);
       gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
       gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), TRUE);
    }
+   return G_SOURCE_REMOVE;
 }
