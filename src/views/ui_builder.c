@@ -24,7 +24,7 @@ app_widgets *app_builder(void) {
       return NULL;
    }
 
-   appWidgetsT->run_model = run_model_new(NULL, NULL);
+   appWidgetsT->run_model = run_model_new();
 
    appWidgetsT->main_wnd = GTK_APPLICATION_WINDOW(gtk_builder_get_object(builder, "main_wnd"));
 
