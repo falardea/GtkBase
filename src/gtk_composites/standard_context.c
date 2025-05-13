@@ -23,8 +23,6 @@ static void standard_context_finalize(GObject *g_object)
 
 static void standard_context_class_init(StandardContextClass *klass)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
@@ -36,15 +34,11 @@ static void standard_context_class_init(StandardContextClass *klass)
 
 static void standard_context_init(StandardContext *self)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
 StandardContext *standard_context_new(RunModel *model)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    StandardContext *self;
    self = g_object_new(STANDARD_TYPE_CONTEXT, NULL);
    self->model = model;

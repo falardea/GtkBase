@@ -8,8 +8,10 @@
 #include "setup_view.h"
 #include "gtk_composites/service_context.h"
 #include "gtk_composites/standard_context.h"
+#include "setup_controller.h"
 
 typedef struct {
+   SetupController   *setup_ctrl;
    StandardContext   *standard_ctx;
    ServiceContext    *service_ctx;
    SetupViewer       *setup_viewer;
@@ -44,8 +46,6 @@ static void run_viewer_finalize(GObject *g_object)
 
 static void run_viewer_class_init(RunViewerClass *klass)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
@@ -75,16 +75,18 @@ gboolean run_viewer_mode_change_listener(RunModel *model, RUN_MODEL_MODE mode, g
 
 RunViewer *run_viewer_new(RunModel *model)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    RunViewer *self;
    self = g_object_new(RUN_TYPE_VIEWER, NULL);
    self->model = model;
 
    RunViewerPrivate *priv = run_viewer_get_instance_private(self);
+
    priv->standard_ctx = standard_context_new(self->model);
    priv->service_ctx = service_context_new(self->model);
    priv->setup_viewer = setup_viewer_new(self->model);
+
+   priv->setup_ctrl = setup_controller_new(self, priv->setup_viewer, self->model);
+   setup_controller_build_setup_viewer(priv->setup_ctrl);
 
    gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->setup_viewer), TRUE, TRUE, 0);
    gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->standard_ctx), TRUE, TRUE, 0);

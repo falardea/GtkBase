@@ -30,6 +30,9 @@
         <file alias="setup_context" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/setup_context.ui</file>
 
+        <file alias="command_step" compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/command_step.ui</file>
+
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>
         <!-- Images -->

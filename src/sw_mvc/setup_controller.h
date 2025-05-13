@@ -16,7 +16,7 @@ G_DECLARE_FINAL_TYPE(SetupController, setup_controller, SETUP, CONTROLLER, GObje
 
 SetupController *setup_controller_new(RunViewer *run_viewer, SetupViewer *setup_viewer, RunModel *run_model);
 
-
+void setup_controller_build_setup_viewer(SetupController *self);
 
 G_END_DECLS
 #endif  // SETUP_CONTROLLER_H__

@@ -108,7 +108,10 @@ set(MY_SOURCES
       src/sw_mvc/run_viewer.h
       src/sw_mvc/setup_view.c
       src/sw_mvc/setup_view.h
-
+      src/sw_mvc/setup_controller.h
+      src/sw_mvc/setup_controller.c
+      src/sw_mvc/setup_page_templates/command_step.h
+      src/sw_mvc/setup_page_templates/command_step.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
