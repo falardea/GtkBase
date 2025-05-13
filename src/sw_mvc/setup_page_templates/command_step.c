@@ -32,10 +32,7 @@ static void command_step_finalize(GObject *g_object)
 static void on_command_step_btn_start_next_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    CommandStep *self = COMMAND_STEP(user_data);
-   gtk_widget_set_sensitive(GTK_WIDGET(self->btn_start_next), FALSE);
-   gtk_label_set_markup(self->lbl_step_bullet, BLUE_BULLET_FORMAT_STR);
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    run_model_set_last_completed_step(self->model, self->go_to_state);
 }
 

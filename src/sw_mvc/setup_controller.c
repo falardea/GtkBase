@@ -5,6 +5,7 @@
 #include "setup_controller.h"
 #include "utils/logging.h"
 #include "setup_page_templates/command_step.h"
+#include "setup_page_templates/uchoice_step.h"
 #include "setup_view.h"
 
 typedef struct
@@ -82,13 +83,14 @@ static void setup_controller_build_step_map(SetupController *self)
 
    g_hash_table_insert(priv->step_map, GINT_TO_POINTER(RUN_SETUP_UNINITIALIZED),
                        command_step_new("This is not suppose to be shown", "Goto Mode Select", self->run_model, RUN_SETUP_MODE_SELECTED));
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: first hash", __func__);
 
    g_hash_table_insert(priv->step_map, GINT_TO_POINTER(RUN_SETUP_MODE_SELECTED),
                        command_step_new("Welcome to POD (run mode selected)", "Start", self->run_model, RUN_SETUP_MEMCHECK_COMPLETE));
 
    g_hash_table_insert(priv->step_map, GINT_TO_POINTER(RUN_SETUP_MEMCHECK_COMPLETE),
-                       command_step_new("Memcheck complete", "\0", self->run_model, RUN_SETUP_INTERMEDIATE_STEPS));
+                       uchoice_step_new("Memcheck complete", "Retry", "Next", self->run_model,
+                                        RUN_SETUP_MODE_SELECTED,
+                                        RUN_SETUP_INTERMEDIATE_STEPS));
 
    g_hash_table_insert(priv->step_map, GINT_TO_POINTER(RUN_SETUP_INTERMEDIATE_STEPS),
                        command_step_new("An intermediate step as yet undefined", "Next", self->run_model, RUN_SETUP_COMPLETE));
@@ -103,16 +105,12 @@ static void setup_controller_build_step_map(SetupController *self)
 static void per_map_fn(gpointer key, gpointer value, gpointer user_data)
 {
    SetupController *self = SETUP_CONTROLLER(user_data);
-
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: key = %p", __func__, key);
    setup_viewer_add_page_by_state_id(self->setup_viewer, GTK_WIDGET(value), GPOINTER_TO_INT(key));
 }
 
 void setup_controller_build_setup_viewer(SetupController *self)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SetupControllerPrivate *priv = setup_controller_get_instance_private(self);
-
    g_hash_table_foreach(priv->step_map, per_map_fn, self);
    setup_viewer_set_page_view(self->setup_viewer, RUN_SETUP_UNINITIALIZED);
 }

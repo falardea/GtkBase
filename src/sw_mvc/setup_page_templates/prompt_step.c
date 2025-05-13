@@ -45,7 +45,7 @@ static void prompt_step_class_init(PromptStepClass *klass)
 
    gobject_class->finalize = prompt_step_finalize;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/com/dekaresearch/pod/prompt_step");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/prompt_step");
    gtk_widget_class_bind_template_child(widget_class, PromptStep, lbl_step_bullet);
    gtk_widget_class_bind_template_child(widget_class, PromptStep, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, PromptStep, btn_start_next);
