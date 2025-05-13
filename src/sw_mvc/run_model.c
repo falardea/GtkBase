@@ -164,27 +164,6 @@ void run_model_set_run_mode( RunModel *self, RUN_MODEL_MODE mode )
    }
 }
 
-RUN_SETUP_STEPS run_model_get_last_completed_step(RunModel *self )
-{
-   g_return_val_if_fail( RUN_IS_MODEL( self ), RUN_SETUP_FAILED);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-   return self->last_completed_phase;
-}
-void run_model_set_last_completed_step(RunModel *self, RUN_SETUP_STEPS step )
-{
-   g_return_if_fail(self != NULL);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   if (self->last_completed_phase != step)
-   {
-      // ----------------------
-      self->last_completed_phase = step;
-      // ----------------------
-      g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_SETUP_STEP_CHANGE]);
-      g_signal_emit(G_OBJECT(self), run_model_sigs[RUN_MODEL_SIGNAL_SETUP_STEP_CHANGE], 0, self->last_completed_phase);
-   }
-}
-
 gchar *run_model_get_run_description(RunModel *self)
 {
    return g_strdup(self->run_description);
@@ -205,5 +184,45 @@ void run_model_set_leak_check_complete(RunModel *self, gboolean complete)
    {
       self->leak_check_complete = complete;
       g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_LEAK_CHECK_COMPLETE]);
+   }
+}
+
+RUN_SETUP_STEPS run_model_get_last_completed_step(RunModel *self )
+{
+   g_return_val_if_fail( RUN_IS_MODEL( self ), RUN_SETUP_FAILED);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   return self->last_completed_phase;
+}
+void run_model_set_last_completed_step(RunModel *self, RUN_SETUP_STEPS step )
+{
+   g_return_if_fail(self != NULL);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   if (self->last_completed_phase != step)
+   {
+      // ----------------------
+      // This is where we do things on system that we've triggered from the setup menu
+      self->last_completed_phase = step;
+
+      switch(self->last_completed_phase)
+      {
+         case RUN_SETUP_UNINITIALIZED:
+         case RUN_SETUP_MODE_SELECTED:
+            logging_llprintf(LOGLEVEL_DEBUG, "%s: RUN_SETUP_MODE_SELECTED->start mem check", __func__);
+            break;
+         case RUN_SETUP_MEMCHECK_COMPLETE:
+         case RUN_SETUP_INTERMEDIATE_STEPS:
+         case RUN_SETUP_COMPLETE:
+            logging_llprintf(LOGLEVEL_DEBUG, "%s: RUN_SETUP_COMPLETE->switch to perfusion tab", __func__);
+            break;
+         case RUN_SETUP_FAILED:
+         case RUN_SETUP_N_STEPS:
+            logging_llprintf(LOGLEVEL_DEBUG, "%s: RUN_SETUP_FAILED->we failed or got a state we don't understand", __func__);
+            break;
+      }
+
+      // ----------------------
+      g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_SETUP_STEP_CHANGE]);
+      g_signal_emit(G_OBJECT(self), run_model_sigs[RUN_MODEL_SIGNAL_SETUP_STEP_CHANGE], 0, self->last_completed_phase);
    }
 }

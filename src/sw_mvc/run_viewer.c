@@ -135,5 +135,6 @@ gboolean run_viewer_mode_change_listener(RunModel *model, RUN_MODEL_MODE mode, g
       gtk_widget_set_visible(GTK_WIDGET(priv->standard_ctx), FALSE);
       gtk_widget_set_visible(GTK_WIDGET(priv->service_ctx), TRUE);
    }
+   run_model_set_last_completed_step(self->model, RUN_SETUP_MODE_SELECTED);
    return G_SOURCE_REMOVE;
 }

@@ -137,14 +137,9 @@ static gboolean branch_step_get_process_complete(BranchStep *self)
 }
 static void branch_step_set_process_complete(BranchStep *self, gboolean complete)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: coming in with complete = %s", __func__, complete ? "TRUE":"FALSE");
-
    if (self->process_complete != complete)
    {
-      logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>> twice", __func__);
-
       self->process_complete = complete;
-
       run_model_set_last_completed_step(self->model, self->on_success);
    }
 }
