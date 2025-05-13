@@ -62,14 +62,14 @@
             <property name="margin_bottom">10</property>
             <property name="spacing">5</property>
             <child>
-              <object class="GtkButton" id="btn_cancel_skip">
+              <object class="GtkButton" id="btn_cancel">
                 <property name="label" translatable="yes">Cancel</property>
                 <property name="name">btn-cancel-skip</property>
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_btn_cancel_skip_clicked" object="PendingStep" swapped="no"/>
+                <signal name="clicked" handler="on_btn_cancel_clicked" object="BranchStep" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>

@@ -114,6 +114,8 @@ set(MY_SOURCES
       src/sw_mvc/setup_page_templates/command_step.c
       src/sw_mvc/setup_page_templates/uchoice_step.h
       src/sw_mvc/setup_page_templates/uchoice_step.c
+      src/sw_mvc/setup_page_templates/branch_step.h
+      src/sw_mvc/setup_page_templates/branch_step.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

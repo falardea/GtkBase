@@ -34,6 +34,8 @@
               preprocess="xml-stripblanks">resources/composite_templates/command_step.ui</file>
         <file alias="uchoice_step" compressed="true"
               preprocess="xml-stripblanks">resources/composite_templates/uchoice_step.ui</file>
+        <file alias="branch_step" compressed="true"
+              preprocess="xml-stripblanks">resources/composite_templates/branch_step.ui</file>
 
         <!-- CSS -->
         <file>resources/style/this_app_name_style.css</file>

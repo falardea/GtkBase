@@ -24,6 +24,8 @@ G_DEFINE_TYPE(CommandStep, command_step, GTK_TYPE_BOX)
 
 static void command_step_finalize(GObject *g_object)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_return_if_fail(g_object != NULL);
    g_return_if_fail(COMMAND_IS_STEP(g_object));
    G_OBJECT_CLASS(command_step_parent_class)->finalize(g_object);

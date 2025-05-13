@@ -11,7 +11,8 @@
 #include "setup_controller.h"
 
 typedef struct {
-   SetupController   *setup_ctrl;
+   SetupController   *setup_ctrl; // GObject, disposal?
+
    StandardContext   *standard_ctx;
    ServiceContext    *service_ctx;
    SetupViewer       *setup_viewer;
@@ -41,6 +42,12 @@ G_DEFINE_TYPE_WITH_PRIVATE(RunViewer, run_viewer, GTK_TYPE_BOX)
 static void run_viewer_finalize(GObject *g_object)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   RunViewer *self = RUN_VIEWER(g_object);
+   RunViewerPrivate  *priv = run_viewer_get_instance_private(self);
+   if(priv->setup_ctrl)
+   {
+      g_object_unref(G_OBJECT(priv->setup_ctrl));
+   }
    G_OBJECT_CLASS(run_viewer_parent_class)->finalize(g_object);
 }
 

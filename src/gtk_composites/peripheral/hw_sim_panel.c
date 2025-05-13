@@ -114,6 +114,8 @@ static void on_btn_memcheck_response_clicked(__attribute__((unused))GtkButton *b
 static void on_btn_pump_enable_response_clicked(__attribute__((unused))GtkButton *button,__attribute__((unused)) gpointer *user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   HwSimPanel *self = HW_SIM_PANEL(user_data);
+   run_model_set_leak_check_complete(self->model, TRUE);
 }
 static void on_btn_heat_enable_response_clicked(__attribute__((unused))GtkButton *button,__attribute__((unused)) gpointer *user_data)
 {

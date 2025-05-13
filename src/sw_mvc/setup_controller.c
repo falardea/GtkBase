@@ -6,6 +6,7 @@
 #include "utils/logging.h"
 #include "setup_page_templates/command_step.h"
 #include "setup_page_templates/uchoice_step.h"
+#include "setup_page_templates/branch_step.h"
 #include "setup_view.h"
 
 typedef struct
@@ -28,6 +29,14 @@ G_DEFINE_TYPE_WITH_PRIVATE(SetupController, setup_controller, G_TYPE_OBJECT)
 
 static void setup_controller_finalize(GObject *g_object)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   SetupController *self = SETUP_CONTROLLER(g_object);
+   SetupControllerPrivate *priv = setup_controller_get_instance_private(self);
+   if(priv->step_map)
+   {
+      g_hash_table_destroy(priv->step_map);
+   }
    G_OBJECT_CLASS(setup_controller_parent_class)->finalize(g_object);
 }
 
@@ -40,9 +49,7 @@ static void setup_controller_class_init(SetupControllerClass *klass)
 static void setup_controller_build_step_map(SetupController *self);
 static void setup_controller_init(SetupController *self)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    SetupControllerPrivate *priv = setup_controller_get_instance_private(self);
-
    priv->step_map = g_hash_table_new(NULL, NULL);
 }
 
@@ -50,8 +57,6 @@ gboolean setup_controller_step_change_listener(RunModel *model, RUN_SETUP_STEPS 
 
 SetupController *setup_controller_new(RunViewer *run_viewer, SetupViewer *setup_viewer, RunModel *run_model)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
    SetupController *self;
    self = g_object_new(SETUP_TYPE_CONTROLLER, NULL);
 
@@ -93,7 +98,8 @@ static void setup_controller_build_step_map(SetupController *self)
                                         RUN_SETUP_INTERMEDIATE_STEPS));
 
    g_hash_table_insert(priv->step_map, GINT_TO_POINTER(RUN_SETUP_INTERMEDIATE_STEPS),
-                       command_step_new("An intermediate step as yet undefined", "Next", self->run_model, RUN_SETUP_COMPLETE));
+                       branch_step_new("A wait step", self->run_model,
+                                       RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR, RUN_SETUP_COMPLETE));
 
    g_hash_table_insert(priv->step_map, GINT_TO_POINTER(RUN_SETUP_COMPLETE),
                        command_step_new("Setup Complete", "Done", self->run_model, RUN_SETUP_FAILED));

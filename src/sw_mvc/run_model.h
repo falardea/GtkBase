@@ -14,8 +14,10 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE(RunModel, run_model, RUN, MODEL, GObject)
 
 #define RUN_MODEL_MODE_CHANGE_PROP_STR          "mode-changed"
-#define RUN_MODEL_MODE_CHANGE_SIGNAL_STR        "run-mode-changed"
 #define RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR    "step-changed"
+#define RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR    "leak-check-complete"
+
+#define RUN_MODEL_MODE_CHANGE_SIGNAL_STR        "run-mode-changed"
 #define RUN_MODEL_SETUP_STEP_CHANGE_SIGNAL_STR  "setup-step-changed"
 
 typedef enum
@@ -54,11 +56,8 @@ void run_model_set_last_completed_step(RunModel *self, RUN_SETUP_STEPS step );
 gchar *run_model_get_run_description(RunModel *self);
 void run_model_set_run_description(RunModel *self, const gchar *run_description);
 
-gboolean run_model_get_fluid_loaded(RunModel *self);
-void run_model_set_fluid_loaded(RunModel *self, gboolean loaded);
-
-gboolean run_model_get_low_memory(RunModel *self);
-void run_model_set_low_memory(RunModel *self, gboolean is_low);
+gboolean run_model_get_leak_check_complete(RunModel *self);
+void run_model_set_leak_check_complete(RunModel *self, gboolean complete);
 
 // Memento?
 void run_model_set_restore_point(RunModel *self);
