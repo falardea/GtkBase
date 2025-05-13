@@ -59,5 +59,10 @@ void run_model_set_fluid_loaded(RunModel *self, gboolean loaded);
 
 gboolean run_model_get_low_memory(RunModel *self);
 void run_model_set_low_memory(RunModel *self, gboolean is_low);
+
+// Memento?
+void run_model_set_restore_point(RunModel *self);
+RunModel *run_model_get_restore_point(RunModel *self);
+
 G_END_DECLS
 #endif  // RUN_MODEL_H__
