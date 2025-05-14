@@ -60,7 +60,12 @@ static void prompt_step_init(PromptStep *self)
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-PromptStep *prompt_step_new(const gchar *prompt_description)
+PromptStep *prompt_step_new(const gchar *step_description,
+                            const gchar *prompt_description,
+                            const gchar *prompt_units,
+                            RunModel *model,
+                            RUN_SETUP_STEPS state_on_valid_input,
+                            PromptStepValidationFn validation_callback)
 {
    PromptStep *self;
    self = g_object_new(PROMPT_TYPE_STEP, NULL);
