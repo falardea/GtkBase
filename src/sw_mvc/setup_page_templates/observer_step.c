@@ -91,7 +91,7 @@ static void observer_step_class_init(ObserverStepClass *klass)
    gobject_class->get_property = observer_step_get_property;
    gobject_class->set_property = observer_step_set_property;
 
-   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/com/dekaresearch/pod/observer_step");
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/observer_step");
    gtk_widget_class_bind_template_child(widget_class, ObserverStep, lbl_step_description);
    gtk_widget_class_bind_template_child(widget_class, ObserverStep, btn_cancel);
    gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_cancel_clicked", (GCallback)on_observer_step_btn_cancel_clicked);
@@ -191,11 +191,11 @@ static void observer_step_set_process_complete(ObserverStep *self, gboolean comp
       {
          // On success ??
          // g_object_unref(self->external_binding);
-         run_model_set_next_step(self->model, self->on_success);
+         run_model_set_last_completed_step(self->model, self->on_success);
       }
       else
       {
-         run_model_set_next_step(self->model, self->on_failure);
+         run_model_set_last_completed_step(self->model, self->on_failure);
       }
 
    }

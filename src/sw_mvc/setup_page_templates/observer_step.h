@@ -5,7 +5,7 @@
 #ifndef OBSERVER_STEP_H__
 #define OBSERVER_STEP_H__
 #include <gtk/gtk.h>
-#include "views/models/run_model.h"
+#include "sw_mvc/run_model.h"
 G_BEGIN_DECLS // __cplusplus guard
 
 #define OBSERVER_TYPE_STEP (observer_step_get_type())

@@ -17,6 +17,7 @@ struct _RunModel
    RUN_MODEL_MODE    run_mode;
 
    RUN_SETUP_STEPS  last_completed_phase;
+   PneumaticLeakTest    *pneumatic_leak_test;
 
    gchar             *run_description;
    gboolean          leak_check_complete;
@@ -31,6 +32,7 @@ enum
    RUN_MODEL_PROP_RUN_MODE,
    RUN_MODEL_PROP_SETUP_STEP_CHANGE,
    RUN_MODEL_PROP_LEAK_CHECK_COMPLETE,
+   RUN_MODEL_PROP_PNEUMATIC_LEAK_TEST,
    RUN_MODEL_N_PROPERTIES
 };
 
@@ -69,6 +71,9 @@ static void run_model_set_property( GObject *object, guint prop_id, const GValue
       case RUN_MODEL_PROP_LEAK_CHECK_COMPLETE:
          run_model_set_leak_check_complete(model, g_value_get_boolean( value ) );
          break;
+      case RUN_MODEL_PROP_PNEUMATIC_LEAK_TEST:
+         run_model_set_pneumatic_leak_test(model, g_value_get_boxed( value ) );
+         break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
    }
@@ -88,6 +93,9 @@ static void run_model_get_property( GObject *object, guint prop_id, GValue *valu
       case RUN_MODEL_PROP_LEAK_CHECK_COMPLETE:
          g_value_set_boolean( value, run_model_get_leak_check_complete( model ) );
          break;
+      case RUN_MODEL_PROP_PNEUMATIC_LEAK_TEST:
+         g_value_set_boxed( value, run_model_get_pneumatic_leak_test( model ) );
+         break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
    }
@@ -105,19 +113,15 @@ static void run_model_class_init( RunModelClass *klass )
    gobject_class->get_property = run_model_get_property;
    gobject_class->set_property = run_model_set_property;
 
-   model_properties[RUN_MODEL_PROP_RUN_MODE] = g_param_spec_uint(RUN_MODEL_MODE_CHANGE_PROP_STR,
-                                                                 RUN_MODEL_MODE_CHANGE_PROP_STR,
-                                                                 RUN_MODEL_MODE_CHANGE_PROP_STR,
-                                                                 RUN_MODE_NOT_SET, N_RUM_MODEL_MODES-1, RUN_MODE_NOT_SET, G_PARAM_READWRITE );
-   model_properties[RUN_MODEL_PROP_SETUP_STEP_CHANGE] = g_param_spec_uint(RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR,
-                                                                          RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR,
-                                                                          RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR,
-                                                                          RUN_SETUP_UNINITIALIZED, RUN_SETUP_N_STEPS-1, RUN_SETUP_UNINITIALIZED, G_PARAM_READWRITE );
-   model_properties[RUN_MODEL_PROP_LEAK_CHECK_COMPLETE] = g_param_spec_boolean(RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR,
-                                                                               RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR,
-                                                                               RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR,
-                                                                               FALSE, G_PARAM_READWRITE );
-
+   model_properties[RUN_MODEL_PROP_RUN_MODE] = g_param_spec_uint(RUN_MODEL_MODE_CHANGE_PROP_STR, NULL, NULL,
+                                                                 RUN_MODE_NOT_SET, N_RUM_MODEL_MODES-1, RUN_MODE_NOT_SET, G_PARAM_READWRITE  | G_PARAM_STATIC_NAME);
+   model_properties[RUN_MODEL_PROP_SETUP_STEP_CHANGE] = g_param_spec_uint(RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR, NULL, NULL,
+                                                                          RUN_SETUP_UNINITIALIZED, RUN_SETUP_N_STEPS-1, RUN_SETUP_UNINITIALIZED, G_PARAM_READWRITE  | G_PARAM_STATIC_NAME);
+   model_properties[RUN_MODEL_PROP_LEAK_CHECK_COMPLETE] = g_param_spec_boolean(RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR, NULL, NULL,
+                                                                               FALSE, G_PARAM_READWRITE  | G_PARAM_STATIC_NAME);
+   model_properties[RUN_MODEL_PROP_PNEUMATIC_LEAK_TEST] = g_param_spec_boxed(RUN_MODEL_PNEUMATIC_LEAK_TEST_PROP_STR, NULL, NULL,
+                                                                             PNEUMATIC_TYPE_LEAK_TEST,
+                                                                             G_PARAM_READWRITE | G_PARAM_STATIC_NAME);
 
    g_object_class_install_properties( gobject_class, RUN_MODEL_N_PROPERTIES, model_properties);
 
@@ -144,6 +148,8 @@ RunModel *run_model_new()
    model->last_completed_phase = RUN_SETUP_UNINITIALIZED;
    model->leak_check_complete = FALSE;
    model->leak_check_success = FALSE;
+
+   model->pneumatic_leak_test = pneumatic_leak_test_new();
    return model;
 }
 
@@ -184,6 +190,24 @@ void run_model_set_leak_check_complete(RunModel *self, gboolean complete)
    {
       self->leak_check_complete = complete;
       g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_LEAK_CHECK_COMPLETE]);
+   }
+}
+
+gboolean run_model_get_leak_check_success(RunModel *self)
+{
+   return self->pneumatic_leak_test->test_passed;
+}
+PneumaticLeakTest *run_model_get_pneumatic_leak_test(RunModel *self)
+{
+   return pneumatic_leak_test_copy(self->pneumatic_leak_test);
+}
+void run_model_set_pneumatic_leak_test(RunModel *self, PneumaticLeakTest *source)
+{
+   if (!pneumatic_leak_test_equal(self->pneumatic_leak_test, source))
+   {
+      g_free(self->pneumatic_leak_test);
+      self->pneumatic_leak_test = pneumatic_leak_test_copy(source);
+      g_object_notify_by_pspec(G_OBJECT(self), model_properties[RUN_MODEL_PROP_PNEUMATIC_LEAK_TEST]);
    }
 }
 

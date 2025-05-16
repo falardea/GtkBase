@@ -1,19 +1,3 @@
-/**
- * @file pneumatic_leak_test.c
- *
- * @copyright
- * COPYRIGHT 2025
- * DEKA RESEARCH AND DEVELOPMENT CORPORATION
- *
- * Contains confidential and proprietary information which
- * may not be copied, disclosed or used by others except as expressly
- * authorized in writing by DEKA Research & Development Corporation.
- *
- * @critical <Minor, Moderate, Major Single-Point, Major Multi-Point>
- * @brief <brief description of the file>
- * @subsystem <subsystem name>
- */
-
 #include "pneumatic_leak_test.h"
 
 G_DEFINE_BOXED_TYPE(PneumaticLeakTest, pneumatic_leak_test, pneumatic_leak_test_copy, pneumatic_leak_test_free)

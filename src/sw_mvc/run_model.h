@@ -6,7 +6,7 @@
 #define RUN_MODEL_H__
 
 #include <gtk/gtk.h>
-
+#include "pneumatic_leak_test.h"
 G_BEGIN_DECLS
 
 #define RUN_TYPE_MODEL              ( run_model_get_type( ) )
@@ -16,6 +16,8 @@ G_DECLARE_FINAL_TYPE(RunModel, run_model, RUN, MODEL, GObject)
 #define RUN_MODEL_MODE_CHANGE_PROP_STR          "mode-changed"
 #define RUN_MODEL_SETUP_STEP_CHANGE_PROP_STR    "step-changed"
 #define RUN_MODEL_SETUP_LEAK_COMPLETE_PROP_STR    "leak-check-complete"
+#define RUN_MODEL_PNEUMATIC_LEAK_TEST_PROP_STR     "pneumatic-leak-test"
+
 
 #define RUN_MODEL_MODE_CHANGE_SIGNAL_STR        "run-mode-changed"
 #define RUN_MODEL_SETUP_STEP_CHANGE_SIGNAL_STR  "setup-step-changed"
@@ -33,6 +35,12 @@ typedef enum
 {
    RUN_SETUP_UNINITIALIZED = 0,
    RUN_SETUP_MODE_SELECTED,
+
+   RUN_SETUP_START_PNEUMATICS_TEST,
+   RUN_SETUP_WAIT_FOR_PNEUMATICS_TEST,
+   RUN_SETUP_PROCESS_PNEUMATICS_TEST_RESULT,
+   RUN_SETUP_PNEUMATICS_TEST_COMPLETE_FAILURE,
+
    RUN_SETUP_MEMCHECK_COMPLETE,
    // ...
    RUN_SETUP_INTERMEDIATE_STEPS,
@@ -43,6 +51,7 @@ typedef enum
 } RUN_SETUP_STEPS;
 
 typedef void (*RunModelSetterCallback_T)(RunModel *self, gpointer user_data);
+typedef gboolean (* RunModelBooleanGetterFn_T) (RunModel *self);
 
 /* Methods for our newly declared GObject derived GType*/
 RunModel *run_model_new();
@@ -58,6 +67,10 @@ void run_model_set_run_description(RunModel *self, const gchar *run_description)
 
 gboolean run_model_get_leak_check_complete(RunModel *self);
 void run_model_set_leak_check_complete(RunModel *self, gboolean complete);
+
+gboolean run_model_get_leak_check_success(RunModel *self);
+PneumaticLeakTest *run_model_get_pneumatic_leak_test(RunModel *self);
+void run_model_set_pneumatic_leak_test(RunModel *self, PneumaticLeakTest *source);
 
 // Memento?
 void run_model_set_restore_point(RunModel *self);
