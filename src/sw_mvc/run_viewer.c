@@ -8,10 +8,10 @@
 #include "setup_view.h"
 #include "gtk_composites/service_context.h"
 #include "gtk_composites/standard_context.h"
-#include "setup_controller.h"
+#include "tabview_factory.h"
 
 typedef struct {
-   SetupController   *setup_ctrl; // GObject, disposal?
+   TabviewFactory  *tab_factory; // GObject, disposal?
 
    StandardContext   *standard_ctx;
    ServiceContext    *service_ctx;
@@ -44,9 +44,9 @@ static void run_viewer_finalize(GObject *g_object)
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    RunViewer *self = RUN_VIEWER(g_object);
    RunViewerPrivate  *priv = run_viewer_get_instance_private(self);
-   if(priv->setup_ctrl)
+   if(priv->tab_factory)
    {
-      g_object_unref(G_OBJECT(priv->setup_ctrl));
+      g_object_unref(G_OBJECT(priv->tab_factory));
    }
    G_OBJECT_CLASS(run_viewer_parent_class)->finalize(g_object);
 }
@@ -92,8 +92,8 @@ RunViewer *run_viewer_new(RunModel *model)
    priv->service_ctx = service_context_new(self->model);
    priv->setup_viewer = setup_viewer_new(self->model);
 
-   priv->setup_ctrl = setup_controller_new(self, priv->setup_viewer, self->model);
-   setup_controller_build_setup_viewer(priv->setup_ctrl);
+   priv->tab_factory = tabview_factory_new(self, priv->setup_viewer, self->model);
+   tabview_factory_build_setup_viewer(priv->tab_factory);
 
    gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->setup_viewer), TRUE, TRUE, 0);
    gtk_box_pack_start(self->box_setup_interface, GTK_WIDGET(priv->standard_ctx), TRUE, TRUE, 0);

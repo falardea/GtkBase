@@ -17,7 +17,7 @@ struct _SetupViewer
 
 G_DEFINE_TYPE_WITH_PRIVATE(SetupViewer, setup_viewer, GTK_TYPE_BOX)
 
-static gchar *step_id_to_page_string(RUN_SETUP_STEPS step_id);
+gboolean setup_viewer_step_change_listener(RunModel *model, RUN_SETUP_STEPS step, gpointer user_data);
 
 static void setup_viewer_finalize(GObject *g_object)
 {
@@ -48,6 +48,7 @@ SetupViewer *setup_viewer_new(RunModel *model)
    self = g_object_new(SETUP_TYPE_VIEWER, NULL);
    self->model = model;
 
+   g_signal_connect (G_OBJECT(self->model), RUN_MODEL_SETUP_STEP_CHANGE_SIGNAL_STR, G_CALLBACK(setup_viewer_step_change_listener), self);
    return self;
 }
 
@@ -59,4 +60,14 @@ void setup_viewer_add_page_by_state_id(SetupViewer *self, GtkWidget *page, RUN_S
 void setup_viewer_set_page_view(SetupViewer *self, RUN_SETUP_STEPS step_id)
 {
    gtk_stack_set_visible_child_name(self->page_stack, g_strdup_printf("%d", step_id));
+}
+
+gboolean setup_viewer_step_change_listener(__attribute__((unused))RunModel *model, RUN_SETUP_STEPS step, gpointer user_data)
+{
+   SetupViewer *self = SETUP_VIEWER(user_data);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+   setup_viewer_set_page_view(self, step);
+
+   return G_SOURCE_REMOVE;
 }

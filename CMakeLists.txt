@@ -108,8 +108,8 @@ set(MY_SOURCES
       src/sw_mvc/run_viewer.h
       src/sw_mvc/setup_view.c
       src/sw_mvc/setup_view.h
-      src/sw_mvc/setup_controller.h
-      src/sw_mvc/setup_controller.c
+    src/sw_mvc/tabview_factory.h
+    src/sw_mvc/tabview_factory.c
       src/sw_mvc/setup_page_templates/command_step.h
       src/sw_mvc/setup_page_templates/command_step.c
       src/sw_mvc/setup_page_templates/uchoice_step.h
