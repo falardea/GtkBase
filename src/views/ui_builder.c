@@ -10,7 +10,7 @@
 app_widget_ref_struct *app_builder(void) {
    GtkBuilder *builder;
 
-   app_widget_ref_struct *appWidgetsT = g_slice_new(app_widget_ref_struct);
+   app_widget_ref_struct *appWidgetsT = g_slice_new0(app_widget_ref_struct);
 
    builder = gtk_builder_new();
 
