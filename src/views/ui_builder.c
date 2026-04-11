@@ -15,7 +15,7 @@ app_widgets *get_app_widgets_pointer(void)
 app_widgets *app_builder(void) {
    GtkBuilder *builder;
 
-   app_widgets *appWidgetsT = g_slice_new(app_widgets);
+   app_widgets *appWidgetsT = g_slice_new0(app_widgets);
 
    builder = gtk_builder_new();
 
