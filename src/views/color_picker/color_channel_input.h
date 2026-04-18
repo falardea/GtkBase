@@ -6,6 +6,8 @@
 #include <gtk/gtk.h>
 G_BEGIN_DECLS
 
+#define CHANNEL_VALUE_CHANGED_PROPERTY_STR "channel-value-changed"
+
 #define COLOR_CHANNEL_TYPE_INPUT (color_channel_input_get_type())
 
 G_DECLARE_FINAL_TYPE(ColorChannelInput, color_channel_input, COLOR_CHANNEL, INPUT, GtkBox)

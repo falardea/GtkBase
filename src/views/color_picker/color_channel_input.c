@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include "color_channel_input.h"
 
-#define CHANNEL_VALUE_CHANGED_PROPERTY_STR "channel-value-changed"
-
 struct _ColorChannelInput
 {
    GtkBox parent;
