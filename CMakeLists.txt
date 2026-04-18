@@ -89,6 +89,10 @@ set(MY_SOURCES
     src/headless_sandbox/headless_sandbox.h
     src/headless_sandbox/headless_sandbox.c
     src/gtk_composites/log_terminal.c
+    src/views/color_picker/color_channel_input.c
+    src/views/color_picker/color_channel_input.h
+    src/views/color_picker/color_picker.c
+    src/views/color_picker/color_picker.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

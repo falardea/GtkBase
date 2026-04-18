@@ -6,6 +6,7 @@
 #include "ui_builder.h"
 #include "utils/logging.h"
 #include "gtk_composites/log_terminal.h"
+#include "views/color_picker/color_picker.h"
 
 app_widget_ref_struct *app_builder(void) {
    GtkBuilder *builder;
@@ -29,6 +30,11 @@ app_widget_ref_struct *app_builder(void) {
 
    gtk_box_pack_start(GTK_BOX(appWidgetsT->app_gutter), GTK_WIDGET(appWidgetsT->msg_out), TRUE, TRUE, 0);
    // gtk_widget_show(GTK_WIDGET(appWidgetsT->msg_out));
+
+   appWidgetsT->w_sandbox_content = GTK_WIDGET(gtk_builder_get_object(builder, "sandbox_content"));
+   appWidgetsT->w_picker = GTK_WIDGET(color_picker_new());
+   gtk_box_pack_start(GTK_BOX(appWidgetsT->w_sandbox_content), GTK_WIDGET(appWidgetsT->w_picker), TRUE, TRUE, 0);
+   gtk_widget_show(appWidgetsT->w_sandbox_content);
 
    gtk_builder_connect_signals(builder, appWidgetsT);
 

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkAdjustment" id="slider_adjustment">
+    <property name="upper">1</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">0.10</property>
+  </object>
+  <template class="ColorChannelInput" parent="GtkBox">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="spacing">20</property>
+    <child>
+      <object class="GtkLabel" id="display_label">
+        <property name="width-request">60</property>
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">Color</property>
+        <style>
+          <class name="display-label"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScale" id="slider_scale">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="adjustment">slider_adjustment</property>
+        <property name="digits">2</property>
+        <property name="draw-value">False</property>
+        <property name="value-pos">right</property>
+        <signal name="value-changed" handler="on_slider_scale_value_changed" object="ColorChannelInput" swapped="no"/>
+        <style>
+          <class name="slider-scale"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="hex_label">
+        <property name="width-request">80</property>
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">#FF</property>
+        <style>
+          <class name="value-label"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="value_entry">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="input-purpose">number</property>
+        <signal name="changed" handler="on_value_entry_changed" object="ColorChannelInput" swapped="no"/>
+        <style>
+          <class name="input-entry"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <style>
+      <class name="slider-input"/>
+    </style>
+  </template>
+</interface>

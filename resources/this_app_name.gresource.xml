@@ -4,6 +4,8 @@
         <file alias="main_app_wnd" compressed="true" preprocess="xml-stripblanks">resources/this_app_name.glade</file>
         <file alias="log_terminal" compressed="true" preprocess="xml-stripblanks">resources/log_terminal.ui</file>
 
+        <file alias="color_picker" compressed="true" preprocess="xml-stripblanks">resources/composite_templates/color_picker.ui</file>
+        <file alias="color_channel_input" compressed="true" preprocess="xml-stripblanks">resources/composite_templates/color_channel_input.ui</file>
         <file>resources/style/this_app_name_style.css</file>
     </gresource>
 </gresources>

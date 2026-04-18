@@ -5,6 +5,7 @@
 #define APP_GLOBALS_H__
 #include <gtk/gtk.h>
 #include "gtk_composites/log_terminal.h"
+#include "views/color_picker/color_picker.h"
 
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -32,6 +33,9 @@ typedef struct {
    GtkWidget   *w_sandbox_content;
    GtkWidget   *app_gutter;
    LogTerminal *msg_out;
+
+   ColorPicker  *w_picker;
+
 } app_widget_ref_struct;
 
 extern app_widget_ref_struct *g_app_widget_refs;
