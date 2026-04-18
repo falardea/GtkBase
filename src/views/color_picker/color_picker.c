@@ -15,9 +15,7 @@ struct _ColorPicker
    GtkBox parent;
 
    GtkDrawingArea *color_output;
-   GtkBox         *r_slider_box;
-   GtkBox         *g_slider_box;
-   GtkBox         *b_slider_box;
+   GtkBox         *slider_box;
 
    GdkRGBA curr_color;
 };
@@ -54,9 +52,7 @@ static void color_picker_class_init(ColorPickerClass *klass)
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/resource_path/color_picker");
    gtk_widget_class_bind_template_child(widget_class, ColorPicker, color_output);
-   gtk_widget_class_bind_template_child(widget_class, ColorPicker, r_slider_box);
-   gtk_widget_class_bind_template_child(widget_class, ColorPicker, g_slider_box);
-   gtk_widget_class_bind_template_child(widget_class, ColorPicker, b_slider_box);
+   gtk_widget_class_bind_template_child(widget_class, ColorPicker, slider_box);
 
    gtk_widget_class_bind_template_callback_full(widget_class, "draw", (GCallback)color_picker_color_output_draw_func);
 
@@ -80,16 +76,12 @@ ColorPicker *color_picker_new()
    self->curr_color.alpha = 1;
 
    priv->red_channel = color_channel_input_new("Red");
-//   priv->red_channel = color_channel_input_new("Green");
-//   priv->red_channel = color_channel_input_new("Blue");
+   priv->green_channel = color_channel_input_new("Green");
+   priv->blue_channel = color_channel_input_new("Blue");
 
-//   gtk_box_pack_start(self->r_slider_box, GTK_WIDGET(priv->red_channel), TRUE, TRUE, 0);
-   g_print("Checkpoint >>>> %s\n", __func__);
-//   gtk_box_pack_start(self->g_slider_box, GTK_WIDGET(priv->green_channel), TRUE, TRUE, 0);
-//   gtk_box_pack_start(self->b_slider_box, GTK_WIDGET(priv->blue_channel), TRUE, TRUE, 0);
-//   gtk_widget_show(GTK_WIDGET(priv->red_channel));
-//   gtk_widget_set_visible(GTK_WIDGET(priv->green_channel), TRUE);
-//   gtk_widget_set_visible(GTK_WIDGET(priv->blue_channel), TRUE);
+   gtk_box_pack_start(self->slider_box, GTK_WIDGET(priv->red_channel), TRUE, TRUE, 0);
+   gtk_box_pack_start(self->slider_box, GTK_WIDGET(priv->green_channel), TRUE, TRUE, 0);
+   gtk_box_pack_start(self->slider_box, GTK_WIDGET(priv->blue_channel), TRUE, TRUE, 0);
 
    return self;
 }

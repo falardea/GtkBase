@@ -101,7 +101,7 @@ static void on_value_entry_changed(__attribute__((unused))GtkEditable *entry, gp
 
       if (valid_input)
       {
-         color_channel_input_set_value(self, entry_value);
+         color_channel_input_set_value(self, entry_value/255);
       }
    }
 }

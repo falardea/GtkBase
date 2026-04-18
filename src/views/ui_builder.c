@@ -23,18 +23,15 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_msg_out_textview = GTK_WIDGET(gtk_builder_get_object(builder, "msg_out_textview"));
    appWidgetsT->w_say_something_entry = GTK_WIDGET(gtk_builder_get_object(builder, "say_something_entry"));
 
-   // appWidgetsT->w_sandbox_content = GTK_WIDGET(gtk_builder_get_object(builder, "sandbox_content"));
    appWidgetsT->app_gutter = GTK_WIDGET(gtk_builder_get_object(builder, "app_gutter"));
 
    appWidgetsT->msg_out = log_terminal_new();
 
    gtk_box_pack_start(GTK_BOX(appWidgetsT->app_gutter), GTK_WIDGET(appWidgetsT->msg_out), TRUE, TRUE, 0);
-   // gtk_widget_show(GTK_WIDGET(appWidgetsT->msg_out));
 
    appWidgetsT->w_sandbox_content = GTK_WIDGET(gtk_builder_get_object(builder, "sandbox_content"));
-   appWidgetsT->w_picker = GTK_WIDGET(color_picker_new());
+   appWidgetsT->w_picker = color_picker_new();
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_sandbox_content), GTK_WIDGET(appWidgetsT->w_picker), TRUE, TRUE, 0);
-   gtk_widget_show(appWidgetsT->w_sandbox_content);
 
    gtk_builder_connect_signals(builder, appWidgetsT);
 
